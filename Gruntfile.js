@@ -16,13 +16,13 @@ module.exports = function (grunt) {
         concat: {
             client: {
                 src: [
-                    'client/**/*.cjs'
+                    'client/**/*.pjs'
                 ],
                 dest: 'dist/js.js'
             },
             server: {
                 src: [
-                    'server/**/*.sjs',
+                    'server/**/*.pjs',
                     'server/**/*.model',
                     'server/**/*.route'
                 ],
@@ -62,8 +62,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: [
-                    '**/*.sjs',
-                    '**/*.cjs',
+                    '**/*.pjs',
                     '**/*.route',
                     '**/*.model',
                     '**/*.less'

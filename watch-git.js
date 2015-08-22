@@ -29,12 +29,10 @@ handler.on('push', function (event) {
     logger.info('Received a push event for %s to %s',
         event.payload.repository.name,
         event.payload.ref);
-
     logger.info(exec('git pull').stdout);
     logger.info(exec('npm install').stdout);
-
+    logger.info(exec('grunt').stdout);
     serverRestart();
-
 });
 
 function serverRestart() {

@@ -1,0 +1,98 @@
+var express = require('express'),
+    app = express(),
+    http = require('http').Server(app),
+//io = require('socket.io')(http),
+    path = require('path');
+
+
+var mongoDB = require('mongodb'),
+    ObjectID = mongoDB.ObjectID,
+    mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/freetty');
+
+var winston = require('winston');
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            level: 'debug'
+        }),
+        new (winston.transports.File)({
+            filename: './log/log.log'
+        })
+    ]
+});
+
+var bodyParser = require('body-parser'),
+    multer = require('multer');
+
+app.use(function (req, res, next) {
+    res.charset = "utf-8";
+    next();
+});
+app.use('/node_modules', express.static('node_modules'));
+app.use('/dist', express.static('dist'));
+app.use('/app', express.static('app'));
+app.use('/uploads', express.static('uploads'));
+
+app.use(bodyParser.json());
+app.use(function (req, res, next) {
+    if (req.method == "GET")
+        req.passed = req.query;
+    else
+        req.passed = req.body;
+    next();
+});
+//app.use('/socket.io', express.static('node_modules/socket.io/node_modules/socket.io-app'));
+
+app.use(multer({
+    dest: './uploads/',
+    rename: function (fieldname, filename) {
+        function ran(length) {
+            var result = "";
+            var r = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            for (var i = 0; i < length; i++) {
+                result += r.charAt(parseInt(Math.random() * r.length));
+            }
+            return result;
+        }
+
+        return Date.now() + ran(5);
+    },
+    onFileUploadStart: function (file) {
+    },
+    onFileUploadComplete: function (file) {
+    }
+}));
+
+var session = require('express-session'),
+//cookie = require('cookie'),
+    sessionStore = new session.MemoryStore(),
+    cookieParser = require('cookie-parser'),
+    COOKIE_SECRET = 'secret',
+    COOKIE_NAME = 'sid';
+
+app.use(cookieParser(COOKIE_SECRET));
+app.use(session({
+    name: COOKIE_NAME,
+    store: sessionStore,
+    secret: COOKIE_SECRET,
+    saveUninitialized: true,
+    resave: true,
+    cookie: {
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        maxAge: null
+    }
+}));
+
+
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname + '/app/pages/index/index.html'));
+});
+
+http.listen(80, function () {
+    logger.info('listening on *:80');
+});
+
