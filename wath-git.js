@@ -20,9 +20,6 @@ handler.on('push', function (event) {
         event.payload.repository.name,
         event.payload.ref);
 
-    console.log(exec('git pull').stdout);
-    console.log(exec('npm install').stdout);
-    console.log(exec('nginx -s reload').stdout);
     console.log(exec('sh deploy.sh').stdout);
 
 });
