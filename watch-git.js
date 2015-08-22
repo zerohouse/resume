@@ -32,7 +32,14 @@ handler.on('push', function (event) {
 
     logger.info(exec('git pull').stdout);
     logger.info(exec('npm install').stdout);
-    logger.info(exec('cp ./nginx.conf /etc/nginx/nginx.conf').stdout);
-    logger.info(exec('service nginx reload').stdout);
+
+    serverRestart();
 
 });
+
+function serverRestart() {
+    var serverPid = exec('ps -ef | grep server.js').stdout.split("  ")[1];
+    exec('kill -9 ' + serverPid);
+    exec('node server.js&');
+    logger.info('server restart %s', new Date().toString());
+}
