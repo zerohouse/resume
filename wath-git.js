@@ -19,6 +19,8 @@ handler.on('push', function (event) {
         event.payload.repository.name,
         event.payload.ref);
 
-    exec('sh deploy.sh');
+    exec('sh deploy.sh', function (er, out, ster) {
+        console.log(out)
+    });
 
 });
