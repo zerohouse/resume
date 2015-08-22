@@ -1,7 +1,8 @@
 var http = require('http');
 var createHandler = require('github-webhook-handler');
 var handler = createHandler({path: '/update/deploy', secret: 'myhashsecret'});
-var exec = require('child_process').exec;
+var exec = require('sync-exec');
+
 
 http.createServer(function (req, res) {
     handler(req, res, function (err) {
@@ -19,8 +20,8 @@ handler.on('push', function (event) {
         event.payload.repository.name,
         event.payload.ref);
 
-    exec('sh deploy.sh', function (er, out, ster) {
-        console.log(out)
-    });
+    console.log(exec('git pull'));
+    console.log(exec('sh deploy.sh'));
+
 
 });
