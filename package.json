@@ -1,0 +1,22 @@
+{
+  "name": "park",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zerohouse/park.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zerohouse/park/issues"
+  },
+  "homepage": "https://github.com/zerohouse/park#readme",
+  "dependencies": {
+    "github-webhook-handler": "^0.5.0"
+  }
+}
