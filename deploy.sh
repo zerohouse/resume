@@ -1,5 +1,4 @@
 git pull
 npm install
-sudo cp ./nginx.conf /etc/nginx/nginx.conf
-sudo nginx -s -reload
-s
+cp ./nginx.conf /etc/nginx/nginx.conf
+nginx -s -reload
