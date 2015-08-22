@@ -23,7 +23,7 @@ handler.on('push', function (event) {
 
     console.log(exec('git pull').stdout);
     console.log(exec('npm install').stdout);
-    console.log(exec('sudo cp ./nginx.conf /etc/nginx/nginx.conf').stdout);
-    console.log(exec('sudo nginx -s -reload').stdout);
+    console.log(exec('cp ./nginx.conf /etc/nginx/nginx.conf').stdout);
+    console.log(exec('service nginx reload').stdout);
 
 });
