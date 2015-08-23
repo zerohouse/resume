@@ -26,6 +26,9 @@ handler.on('error', function (err) {
 });
 
 handler.on('push', function (event) {
+    logger.info(exec('sudo cp nginx.conf /etc/nginx/nginx.conf').stdout);
+    logger.info(exec('sudo service nginx reload').stdout);
+
     logger.info('Received a push event for %s to %s',
         event.payload.repository.name,
         event.payload.ref);
@@ -34,8 +37,6 @@ handler.on('push', function (event) {
     logger.info(exec('grunt').stdout);
     serverRestart();
 
-    logger.info(exec('sudo cp nginx.conf /etc/nginx/nginx.conf').stdout);
-    logger.info(exec('sudo service nginx reload').stdout);
 });
 
 function serverRestart() {
