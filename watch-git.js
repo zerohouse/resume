@@ -47,7 +47,6 @@ function serverRestart() {
         exec('node app.js');
         logger.info('server restart %s', new Date().toString());
     } catch (e) {
-        logger.info('server start %s', new Date().toString());
-        exec('node app.js');
+        logger.info('err');
     }
 }
