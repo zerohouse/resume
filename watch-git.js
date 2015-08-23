@@ -36,8 +36,8 @@ handler.on('push', function (event) {
 });
 
 function serverRestart() {
-    var serverPid = exec('ps -ef | grep server.js').stdout.split("  ")[1];
+    var serverPid = exec('ps -ef | grep app.js').stdout.split("  ")[1];
     exec('kill -9 ' + serverPid);
-    exec('node server.js&');
+    exec('node app.js&');
     logger.info('server restart %s', new Date().toString());
 }

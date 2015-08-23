@@ -81,9 +81,12 @@ app.use(session({
     }
 }));
 
+app.use('/', express.static('dist'));
+
 app.get('/*', function (req, res) {
-    res.send('test');
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
 });
+
 
 http.listen(3000, function () {
     logger.info('listening on *:3000');

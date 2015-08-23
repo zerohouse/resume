@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                     'server/**/*.model',
                     'server/**/*.route'
                 ],
-                dest: 'server.js'
+                dest: 'app.js'
             }
         },
 
@@ -59,6 +59,16 @@ module.exports = function (grunt) {
             }
         },
 
+        copy: {
+            main: {
+                files: [
+                    {expand: true, cwd: 'client/', src: ['**/*.html'], dest: 'dist'}
+                ]
+            }
+        },
+
+        clean: ['dist/css'],
+
         watch: {
             scripts: {
                 files: [
@@ -67,7 +77,7 @@ module.exports = function (grunt) {
                     '**/*.model',
                     '**/*.less'
                 ],
-                tasks: ['concat', 'uglify', 'less', 'concat_css', 'cssmin'],
+                tasks: ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean'],
                 options: {
                     interrupt: true
                 }
@@ -81,8 +91,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-concat-css');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin']);
+    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
 
 };
