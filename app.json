@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "park",
+      "watch": "true",
+      "script": "app.js",
+      "name": "park"
+    }
+  ]
+}
