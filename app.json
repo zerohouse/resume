@@ -3,6 +3,12 @@
     {
       "name": "park",
       "watch": "true",
+      "ignore_watch": [
+        "node_modules",
+        "client",
+        "server",
+        "dist"
+      ],
       "script": "app.js",
       "log_file": "pm2log.log",
       "error_file": "pm2error.log"
