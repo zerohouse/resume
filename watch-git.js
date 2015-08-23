@@ -41,7 +41,8 @@ handler.on('push', function (event) {
 
 function serverRestart() {
     var serverPid = exec('ps -ef | grep app.js').stdout.split("  ")[1];
-    exec('kill -9 ' + serverPid);
-    exec('node app.js&');
+    logger.info('server Pid is', serverPid);
+    exec('sudo kill -9 ' + serverPid);
+    exec('sudo node app.js');
     logger.info('server restart %s', new Date().toString());
 }
