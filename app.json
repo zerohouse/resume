@@ -2,11 +2,7 @@
   "apps": [
     {
       "watch": [
-        "app.js"
-      ],
-      "ignore_watch": [
-        "node_modules",
-        "client"
+        "server"
       ],
       "name": "park",
       "script": "app.js"
