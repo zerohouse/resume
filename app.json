@@ -1,6 +1,13 @@
 {
   "apps": [
     {
+      "watch": [
+        "app.js"
+      ],
+      "ignore_watch": [
+        "node_modules",
+        "client"
+      ],
       "name": "park",
       "script": "app.js"
     }
