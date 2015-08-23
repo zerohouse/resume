@@ -34,8 +34,8 @@ handler.on('push', function (event) {
     logger.info(exec('grunt').stdout);
     serverRestart();
 
-    logger.info(exec('cp nginx.conf /etc/nginx/nginx.conf').stdout);
-    logger.info(exec('service nginx reload').stdout);
+    logger.info(exec('sudo cp nginx.conf /etc/nginx/nginx.conf').stdout);
+    logger.info(exec('sudo service nginx reload').stdout);
 });
 
 function serverRestart() {
