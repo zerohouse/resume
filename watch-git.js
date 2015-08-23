@@ -26,13 +26,16 @@ handler.on('error', function (err) {
 });
 
 handler.on('push', function (event) {
-    logger.info(exec('cp nginx.conf /etc/nginx/nginx.conf').stdout);
-    logger.info(exec('service nginx reload').stdout);
 
     logger.info('Received a push event for %s to %s',
         event.payload.repository.name,
         event.payload.ref);
     logger.info(exec('git pull').stdout);
+
+    logger.info(exec('cp nginx.conf /etc/nginx/nginx.conf').stdout);
+    logger.info(exec('service nginx reload').stdout);
+
+
     logger.info(exec('npm install').stdout);
     logger.info(exec('grunt').stdout);
     serverRestart();
