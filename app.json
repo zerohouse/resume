@@ -2,7 +2,8 @@
   "apps": [
     {
       "name": "park",
-      "script": "app.js"
+      "script": "app.js",
+      "watch": "app.js"
     }
   ]
 }
