@@ -3,7 +3,10 @@
     {
       "name": "park",
       "script": "app.js",
-      "watch": "app.js"
+      "watch": true,
+      "ignore_watch": [
+        "**.*"
+      ]
     }
   ]
 }
