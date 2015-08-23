@@ -1,9 +1,6 @@
 {
   "apps": [
     {
-      "watch": [
-        "server"
-      ],
       "name": "park",
       "script": "app.js"
     }
