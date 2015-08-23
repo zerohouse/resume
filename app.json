@@ -4,7 +4,8 @@
       "name": "park",
       "watch": "true",
       "script": "app.js",
-      "name": "park"
+      "log_file": "pm2log.log",
+      "error_file": "pm2error.log"
     }
   ]
 }
