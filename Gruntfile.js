@@ -1,6 +1,7 @@
 /**
  * Created by park on 15. 4. 23..
  */
+
 module.exports = function (grunt) {
 
     grunt.file.defaultEncoding = "utf8";
@@ -69,17 +70,6 @@ module.exports = function (grunt) {
 
         clean: ['dist/css'],
 
-        express: {
-            options: {
-                // Override defaults here
-            },
-            dev: {
-                options: {
-                    script: 'app.js'
-                }
-            },
-        },
-
         watch: {
             scripts: {
                 files: [
@@ -104,9 +94,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-express-server');
 
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean', 'express']);
+    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
 
 };
