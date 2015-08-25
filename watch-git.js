@@ -32,7 +32,6 @@ handler.on('push', function (event) {
     logger.info(exec('git pull').stdout);
     logger.info(exec('npm install').stdout);
     logger.info(exec('grunt').stdout);
-    logger.info(exec('grunt').stdout);
     logger.info(exec('pm2 stop server.js').stdout);
     logger.info(exec('pm2 start server.js').stdout);
 });

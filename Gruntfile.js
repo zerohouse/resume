@@ -9,6 +9,7 @@ module.exports = function (grunt) {
     var config = {pkg: grunt.file.readJSON('package.json')};
     config.concat = {};
     config.watch = {};
+    config.mochaTest = {}
 
     // Client JS File Concat And Uglify
     config.concat.client = {
@@ -23,15 +24,19 @@ module.exports = function (grunt) {
             dest: 'dist/js.min.js'
         }
     };
+    config.mochaTest.client = {
+        src: ['test/client/**/*.js']
+    };
     config.watch.client = {
         files: [
             'client/**/*.js'
         ],
-        tasks: ['concat:client', 'uglify'],
+        tasks: ['concat:client', 'uglify', 'mochaTest:client'],
         options: {
             interrupt: true
         }
     };
+
 
     // LESS Comfile And Concat
     config.less = {
@@ -145,6 +150,8 @@ module.exports = function (grunt) {
 
 
     grunt.initConfig(config);
+
+
     grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -155,9 +162,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     // Default task(s).
     grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
-    grunt.registerTask('run', ['concurrent:dev']);
+    grunt.registerTask('run', ['default', 'concurrent:dev']);
 };
