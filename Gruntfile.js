@@ -9,11 +9,14 @@ module.exports = function (grunt) {
     var config = {pkg: grunt.file.readJSON('package.json')};
     config.concat = {};
     config.watch = {};
+    config.karma = {};
+    config.mochaTest = {};
 
     // Client JS File Concat And Uglify
     config.concat.client = {
         src: [
-            'client/**/*.js'
+            'client/**/*.js',
+            '!client/**/*_test.js'
         ],
         dest: 'dist/js.js'
     };
@@ -21,6 +24,19 @@ module.exports = function (grunt) {
         build: {
             src: 'dist/js.js',
             dest: 'dist/js.min.js'
+        }
+    };
+    config.karma.client = {
+        options: {
+            frameworks: ['jasmine'],
+            singleRun: true,
+            browsers: ['PhantomJS'],
+            files: [
+                'node_modules/angular/angular.js',
+                'node_modules/angular-mocks/angular-mocks.js',
+                'dist/js.js',
+                'client/**/*_test.js'
+            ]
         }
     };
     config.watch.client = {
@@ -94,16 +110,16 @@ module.exports = function (grunt) {
 
     config.concat.route = {
         src: [
-            'server/route/pre',
-            'server/route/**/*.js',
-            'server/route/post'
+            'server/route/scripts/pre',
+            'server/route/scripts/**/*.js',
+            'server/route/scripts/post'
         ],
-        dest: 'server/route.js'
+        dest: 'server/route/route.js'
     };
 
     config.watch.route = {
         files: [
-            'server/route/**/*.js'
+            'server/route/scripts/**/*.js'
         ],
         tasks: ['concat:route'],
         options: {
@@ -113,21 +129,25 @@ module.exports = function (grunt) {
 
     config.concat.db = {
         src: [
-            'server/db/pre',
-            'server/db/**/*.js',
-            'server/db/post'
+            'server/db/scripts/pre',
+            'server/db/scripts/**/*.js',
+            'server/db/scripts/post'
         ],
-        dest: 'server/db.js'
+        dest: 'server/db/db.js'
     };
 
     config.watch.db = {
         files: [
-            'server/db/**/*.js'
+            'server/db/scripts/**/*.js'
         ],
-        tasks: ['concat:db'],
+        tasks: ['concat:db', 'mochaTest:db'],
         options: {
             interrupt: true
         }
+    };
+
+    config.mochaTest.db = {
+        src: ['server/db/db_test.js']
     };
 
     config.nodemon = {
@@ -149,7 +169,6 @@ module.exports = function (grunt) {
 
     grunt.initConfig(config);
 
-
     grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -160,8 +179,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
+    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean', 'mochaTest', 'karma']);
     grunt.registerTask('run', ['default', 'concurrent:dev']);
 };

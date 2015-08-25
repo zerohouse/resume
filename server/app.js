@@ -1,14 +1,15 @@
 var express = require('express'),
     app = express();
 
-var logger = require('./logger.js');
+var logger = require('./utils/logger.js');
 app.use(function (req, res, next) {
     res.charset = "utf-8";
     next();
 });
-require('./parse.js');
-require('./upload.js')(app);
-require('./session.js')(app);
-require('./route.js')(app, logger);
+require('./utils/parse.js');
+require('./utils/upload.js')(app);
+require('./utils/session.js')(app);
+
+require('./route/route.js')(app, logger);
 
 module.exports = app;
