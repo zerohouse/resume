@@ -136,8 +136,10 @@ module.exports = function (grunt) {
 
     config.nodemon = {
         dev: {
-            script: 'server.dev.js',
-            ignore: ['node_modules/**', 'client/**', 'dist/**'],
+            script: 'server.dev.js'
+        },
+        options : {
+            watch: ['./server']
         }
     };
 
