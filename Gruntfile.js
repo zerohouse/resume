@@ -9,7 +9,6 @@ module.exports = function (grunt) {
     var config = {pkg: grunt.file.readJSON('package.json')};
     config.concat = {};
     config.watch = {};
-    config.mochaTest = {}
 
     // Client JS File Concat And Uglify
     config.concat.client = {
@@ -24,14 +23,11 @@ module.exports = function (grunt) {
             dest: 'dist/js.min.js'
         }
     };
-    config.mochaTest.client = {
-        src: ['test/client/**/*.js']
-    };
     config.watch.client = {
         files: [
             'client/**/*.js'
         ],
-        tasks: ['concat:client', 'uglify', 'mochaTest:client'],
+        tasks: ['concat:client', 'uglify'],
         options: {
             interrupt: true
         }
@@ -138,7 +134,7 @@ module.exports = function (grunt) {
         dev: {
             script: 'server.dev.js'
         },
-        options : {
+        options: {
             watch: ['./server']
         }
     };
@@ -164,7 +160,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-mocha-test');
 
     // Default task(s).
     grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
