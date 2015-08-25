@@ -1,6 +1,5 @@
 var express = require('express'),
-    app = express(),
-    path = require('path');
+    app = express();
 
 var logger = require('./logger.js');
 app.use(function (req, res, next) {

@@ -1,6 +1,6 @@
 var app = require('./server/app.js');
 var http = require('http').Server(app);
-
+var path = require('path');
 
 app.use('/', express.static('dist'));
 
