@@ -33,6 +33,6 @@ handler.on('push', function (event) {
     logger.info(exec('npm install').stdout);
     logger.info(exec('grunt').stdout);
     logger.info(exec('grunt').stdout);
-    logger.info(exec('pm2 stop app.js').stdout);
-    logger.info(exec('pm2 start app.js').stdout);
+    logger.info(exec('pm2 stop server.js').stdout);
+    logger.info(exec('pm2 start server.js').stdout);
 });
