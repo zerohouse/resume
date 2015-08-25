@@ -129,7 +129,24 @@ module.exports = function (grunt) {
         }
     };
 
+    config.nodemon = {
+        dev: {
+            script: 'server.dev.js',
+            ignore: ['node_modules/**', 'client/**', 'dist/**'],
+        }
+    };
+
+    config.concurrent = {
+        dev: ["nodemon", "watch"],
+        options: {
+            logConcurrentOutput: true
+        }
+    };
+
+
     grunt.initConfig(config);
+    grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -139,6 +156,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
+
     // Default task(s).
     grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
+    grunt.registerTask('run', ['concurrent:dev']);
 };
