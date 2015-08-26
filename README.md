@@ -1,7 +1,9 @@
-##  nginx + 노드서버
+## Server
+### Dev - NodeJS (grunt - nodemon)
+### Prod - Nginx + Node APi Server
+### Test - Mocha & chai
 
-## angular client
-
-## 테스트
-### 서버 - Mocha & chai
-### 클라이언트 - Karma & jasmine
+## Client
+### angular
+### css - less
+### Test - Karma & jasmine
