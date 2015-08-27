@@ -1,3 +1,5 @@
-app.controller('main', function () {
+app.controller('main', function ($scope) {
+
+    $scope.name = "main";
 
 });
