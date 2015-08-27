@@ -1,6 +1,6 @@
 module.exports = function (app) {
     app.use(require('multer')({
-        dest: './client/uploads/',
+        dest: './dist/uploads/',
         rename: function (fieldname, filename) {
             function ran(length) {
                 var result = "";

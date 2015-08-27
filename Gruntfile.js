@@ -15,7 +15,9 @@ module.exports = function (grunt) {
     // Client JS File Concat And Uglify
     config.concat.client = {
         src: [
+            'client/**/*.pre.js',
             'client/**/*.js',
+            'client/**/*.post.js',
             '!client/**/*_test.js'
         ],
         dest: 'dist/js.js'
