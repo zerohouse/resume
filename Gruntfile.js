@@ -36,6 +36,7 @@ module.exports = function (grunt) {
             files: [
                 'node_modules/angular/angular.js',
                 'node_modules/angular-mocks/angular-mocks.js',
+                'node_modules/angular-ui-router/build/angular-ui-router.min.js',
                 'dist/js.js',
                 'client/**/*_test.js'
             ]

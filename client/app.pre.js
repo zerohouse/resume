@@ -1,1 +1,1 @@
-var app = angular.module('test', []);
+var app = angular.module('resume', ['ui.router']);
