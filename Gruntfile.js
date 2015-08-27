@@ -51,6 +51,15 @@ module.exports = function (grunt) {
             interrupt: true
         }
     };
+    config.watch.clientTest = {
+        files: [
+            'client/**/*_test.js'
+        ],
+        tasks: ['karma:client'],
+        options: {
+            interrupt: true
+        }
+    };
 
 
     // LESS Comfile And Concat
@@ -113,9 +122,9 @@ module.exports = function (grunt) {
 
     config.concat.route = {
         src: [
-            'server/route/scripts/pre',
+            'server/route/scripts/**/*.pre.js',
             'server/route/scripts/**/*.js',
-            'server/route/scripts/post'
+            'server/route/scripts/**/*.post.js'
         ],
         dest: 'server/route/route.js'
     };
@@ -132,9 +141,9 @@ module.exports = function (grunt) {
 
     config.concat.db = {
         src: [
-            'server/db/scripts/pre',
-            'server/db/scripts/**/*.js',
-            'server/db/scripts/post'
+            'server/route/scripts/**/*.pre.js',
+            'server/route/scripts/**/*.js',
+            'server/route/scripts/**/*.post.js'
         ],
         dest: 'server/db/db.js'
     };
@@ -143,14 +152,24 @@ module.exports = function (grunt) {
         files: [
             'server/db/scripts/**/*.js'
         ],
-        tasks: ['concat:db', 'mochaTest:db'],
+        tasks: ['concat:db'],
         options: {
             interrupt: true
         }
     };
 
-    config.mochaTest.db = {
-        src: ['server/db/db_test.js']
+    config.watch.serverTest = {
+        files: [
+            'server/**/*_test.js'
+        ],
+        tasks: ['mochaTest:server'],
+        options: {
+            interrupt: true
+        }
+    };
+
+    config.mochaTest.server = {
+        src: ['server/**/*_test.js']
     };
 
     config.nodemon = {
@@ -176,7 +195,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-legit ss');
     grunt.loadNpmTasks('grunt-concat-css');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
