@@ -1,4 +1,4 @@
-var app = beforeEach(module('test'));
+var app = beforeEach(module('resume'));
 var $controller;
 
 beforeEach(inject(function (_$controller_) {
