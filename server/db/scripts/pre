@@ -1,5 +1,4 @@
-var db = {};
-var mongoDB = require('mongodb'),
-    ObjectID = mongoDB.ObjectID,
-    mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/freetty');
+var db = {},
+    mongoose = require('mongoose'),
+    ObjectId = mongoose.Types.ObjectId();
+mongoose.connect('mongodb://localhost:27017/resume');
