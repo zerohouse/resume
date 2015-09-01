@@ -18,6 +18,7 @@
   "homepage": "https://github.com/zerohouse/park#readme",
   "dependencies": {
     "angular": "^1.4.4",
+    "angular-timeline": "^1.2.1",
     "angular-ui-bootstrap": "^0.13.3",
     "angular-ui-router": "^0.2.15",
     "body-parser": "^1.13.2",
