@@ -1,4 +1,5 @@
 dist
+!dist/lib
 server/db.js
 server/route.js
 
