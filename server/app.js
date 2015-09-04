@@ -9,7 +9,6 @@ app.use(function (req, res, next) {
 require('./utils/parse.js');
 require('./utils/upload.js')(app);
 require('./utils/session.js')(app);
-
 require('./route/route.js')(app, logger);
 
 module.exports = app;
