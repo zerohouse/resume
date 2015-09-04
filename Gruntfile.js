@@ -52,15 +52,15 @@ module.exports = function (grunt) {
             interrupt: true
         }
     };
-    config.watch.clientTest = {
-        files: [
-            'client/**/*_test.js'
-        ],
-        tasks: ['karma:client'],
-        options: {
-            interrupt: true
-        }
-    };
+    //config.watch.clientTest = {
+    //    files: [
+    //        'client/**/*_test.js'
+    //    ],
+    //    tasks: ['karma:client'],
+    //    options: {
+    //        interrupt: true
+    //    }
+    //};
 
 
     // LESS Comfile And Concat
@@ -206,6 +206,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
 
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean', 'mochaTest', 'karma']);
+    grunt.registerTask('default', ['concat', 'uglify', 'less', 'concat_css', 'cssmin', 'copy', 'clean']);
     grunt.registerTask('run', ['default', 'concurrent:dev']);
 };

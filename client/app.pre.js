@@ -18,6 +18,4 @@ Array.prototype.toggle = function (item) {
     this.push(item);
 };
 
-var socket = io('/api/socket');
-
 var app = angular.module('resume', ['ui.router', 'ui.bootstrap']);
