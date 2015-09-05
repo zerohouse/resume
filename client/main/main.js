@@ -89,6 +89,8 @@ app.controller('main', function ($scope, $timeout) {
     function alert(alert, success) {
         var al = {alert: alert, date: new Date(), success: success};
         $scope.alerts.push(al);
+        $scope.alert = al;
+        $scope.showing = true;
         if ($scope.alerts.length > 6)
             $scope.alerts.remove($scope.alerts[0]);
     }
