@@ -132,7 +132,7 @@ module.exports = function (http) {
                         return;
                     sum += player.score;
                 });
-                socket.player.score = socket.player.score + val + parseInt(sum * 0.2) / 10;
+                socket.player.score = socket.player.score + val + parseInt(sum * 0.5) / 10;
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 if (highest[socket.roomId] != undefined && highest[socket.roomId].score > socket.player.score)
