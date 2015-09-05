@@ -13,9 +13,6 @@
         <div class="col-md-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">결합</div>
-                <div class="panel-body">
-                    <span ng-repeat="each in discovered" style="margin-right:5px;" class="label label-info">{{format.discovered(each)}}</span>
-                </div>
                 <div class="panel-body wrap">
                     <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
                          ng-click="selectBlock(block)">
@@ -23,6 +20,10 @@
                         <span class="number">{{blocks.indexOf(block)+1}}</span>
                         <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
                     </div>
+                </div>
+                <div class="panel-body">
+                    <div>이미 찾은 합</div>
+                    <span ng-repeat="each in discovered" style="margin-right:5px;" class="label label-default">{{format.discovered(each)}}</span>
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group-lg lg-group">
