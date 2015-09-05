@@ -2,8 +2,6 @@ var socket = io('/', {path: '/socket.io'});
 
 app.controller('main', function ($scope) {
 
-    $scope.name = "main";
-
     $scope.shapes = ['fa fa-bell', 'fa fa-heart-o', 'fa fa-circle-o'];
     $scope.colors = ['#FF0', '#F0F', '#0FF'];
     $scope.backs = ['#00F', '#0F0', '#F00'];
@@ -81,8 +79,13 @@ app.controller('main', function ($scope) {
         $scope.$apply();
     });
 
-    socket.on('player', function (player) {
-        $scope.player = player;
+    socket.on('players', function (players) {
+        $scope.players = players;
+        $scope.$apply();
+    });
+
+    $scope.$watch('name', function () {
+        socket.emit('player', $scope.name);
     });
 
 
