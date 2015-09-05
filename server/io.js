@@ -62,16 +62,18 @@ module.exports = function (http) {
             send.blocks = game[socket.roomId].blocks;
             send.discovered = game[socket.roomId].discovered;
             send.id = socket.id;
+            send.reset = true;
             send.players = players[socket.roomId];
             updatePlayers();
             socket.emit('game', send);
         }
 
-        function sendToAll() {
+        function sendToAll(reset) {
             var send = {};
             send.blocks = game[socket.roomId].blocks;
             send.discovered = game[socket.roomId].discovered;
             send.players = players[socket.roomId];
+            send.reset = reset;
             updatePlayers();
             io.to(socket.roomId).emit('game', send);
         }
@@ -82,7 +84,7 @@ module.exports = function (http) {
         });
 
         socket.on('check', function (selects) {
-            if (new Date() - socket.last < 500) {
+            if (new Date() - socket.last < 1500) {
                 return;
             }
             socket.last = new Date();
@@ -100,7 +102,7 @@ module.exports = function (http) {
 
 
         socket.on('done', function () {
-            if (new Date() - socket.last < 500) {
+            if (new Date() - socket.last < 1500) {
                 return;
             }
             socket.last = new Date();
@@ -112,7 +114,7 @@ module.exports = function (http) {
             }
             game[socket.roomId] = g.newGame();
             updatePlayers(3);
-            sendToAll();
+            sendToAll(true);
         });
 
         function updatePlayers(val) {
@@ -130,7 +132,7 @@ module.exports = function (http) {
                         return;
                     sum += player.score;
                 });
-                socket.player.score = socket.player.score + val + sum * 0.02;
+                socket.player.score = socket.player.score + val + parseInt(sum * 0.2) / 10;
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 if (highest[socket.roomId] != undefined && highest[socket.roomId].score > socket.player.score)
@@ -161,7 +163,7 @@ module.exports = function (http) {
 
 
         socket.on('chat', function (message) {
-            if (new Date() - socket.last < 500) {
+            if (new Date() - socket.last < 1500) {
                 return;
             }
             socket.last = new Date();

@@ -17,7 +17,8 @@
         });
 
         socket.on('game', function (send) {
-            scope.resetShapes();
+            if (send.reset)
+                scope.resetShapes();
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
             scope.players = send.players;
@@ -92,7 +93,7 @@
     app.controller('check', function ($scope, alert, socket, $stateParams) {
         $scope.roomId = $stateParams.id;
 
-        $scope.resetShapes = function(){
+        $scope.resetShapes = function () {
             $scope.shapes = [];
             var shapes = ['fa-umbrella', 'fa-heart', 'fa-phone', 'fa-plus', 'fa-caret-up', 'fa-bell', 'fa-star', 'fa-circle'];
             for (var i = 0; i < 3; i++) {
