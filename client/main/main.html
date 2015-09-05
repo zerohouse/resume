@@ -12,12 +12,14 @@
         </div>
     </div>
 
-    <div ng-repeat="select in selects">{{select}}</div>
-    <div ng-repeat="select in discovered">{{select}}</div>
+    <div>{{format.selects(selects)}}</div>
+
+
+    찾은거
+    <div ng-repeat="each in discovered">{{format.discovered(each)}}</div>
 
     <div ng-click="check()">합</div>
     <div ng-click="done()">결</div>
 
-    {{results}}
 
 </div>

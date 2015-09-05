@@ -83,6 +83,7 @@ game.newGame = function () {
         result.blocks.push(game.Block.random());
     }
     result.getAllResults();
+    console.log(result);
     return result;
 };
 
