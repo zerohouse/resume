@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">결합</div>
                 <div class="panel-body wrap">
@@ -25,14 +25,17 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <div class="btn btn-danger" ng-show="selects.length>0">{{format.selects(selects)}}</div>
-                    <div class="btn btn-primary" ng-click="check()" ng-disabled="selects.length!=3">합</div>
-                    <div class="btn btn-success" ng-click="done()">결</div>
+                    <div class="btn-group-lg lg-group">
+                        <div class="btn btn-primary" ng-click="check()" ng-disabled="selects.length!=3">
+                            {{format.selects(selects)}} 합
+                        </div>
+                        <div class="btn btn-success" ng-click="done()">결</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">이미 찾은 합</div>
                 <ul class="list-group">
@@ -61,13 +64,16 @@
         </div>
     </div>
 
-    <ul class="list-group">
-        <li class="list-group-item">0점이하로는 떨어지지 않음</li>
-        <li class="list-group-item">결 = +3점</li>
-        <li class="list-group-item">결실패 = -2점</li>
-        <li class="list-group-item">합 = +1점</li>
-        <li class="list-group-item">합실패 = -1점</li>
-        <li class="list-group-item">10초당 0.1점 보너스점수</li>
-    </ul>
+    <div class="panel panel-primary">
+        <div class="panel-heading">규칙</div>
+        <ul class="list-group">
+            <li class="list-group-item">0점이하로는 떨어지지 않음</li>
+            <li class="list-group-item">결 = +3점</li>
+            <li class="list-group-item">결실패 = -2점</li>
+            <li class="list-group-item">합 = +1점</li>
+            <li class="list-group-item">합실패 = -1점</li>
+            <li class="list-group-item">10초당 0.1점 보너스점수(최대 5점)</li>
+        </ul>
+    </div>
 
 </div>

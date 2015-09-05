@@ -67,7 +67,7 @@ module.exports = function (http) {
 
         function updatePlayers(val) {
             if (!val) {
-                io.sockets.emit('players', {me:players.indexOf(socket.player),players:players});
+                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
                 return;
             }
             if (val > 0) {
@@ -77,7 +77,7 @@ module.exports = function (http) {
                 val = calculateBonus(val);
                 socket.player.score = socket.player.score + val;
                 io.sockets.emit("alert", socket.player.name + "님 " + type + " 성공! +" + val + "점");
-                io.sockets.emit('players', {me:players.indexOf(socket.player),players:players});
+                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
                 if (highest.score > socket.player.score)
                     return;
                 updateHighest(socket.player);
@@ -87,12 +87,12 @@ module.exports = function (http) {
                 socket.player.score = socket.player.score + val;
                 if (socket.player.score < 0)
                     socket.player.score = 0;
-                io.sockets.emit('players', {me:players.indexOf(socket.player),players:players});
+                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
             }
 
             function calculateBonus(val) {
                 var now = new Date();
-                val = val + parseInt((now - start) / 10000) / 10;
+                val = Math.min(5, val + parseInt((now - start) / 10000) / 10);
                 start = now;
                 return val;
             }
@@ -101,7 +101,7 @@ module.exports = function (http) {
         function updateHighest(player) {
             highest = player;
             io.sockets.emit('highest', highest);
-            io.sockets.emit('players', {me:players.indexOf(socket.player),players:players});
+            io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
             io.sockets.emit("alert", player.name + "님이 " + player.score + "점으로 최고기록을 경신했습니다.");
         }
 
