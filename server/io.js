@@ -75,7 +75,6 @@ module.exports = function (http) {
                 var type = "결";
                 if (val == 1)
                     type = "합";
-                val = calculateBonus(val);
                 socket.player.score = socket.player.score + val;
                 io.sockets.emit("alert", socket.player.name + "님 " + type + " 성공! +" + val + "점");
                 io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
@@ -91,12 +90,6 @@ module.exports = function (http) {
                 io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
             }
 
-            function calculateBonus(val) {
-                var now = new Date();
-                val = Math.min(5, val + parseInt((now - start) / 10000) / 10);
-                start = now;
-                return val;
-            }
         }
 
         function updateHighest(player) {
