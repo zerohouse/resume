@@ -14,6 +14,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/",
             controller: "main",
             templateUrl: "/dist/main/main.html"
+        })
+        .state('check', {
+            url: "/check",
+            controller: "check",
+            templateUrl: "/dist/check/check.html"
         });
 
 });

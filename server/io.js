@@ -19,7 +19,6 @@ module.exports = function (http) {
     }
 
     io.on('connection', function (socket) {
-
         socket.player = {score: 0, name: ranname()};
         players.push(socket.player);
 
@@ -38,8 +37,10 @@ module.exports = function (http) {
             io.sockets.emit('game', send);
         }
 
-        send();
-        io.sockets.emit('highest', highest);
+        socket.on('get', function () {
+            send();
+            io.sockets.emit('highest', highest);
+        });
 
         socket.on('check', function (selects) {
             var done = game.check(selects);

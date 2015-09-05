@@ -7,6 +7,7 @@
 
     app.factory('alert', function () {
         var alert = function (message, success) {
+            console.log(message);
             var al = {alert: message, date: new Date(), success: success};
             scope.alerts.push(al);
             scope.alert = al;

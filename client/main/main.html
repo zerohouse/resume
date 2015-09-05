@@ -1,71 +1,10 @@
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i class="fa fa-question-circle"></i></a>
-                <small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>
-            </h1>
-        </div>
-    </div>
+    <h1 ui-sref="check">결합 게임</h1>
+</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="panel panel-primary">
-                <div class="panel-heading">결합</div>
-                <div class="panel-body wrap">
-                    <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
-                         ng-click="selectBlock(block)">
-                        <i class="fa" ng-class="shapes[block.shape]"></i>
-                        <span class="number">{{blocks.indexOf(block)+1}}</span>
-                        <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="btn-group-lg lg-group">
-                        <div class="btn btn-primary" ng-click="check()" ng-disabled="selects.length!=3">
-                            {{format.selects(selects)}} 합
-                        </div>
-                        <div class="btn btn-success" ng-click="done()">결</div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">이미 찾은 합</div>
-                <ul class="list-group">
-                    <li ng-repeat="each in discovered" class="list-group-item">{{format.discovered(each)}}</li>
-                </ul>
-            </div>
+<div class="container">
+    <p>parksungho86@gmail.com</p>
 
-            <div class="panel panel-primary">
-                <div class="panel-heading">플레이어</div>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-class="{'list-group-item-success':player.me}"
-                        ng-repeat="player in players | orderBy: 'score':true">
-                        {{player.name||"플레이어"}}
-                        <span class="badge">{{player.score||0}}</span>
-                    </li>
-                </ul>
-            </div>
-
-            <ul class="list-group">
-                <li class="list-group-item"
-                    ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}"
-                    ng-repeat="alert in alerts">{{alert.alert}}
-                    <small>{{alert.date.toString()}}</small>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="panel panel-primary">
-        <div class="panel-heading">규칙</div>
-        <ul class="list-group">
-            <li class="list-group-item">0점이하로는 떨어지지 않음</li>
-            <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
-            <li class="list-group-item">10초당 0.1점 보너스점수(최대 5점)</li>
-        </ul>
-    </div>
 
 </div>
