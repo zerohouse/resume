@@ -1,6 +1,6 @@
 var socket = io('/', {path: '/socket.io'});
 
-app.controller('main', function ($scope, $timeout) {
+app.controller('main', function ($scope, alert) {
 
     $scope.shapes = ['fa fa-bell', 'fa fa-star', 'fa fa-circle'];
     $scope.colors = ['#4337FD', '#FD3737', '#FDF737'];
@@ -88,17 +88,6 @@ app.controller('main', function ($scope, $timeout) {
         $scope.$apply();
     });
 
-    $scope.alerts = [];
-
-    function alert(alert, success) {
-        var al = {alert: alert, date: new Date(), success: success};
-        $scope.alerts.push(al);
-        $scope.alert = al;
-        $scope.showing = true;
-        if ($scope.alerts.length > 6)
-            $scope.alerts.remove($scope.alerts[0]);
-    }
-
     socket.on('alert', function (message) {
         alert(message, true);
     });
@@ -108,5 +97,6 @@ app.controller('main', function ($scope, $timeout) {
         $scope.$apply();
     });
 
+    $scope.alerts = alert.getAlerts();
 
 });
