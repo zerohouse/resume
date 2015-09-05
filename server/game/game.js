@@ -20,9 +20,9 @@ game.Block.random = function () {
 };
 
 game.Game = function () {
-    this.results = [];
     this.blocks = [];
     this.discovered = [];
+    this.results = [];
 };
 
 game.Game.prototype.done = function () {

@@ -99,4 +99,9 @@ app.controller('main', function ($scope, $timeout) {
         alert(message, true);
     });
 
+    socket.on('highest', function (highest) {
+        $scope.highest = highest;
+        $scope.$apply();
+    });
+
 });
