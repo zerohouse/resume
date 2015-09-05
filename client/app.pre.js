@@ -18,4 +18,26 @@ Array.prototype.toggle = function (item) {
     this.push(item);
 };
 
+Date.prototype.toAmPm = function () {
+    var hours = this.getHours();
+    var minutes = this.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    return hours + ':' + minutes + ampm;
+};
+
+Date.prototype.toString = function () {
+    var month = '' + (this.getMonth() + 1),
+        day = '' + this.getDate(),
+        year = this.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    var date = [year, month, day].join('.');
+    return date + " " + this.toAmPm();
+};
+
+
 var app = angular.module('resume', ['ui.router', 'ui.bootstrap']);

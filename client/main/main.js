@@ -1,10 +1,10 @@
 var socket = io('/', {path: '/socket.io'});
 
-app.controller('main', function ($scope) {
+app.controller('main', function ($scope, $timeout) {
 
-    $scope.shapes = ['fa fa-bell', 'fa fa-heart-o', 'fa fa-circle-o'];
-    $scope.colors = ['#FF0', '#F0F', '#0FF'];
-    $scope.backs = ['#00F', '#0F0', '#F00'];
+    $scope.shapes = ['fa fa-bell', 'fa fa-star', 'fa fa-circle'];
+    $scope.colors = ['#4337FD', '#FD3737', '#FDF737'];
+    $scope.backs = ['#000', '#888', '#FFF'];
 
     $scope.selects = [];
 
@@ -45,6 +45,8 @@ app.controller('main', function ($scope) {
     $scope.selects = [];
 
     $scope.check = function () {
+        if ($scope.selects.length != 3)
+            return;
         var selects = [];
         $scope.selects.forEach(function (block) {
             selects.push($scope.blocks.indexOf(block));
@@ -58,18 +60,18 @@ app.controller('main', function ($scope) {
 
     socket.on('check', function (success) {
         if (success) {
-            alert('합 성공');
+            alert('합 성공 +1점');
             return;
         }
-        alert('합 실패');
+        alert('합 실패 -1점');
     });
 
     socket.on('done', function (success) {
         if (success) {
-            alert('결 성공');
+            alert('결 성공 +3점');
             return;
         }
-        alert('결 실패');
+        alert('결 실패 -2점');
     });
 
     socket.on('game', function (send) {
@@ -84,9 +86,17 @@ app.controller('main', function ($scope) {
         $scope.$apply();
     });
 
-    $scope.$watch('name', function () {
-        socket.emit('player', $scope.name);
-    });
+    $scope.alerts = [];
 
+    function alert(alert) {
+        $scope.alerts.push({alert: alert, date: new Date()});
+        $timeout(function () {
+            $scope.alerts.remove($scope.alerts[0]);
+        }, 5000);
+    }
+
+    socket.on('alert', function (message) {
+        alert(message);
+    });
 
 });

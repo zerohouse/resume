@@ -1,28 +1,51 @@
 <div class="container">
-    <div class="row wrap">
-        <div ng-repeat="block in blocks" ng-style="style(block)" ng-click="selectBlock(block)">
-            <i class="fa" ng-class="shapes[block.shape]"></i>
-            <i ng-show="block.select" class="fa fa-check selected"></i>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>결합게임</h1>
         </div>
     </div>
 
-    <div>{{format.selects(selects)}}</div>
-
-
-    찾은거
-    <div ng-repeat="each in discovered">{{format.discovered(each)}}</div>
-
-    <div ng-click="check()">합</div>
-    <div ng-click="done()">결</div>
-
-    <input ng-model="name" placeholder="이름">
-
-    <div class="panel panel-primary">
-        <div class="panel-heading">선수들</div>
-        <div class="panel-body">
-            <div ng-repeat="player in players | orderBy: player.score">{{player.name||"이름없는 플레이어"}}
-                ({{player.score||0}})
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-primary">
+                <div class="panel-heading">결합</div>
+                <div class="panel-body wrap">
+                    <div ng-repeat="block in blocks" ng-style="style(block)" ng-click="selectBlock(block)">
+                        <i class="fa" ng-class="shapes[block.shape]"></i>
+                        <i ng-show="block.select" class="fa fa-check selected"></i>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="btn btn-danger" ng-show="selects.length>0">{{format.selects(selects)}}</div>
+                    <div class="btn btn-primary" ng-click="check()" ng-disabled="selects.length!=3">합</div>
+                    <div class="btn btn-success" ng-click="done()">결</div>
+                </div>
             </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">이미 찾은 합</div>
+                <ul class="list-group">
+                    <li ng-repeat="each in discovered" class="list-group-item">{{format.discovered(each)}}</li>
+                </ul>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">플레이어</div>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="player in players | orderBy: player.score">
+                        {{player.name||"플레이어"}}
+                        <span class="badge">{{player.score||0}}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-danger" ng-repeat="alert in alerts">{{alert.alert}}
+                    <small>{{alert.date.toString()}}</small>
+                </li>
+            </ul>
         </div>
     </div>
 
