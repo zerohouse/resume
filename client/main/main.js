@@ -60,7 +60,6 @@ app.controller('main', function ($scope, $timeout) {
 
     socket.on('check', function (success) {
         if (success) {
-            alert('합 성공 +1점');
             return;
         }
         alert('합 실패 -1점');
@@ -68,7 +67,6 @@ app.controller('main', function ($scope, $timeout) {
 
     socket.on('done', function (success) {
         if (success) {
-            alert('결 성공 +3점');
             return;
         }
         alert('결 실패 -2점');
@@ -88,15 +86,15 @@ app.controller('main', function ($scope, $timeout) {
 
     $scope.alerts = [];
 
-    function alert(alert) {
-        $scope.alerts.push({alert: alert, date: new Date()});
-        $timeout(function () {
+    function alert(alert, success) {
+        var al = {alert: alert, date: new Date(), success: success};
+        $scope.alerts.push(al);
+        if ($scope.alerts.length > 6)
             $scope.alerts.remove($scope.alerts[0]);
-        }, 5000);
     }
 
     socket.on('alert', function (message) {
-        alert(message);
+        alert(message, true);
     });
 
 });
