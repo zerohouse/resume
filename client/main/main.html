@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>결합!
+            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i class="fa fa-question-circle"></i></a>
                 <small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>
             </h1>
         </div>
@@ -19,9 +19,11 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">결합</div>
                 <div class="panel-body wrap">
-                    <div ng-repeat="block in blocks" ng-style="style(block)" ng-click="selectBlock(block)">
+                    <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
+                         ng-click="selectBlock(block)">
                         <i class="fa" ng-class="shapes[block.shape]"></i>
-                        <i ng-show="block.select" class="fa fa-check selected"></i>
+                        <span class="number">{{blocks.indexOf(block)+1}}</span>
+                        <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
                     </div>
                 </div>
                 <div class="panel-footer">
@@ -68,10 +70,7 @@
         <div class="panel-heading">규칙</div>
         <ul class="list-group">
             <li class="list-group-item">0점이하로는 떨어지지 않음</li>
-            <li class="list-group-item">결 = +3점</li>
-            <li class="list-group-item">결실패 = -2점</li>
-            <li class="list-group-item">합 = +1점</li>
-            <li class="list-group-item">합실패 = -1점</li>
+            <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
             <li class="list-group-item">10초당 0.1점 보너스점수(최대 5점)</li>
         </ul>
     </div>
