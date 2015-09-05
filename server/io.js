@@ -107,6 +107,10 @@ module.exports = function (http) {
         }
 
 
+        socket.on('chat', function (message) {
+            io.sockets.emit('chat', {message: message, from: socket.player.name});
+        });
+
         socket.on('disconnect', function () {
             players.remove(socket.player);
             updatePlayers();

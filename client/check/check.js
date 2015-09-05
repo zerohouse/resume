@@ -45,6 +45,14 @@
             scope.$apply();
         });
 
+        socket.on('chat', function (message) {
+            message.date = new Date();
+            scope.messages.push(message);
+            if (scope.messages.length > 8)
+                scope.messages.remove(scope.messages[0]);
+            scope.$apply();
+        });
+
         return socket;
     });
 
@@ -55,6 +63,7 @@
         $scope.backs = ['#000', '#888', '#FFF'];
 
         $scope.selects = [];
+        $scope.messages = [];
 
         $scope.format = {};
         $scope.format.selects = function (selects) {
@@ -111,6 +120,15 @@
             if (blocks == undefined)
                 socket.emit('get');
         });
+
+        $scope.send = function (message) {
+            if (message == undefined)
+                return;
+            if (message == '') {
+                return;
+            }
+            socket.emit('chat', message);
+        };
 
         $scope.alerts = alert.getAlerts();
 

@@ -1,11 +1,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i class="fa fa-question-circle"></i></a>
+            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
+                    class="fa fa-question-circle"></i></a>
                 <small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>
             </h1>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col-md-8">
@@ -31,6 +33,7 @@
         </div>
 
         <div class="col-md-4">
+
             <div class="panel panel-primary">
                 <div class="panel-heading">이미 찾은 합</div>
                 <ul class="list-group">
@@ -49,15 +52,34 @@
                 </ul>
             </div>
 
-            <ul class="list-group">
-                <li class="list-group-item"
-                    ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}"
-                    ng-repeat="alert in alerts">{{alert.alert}}
-                    <small>{{alert.date.toString()}}</small>
-                </li>
-            </ul>
+            <div class="panel panel-primary">
+                <div class="panel-heading">말하기</div>
+                <ul class="list-group">
+                    <li class="list-group-item"
+                        ng-repeat="message in messages">
+                        <div class="label label-default">{{message.from}}</div>
+                        {{message.message}}
+                        <div class="label label-success">{{message.date.toString()}}</div>
+                    </li>
+                </ul>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input class="form-control" ng-enter="send(message);message=''" ng-model="message">
+
+                        <div class="input-group-addon" ng-click="send(message);message=''">말하기</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <ul class="list-group">
+        <li class="list-group-item"
+            ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}"
+            ng-repeat="alert in alerts">{{alert.alert}}
+            <div class="label">{{alert.date.toString()}}</div>
+        </li>
+    </ul>
 
     <div class="panel panel-primary">
         <div class="panel-heading">규칙</div>
