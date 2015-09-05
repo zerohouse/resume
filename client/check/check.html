@@ -21,7 +21,7 @@
                         <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" ng-show="discovered.length>0">
                     <div>이미 찾은 합</div>
                     <span ng-repeat="each in discovered" style="margin-right:5px;" class="label label-default">{{format.discovered(each)}}</span>
                 </div>
