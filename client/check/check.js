@@ -1,8 +1,6 @@
 (function () {
-
     var scope;
-
-
+    var listScope;
     app.factory('socket', function (alert) {
         var socket = io('/', {path: '/socket.io'});
 
@@ -21,6 +19,7 @@
         socket.on('game', function (send) {
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
+            scope.players = send.players;
             if (scope.id == undefined) {
                 scope.id = send.id;
                 scope.players.forEach(function (player) {
@@ -30,6 +29,12 @@
             }
             scope.selects = [];
             scope.$apply();
+        });
+
+        socket.on('rooms', function (send) {
+            listScope.rooms = send.rooms;
+            listScope.highest = send.highest;
+            listScope.$apply();
         });
 
         socket.on('players', function (players) {
@@ -57,10 +62,44 @@
         return socket;
     });
 
-    app.controller('check', function ($scope, alert, socket) {
+    app.controller('list', function (socket, $scope, $state) {
+        socket.emit('getRooms');
+        listScope = $scope;
+
+        function ranName(length) {
+            var ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789";
+            var result = "";
+            for (var i = 0; i < length; i++)
+                result += ran[parseInt(Math.random() * ran.length)];
+            return result;
+        }
+
+        $scope.newGame = function () {
+            $state.go('check', {id: ranName(10)});
+        };
+        $scope.ranGame = function () {
+            if ($scope.rooms.length == 0) {
+                $scope.newGame();
+                return;
+            }
+            $state.go('check', {id: $scope.rooms[parseInt($scope.rooms.length * Math.random())].roomId});
+        };
+
+    });
+
+    app.controller('check', function ($scope, alert, socket, $stateParams) {
+        $scope.roomId = $stateParams.id;
+
+        $scope.$watch(function () {
+            return $stateParams.id
+        }, function (id) {
+            socket.emit('join', id);
+        });
+
         scope = $scope;
         $scope.shapes = ['fa fa-bell', 'fa fa-star', 'fa fa-circle'];
-        $scope.colors = ['#4337FD', '#FD3737', '#FDF737'];
+        $scope.colors = ['#4337FD', '#FD3737', '#FDD237'];
+
         $scope.backs = ['#000', '#888', '#FFF'];
 
         $scope.selects = [];
@@ -88,9 +127,18 @@
         $scope.selectBlock = function (block) {
             $scope.selects.toggle(block);
             block.select = !block.select;
+            $scope.already = false;
+            if ($scope.selects.length < 3)
+                return;
             if ($scope.selects.length > 3) {
                 $scope.selects.splice(0, 1)[0].select = false;
             }
+            var se = $scope.format.selects($scope.selects);
+            $scope.discovered.forEach(function (each) {
+                if ($scope.format.discovered(each) == se) {
+                    $scope.already = $scope.discovered.indexOf(each);
+                }
+            });
         };
 
         $scope.style = function (block) {
@@ -105,6 +153,8 @@
 
         $scope.check = function () {
             if ($scope.selects.length != 3)
+                return;
+            if ($scope.already !== false)
                 return;
             var selects = [];
             $scope.selects.forEach(function (block) {
@@ -132,7 +182,6 @@
         };
 
         $scope.alerts = alert.getAlerts();
-
     });
 
 

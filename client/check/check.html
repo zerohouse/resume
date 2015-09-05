@@ -1,6 +1,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <div class="label label-info"> Room Id : {{roomId}}</div>
+
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
                 <small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>
@@ -23,11 +25,13 @@
                 </div>
                 <div class="panel-body" ng-show="discovered.length>0">
                     <div>이미 찾은 합</div>
-                    <span ng-repeat="each in discovered" style="margin-right:5px;" class="btn btn-success">{{format.discovered(each)}}</span>
+                    <span ng-repeat="each in discovered" style="margin-right:5px;" class="btn btn-success"
+                          ng-class="{'btn-danger':discovered.indexOf(each) === already}">{{format.discovered(each)}}</span>
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group-lg lg-group">
-                        <div class="btn btn-primary" ng-click="check()" ng-disabled="selects.length!=3">
+                        <div class="btn btn-primary" ng-click="check()"
+                             ng-disabled="selects.length!=3 || already!==false">
                             {{format.selects(selects)}} 합
                         </div>
                         <div class="btn btn-success" ng-click="done()">결</div>
@@ -85,6 +89,10 @@
             <li class="list-group-item">남은 합이 없으면 -> 결</li>
             <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
             <li class="list-group-item">0점이하로는 떨어지지 않음</li>
+
+            <li class="list-group-item">[TODO] 방나누기</li>
+            <li class="list-group-item">[TODO] 레벨링</li>
+            <li class="list-group-item">[TODO] 딜레이주기</li>
         </ul>
     </div>
 

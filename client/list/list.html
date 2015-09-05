@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
+                    class="fa fa-question-circle"></i></a>
+                <!--<small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>-->
+            </h1>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">방목록</div>
+                <ul class="list-group">
+                    <li class="list-group-item" ui-sref="check({id:room.roomId})" ng-repeat="room in rooms">
+                        {{room.roomId}}<span class="badge">{{room.players}}</span>
+                    </li>
+                    <li class="list-group-item" ng-click="newGame()">
+                        새 게임 만들기 <i class="fa fa-plus"></i>
+                    </li>
+                    <li class="list-group-item" ng-click="ranGame()">
+                        아무 게임 들어가기 <i class="fa fa-random"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">최고 기록자</div>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="(key,highest) in highest | orderBy:'score':true">
+                        {{highest.name}}님 <span
+                            class="label label-info">{{highest.score}}</span>점 <span
+                            class="badge">{{key}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
