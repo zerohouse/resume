@@ -95,7 +95,6 @@ module.exports = function (http) {
                 start = now;
                 return val;
             }
-
         }
 
         function updateHighest(player) {
