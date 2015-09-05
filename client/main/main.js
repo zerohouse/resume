@@ -79,8 +79,12 @@ app.controller('main', function ($scope, $timeout) {
         $scope.$apply();
     });
 
-    socket.on('players', function (players) {
-        $scope.players = players;
+    socket.on('players', function (send) {
+        $scope.players = send.players;
+        $scope.players[send.me].me = true;
+        if ($scope.me == undefined)
+            alert("나는 " + $scope.players[send.me].name + " 입니다.");
+        $scope.me = $scope.players[send.me];
         $scope.$apply();
     });
 
@@ -103,5 +107,6 @@ app.controller('main', function ($scope, $timeout) {
         $scope.highest = highest;
         $scope.$apply();
     });
+
 
 });

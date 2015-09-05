@@ -43,7 +43,8 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">플레이어</div>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="player in players | orderBy: player.score">
+                    <li class="list-group-item" ng-class="{'list-group-item-success':player.me}"
+                        ng-repeat="player in players | orderBy: 'score':true">
                         {{player.name||"플레이어"}}
                         <span class="badge">{{player.score||0}}</span>
                     </li>
