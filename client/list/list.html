@@ -31,9 +31,10 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">최고 기록자</div>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="(key,highest) in highest | orderBy:'score':true">
-                        {{highest.name}}님 <span
-                            class="label label-info">{{highest.score}}</span>점 <span
+                    <li ng-show="h.name" class="list-group-item"
+                        ng-repeat="(key,h) in highest | orderBy:'score':true">
+                        {{h.name}}님 <span
+                            class="label label-info">{{h.score}}</span>점 <span
                             class="badge">{{key}}</span>
                     </li>
                 </ul>

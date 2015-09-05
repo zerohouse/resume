@@ -14,7 +14,8 @@
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-primary">
-                <div class="panel-heading">결합</div>
+                <div class="panel-heading">결합 <span class="badge pull-right" ng-click="resetShapes()"><i
+                        class="fa fa-refresh"></i></span></div>
                 <div class="panel-body wrap">
                     <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
                          ng-click="selectBlock(block)">
@@ -89,10 +90,9 @@
             <li class="list-group-item">남은 합이 없으면 -> 결</li>
             <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
             <li class="list-group-item">0점이하로는 떨어지지 않음</li>
+            <li class="list-group-item">각 합과 결에서 자신을 제외한 나머지 플레이어의 점수 * 0.02점 보너스를 받음</li>
 
-            <li class="list-group-item">[TODO] 방나누기</li>
             <li class="list-group-item">[TODO] 레벨링</li>
-            <li class="list-group-item">[TODO] 딜레이주기</li>
         </ul>
     </div>
 

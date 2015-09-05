@@ -17,6 +17,7 @@
         });
 
         socket.on('game', function (send) {
+            scope.resetShapes();
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
             scope.players = send.players;
@@ -29,6 +30,7 @@
             }
             scope.selects = [];
             scope.$apply();
+
         });
 
         socket.on('rooms', function (send) {
@@ -90,6 +92,14 @@
     app.controller('check', function ($scope, alert, socket, $stateParams) {
         $scope.roomId = $stateParams.id;
 
+        $scope.resetShapes = function(){
+            $scope.shapes = [];
+            var shapes = ['fa-umbrella', 'fa-heart', 'fa-phone', 'fa-plus', 'fa-caret-up', 'fa-bell', 'fa-star', 'fa-circle'];
+            for (var i = 0; i < 3; i++) {
+                $scope.shapes[i] = "fa " + shapes.splice(parseInt(Math.random() * shapes.length), 1);
+            }
+        };
+
         $scope.$watch(function () {
             return $stateParams.id
         }, function (id) {
@@ -97,7 +107,8 @@
         });
 
         scope = $scope;
-        $scope.shapes = ['fa fa-bell', 'fa fa-star', 'fa fa-circle'];
+
+
         $scope.colors = ['#4337FD', '#FD3737', '#FDD237'];
 
         $scope.backs = ['#000', '#888', '#FFF'];
