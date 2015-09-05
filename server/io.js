@@ -19,13 +19,14 @@ module.exports = function (http) {
     }
 
     io.on('connection', function (socket) {
-        socket.player = {score: 0, name: ranname()};
+        socket.player = {score: 0, name: ranname(), id: socket.id};
         players.push(socket.player);
 
         function send() {
             var send = {};
             send.blocks = game.blocks;
             send.discovered = game.discovered;
+            send.id = socket.id;
             updatePlayers();
             socket.emit('game', send);
         }
@@ -36,7 +37,6 @@ module.exports = function (http) {
             send.discovered = game.discovered;
             io.sockets.emit('game', send);
         }
-
         socket.on('get', function () {
             send();
             io.sockets.emit('highest', highest);
@@ -68,26 +68,27 @@ module.exports = function (http) {
 
         function updatePlayers(val) {
             if (!val) {
-                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
+                io.sockets.emit('players', players);
                 return;
             }
+            var type = "결";
+            if (Math.abs(val) == 1)
+                type = "합";
             if (val > 0) {
-                var type = "결";
-                if (val == 1)
-                    type = "합";
                 socket.player.score = socket.player.score + val;
-                io.sockets.emit("alert", socket.player.name + "님 " + type + " 성공! +" + val + "점");
-                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
+                io.sockets.emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
+                io.sockets.emit('players', players);
                 if (highest.score > socket.player.score)
                     return;
                 updateHighest(socket.player);
             }
 
             else {
+                io.sockets.emit("alert", new Message(socket.player.name + "님 " + type + " 실패! " + val + "점", true));
                 socket.player.score = socket.player.score + val;
                 if (socket.player.score < 0)
                     socket.player.score = 0;
-                io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
+                io.sockets.emit('players', players);
             }
 
         }
@@ -95,8 +96,13 @@ module.exports = function (http) {
         function updateHighest(player) {
             highest = player;
             io.sockets.emit('highest', highest);
-            io.sockets.emit('players', {me: players.indexOf(socket.player), players: players});
-            io.sockets.emit("alert", player.name + "님이 " + player.score + "점으로 최고기록을 경신했습니다.");
+            io.sockets.emit('players', players);
+            io.sockets.emit("alert", new Message(player.name + "님이 " + player.score + "점으로 최고기록을 경신했습니다."));
+        }
+
+        function Message(message, fail) {
+            this.message = message;
+            this.fail = fail;
         }
 
 

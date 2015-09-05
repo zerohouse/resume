@@ -10,34 +10,35 @@
             if (success) {
                 return;
             }
-            alert('합 실패 -1점');
         });
 
         socket.on('done', function (success) {
             if (success) {
                 return;
             }
-            alert('결 실패 -2점');
         });
 
         socket.on('game', function (send) {
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
+            if (scope.id == undefined) {
+                scope.id = send.id;
+                scope.players.forEach(function (player) {
+                    if (player.id == scope.id)
+                        alert("나는 " + player.name + " 입니다.");
+                });
+            }
             scope.selects = [];
             scope.$apply();
         });
 
-        socket.on('players', function (send) {
-            scope.players = send.players;
-            scope.players[send.me].me = true;
-            if (scope.me == undefined)
-                alert("나는 " + scope.players[send.me].name + " 입니다.");
-            scope.me = scope.players[send.me];
+        socket.on('players', function (players) {
+            scope.players = players;
             scope.$apply();
         });
 
         socket.on('alert', function (message) {
-            alert(message, true);
+            alert(message.message, !message.fail);
         });
 
         socket.on('highest', function (highest) {

@@ -5,8 +5,12 @@
         $scope.alerts = [];
     });
 
-    app.factory('alert', function () {
+    app.factory('alert', function ($timeout) {
         var alert = function (message, success) {
+            $timeout.cancel(this.hide);
+            this.hide = $timeout(function () {
+                scope.showing = false;
+            }, 1500);
             var al = {alert: message, date: new Date(), success: success};
             scope.alerts.push(al);
             scope.alert = al;

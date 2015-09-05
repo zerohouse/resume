@@ -52,8 +52,8 @@
         </div>
     </div>
 </nav>
-<div class="alert-window" ng-show="showing" ng-click="showing=false" ng-controller="alert">
-    <div class="message alert"
+<div class="alert-window" ng-controller="alert" ng-show="showing">
+    <div class="message alert" ng-click="showing=!showing"
          ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}">
         {{alert.alert}}
         <small>{{alert.date.toString()}}</small>
