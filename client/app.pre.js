@@ -47,5 +47,9 @@ Date.prototype.toString = function () {
     return date + " " + this.toAmPm();
 };
 
+String.prototype.newLine = function () {
+    return this.replace(/\n/g, '<br>');
+};
 
-var app = angular.module('resume', ['ui.router', 'ui.bootstrap']);
+
+var app = angular.module('resume', ['ui.router', 'ui.bootstrap', 'ngSanitize']);

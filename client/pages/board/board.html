@@ -34,7 +34,7 @@
                                                                ng-click="delete(article)"></i>
 
         <div>{{article.date.toDateString()}}</div>
-        <p>{{article.text}}</p>
+        <p ng-bind-html="article.text.newLine()"></p>
     </div>
 
     <div ng-show="info.page * info.limit == articles.length" class="alert alert-info" style="text-align:center"
