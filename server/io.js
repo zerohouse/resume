@@ -148,7 +148,7 @@ module.exports = function (http, store, db) {
                         return;
                     sum += player.score;
                 });
-                socket.player.score = socket.player.score + val + Math.max(10, parseInt(sum * 0.2) / 10);
+                socket.player.score = socket.player.score + val + Math.min(10, parseInt(sum * 0.2) / 10);
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 updateHighest(socket.player);
