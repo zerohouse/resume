@@ -6,9 +6,12 @@ app.use(function (req, res, next) {
     res.charset = "utf-8";
     next();
 });
-require('./utils/parse.js');
+app.http = require('http').Server(app);
+require('./utils/parse.js')(app);
 require('./utils/upload.js')(app);
-require('./utils/session.js')(app);
-require('./route/route.js')(app, logger);
+var store = require('./utils/session.js')(app);
+var db = require('./db/db.js');
+require('./route/route.js')(app, logger, store, db);
+require('./io.js')(app.http, store, db);
 
 module.exports = app;

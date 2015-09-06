@@ -2,9 +2,13 @@
     <div class="row">
         <div class="col-md-12">
 
-            <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
+            <h2>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
-                <!--<small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>-->
+            </h2>
+
+            <h1>
+                <small>최고 점수</small>
+                {{best.name}}님 {{best.score}}점
             </h1>
 
         </div>
@@ -32,10 +36,9 @@
                 <div class="panel-heading">최고 기록자</div>
                 <ul class="list-group">
                     <li ng-show="h.name" class="list-group-item"
-                        ng-repeat="(key,h) in highest | orderBy:'score':true">
+                        ng-repeat="h in highest | orderBy:'score':true">
                         {{h.name}}님 <span
-                            class="label label-info">{{h.score}}</span>점 <span
-                            class="badge">{{key}}</span>
+                            class="label label-info">{{h.score}}</span>점
                     </li>
                 </ul>
             </div>

@@ -1,13 +1,21 @@
 var g = require('./game/game.js');
-
-
-module.exports = function (http) {
-
+module.exports = function (http, store, db) {
     var io = require('socket.io')(http);
+    io.use(require('./io.session.js')(store));
 
     var game = {};
     var players = {};
-    var highest = {};
+    var best = {score: 0};
+    var highest = [];
+    db.Record.findOne({type: 'best'}, function (err, result) {
+        if (!err && result != undefined)
+            best = result.record;
+    });
+    db.Record.findOne({type: 'highest'}, function (err, result) {
+        if (!err && result != undefined)
+            highest = result.record;
+    });
+
 
     function ranname() {
         var names = [
@@ -18,12 +26,39 @@ module.exports = function (http) {
     }
 
     io.on('connection', function (socket) {
-        socket.player = {score: 0, name: ranname(), id: socket.id};
+        function userUpdate() {
+            if (socket.session.user == undefined)
+                return;
+            store.set(socket.sid, socket.session);
+            db.User.update({email: socket.player.email}, socket.player, function (er, res) {
+            });
+        }
+
+        playerSetting();
+
+        function playerSetting() {
+            if (socket.session.user) {
+                socket.player = socket.session.user;
+                socket.player.id = socket.session.user.email;
+                if (isNaN(socket.player.score))
+                    socket.player.score = 0;
+                if (!socket.player.name)
+                    socket.player.name = ranname();
+                userUpdate();
+            }
+            else
+                socket.player = {
+                    score: 0,
+                    name: ranname(),
+                    id: socket.id
+                };
+        }
 
         socket.on('getRooms', function () {
             var send = {};
             send.rooms = [];
             send.highest = highest;
+            send.best = best;
             Object.keys(game).forEach(function (roomId) {
                 if (players[roomId].length == 0) {
                     gameEnd(roomId);
@@ -53,7 +88,6 @@ module.exports = function (http) {
                     return;
                 game[vid] = g.newGame();
                 players[vid] = [];
-                highest[vid] = {score: 0};
             }
         });
 
@@ -80,7 +114,6 @@ module.exports = function (http) {
 
         socket.on('get', function () {
             send();
-            io.to(socket.roomId).emit('highest', highest[socket.roomId]);
         });
 
         socket.on('check', function (selects) {
@@ -96,6 +129,7 @@ module.exports = function (http) {
                 updatePlayers(-1);
                 return;
             }
+            socket.last = new Date() + 1500;
             updatePlayers(1);
             sendToAll();
         });
@@ -130,31 +164,61 @@ module.exports = function (http) {
                 players[socket.roomId].forEach(function (player) {
                     if (socket.id == player.id)
                         return;
+                    if (socket.player.email == player.email)
+                        return;
                     sum += player.score;
                 });
-                socket.player.score = socket.player.score + val + parseInt(sum * 0.5) / 10;
+                socket.player.score = Math.max(10, socket.player.score + val + parseInt(sum * 0.2) / 10);
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
-                if (highest[socket.roomId] != undefined && highest[socket.roomId].score > socket.player.score)
-                    return;
                 updateHighest(socket.player);
+                userUpdate();
             }
             else {
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 실패! " + val + "점", true));
                 socket.player.score = socket.player.score + val;
                 if (socket.player.score < 0)
                     socket.player.score = 0;
+                userUpdate();
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
             }
 
         }
 
-        function updateHighest(player) {
-            highest[socket.roomId] = player;
-            io.to(socket.roomId).emit('highest', highest[socket.roomId]);
-            io.to(socket.roomId).emit('players', players[socket.roomId]);
-            io.to(socket.roomId).emit("alert", new Message(player.name + "님이 " + player.score + "점으로 최고기록을 경신했습니다."));
+        function updateHighest(p) {
+            if (!changeIfHigh(p))
+                return;
+            io.sockets.emit('alert', new Message(socket.roomId + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
+            db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
+            });
+            if (best.score < p.score) {
+                best.score = p.score;
+                best.name = p.name;
+                io.sockets.emit('alert', new Message(socket.roomId + "방의 " + p.name + "님 " + p.score + "점으로 최고 기록을 경신하셨습니다."));
+                db.Record.update({type: 'best'}, {record: best}, {upsert: true}, function (e, r) {
+                });
+            }
+
+            function changeIfHigh(p) {
+                for (var i = 0; i < highest.length; i++) {
+                    if (highest[i].id == p.id)
+                        return false;
+                }
+                for (var j = 0; j < 10; j++) {
+                    if (highest[j] == undefined) {
+                        highest[j] = p;
+                        return true;
+                    }
+                    if (highest[j].score < p.score) {
+                        highest[j] = p;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         }
+
 
         function Message(message, fail) {
             this.message = message;
@@ -180,7 +244,6 @@ module.exports = function (http) {
             gameEnd(socket.roomId);
         });
 
-
         function gameEnd(vid) {
             if (game[vid] == undefined)
                 return;
@@ -188,12 +251,7 @@ module.exports = function (http) {
             delete game[vid];
             players[vid] = undefined;
             delete players[vid];
-            if (highest[vid].score == 0) {
-                highest[vid] = undefined;
-                delete players[vid];
-            }
         }
-
     });
 
 };

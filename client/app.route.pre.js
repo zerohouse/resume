@@ -13,17 +13,22 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('main', {
             url: "/",
             controller: "main",
-            templateUrl: "/dist/main/main.html"
+            templateUrl: "/dist/pages/main/main.html"
         })
         .state('list', {
             url: "/check",
             controller: "list",
-            templateUrl: "/dist/list/list.html"
+            templateUrl: "/dist/pages/list/list.html"
         })
         .state('check', {
             url: "/check/:id",
             controller: "check",
-            templateUrl: "/dist/check/check.html"
+            templateUrl: "/dist/pages/check/check.html"
+        })
+        .state('profile', {
+            url: "/profile",
+            controller: "profile",
+            templateUrl: "/dist/pages/profile/profile.html"
         });
 
 });

@@ -121,44 +121,6 @@ module.exports = function (grunt) {
     };
 
 
-    config.concat.route = {
-        src: [
-            'server/route/scripts/**/*.pre.js',
-            'server/route/scripts/**/*.js',
-            'server/route/scripts/**/*.post.js'
-        ],
-        dest: 'server/route/route.js'
-    };
-
-    config.watch.route = {
-        files: [
-            'server/route/scripts/**/*.js'
-        ],
-        tasks: ['concat:route'],
-        options: {
-            interrupt: true
-        }
-    };
-
-    config.concat.db = {
-        src: [
-            'server/route/scripts/**/*.pre.js',
-            'server/route/scripts/**/*.js',
-            'server/route/scripts/**/*.post.js'
-        ],
-        dest: 'server/db/db.js'
-    };
-
-    config.watch.db = {
-        files: [
-            'server/db/scripts/**/*.js'
-        ],
-        tasks: ['concat:db'],
-        options: {
-            interrupt: true
-        }
-    };
-
     config.watch.serverTest = {
         files: [
             'server/**/*_test.js'

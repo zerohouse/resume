@@ -1,6 +1,5 @@
 module.exports = function (app) {
     var session = require('express-session'),
-//cookie = require('cookie'),
         sessionStore = new session.MemoryStore(),
         cookieParser = require('cookie-parser'),
         COOKIE_SECRET = 'secret',
@@ -20,4 +19,6 @@ module.exports = function (app) {
             maxAge: null
         }
     }));
+
+    return sessionStore;
 };

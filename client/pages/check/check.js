@@ -37,6 +37,7 @@
         socket.on('rooms', function (send) {
             listScope.rooms = send.rooms;
             listScope.highest = send.highest;
+            listScope.best = send.best;
             listScope.$apply();
         });
 
@@ -49,10 +50,6 @@
             alert(message.message, !message.fail);
         });
 
-        socket.on('highest', function (highest) {
-            scope.highest = highest;
-            scope.$apply();
-        });
 
         socket.on('chat', function (message) {
             message.date = new Date();
@@ -68,6 +65,7 @@
     app.controller('list', function (socket, $scope, $state) {
         socket.emit('getRooms');
         listScope = $scope;
+
 
         function ranName(length) {
             var ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789";
@@ -90,12 +88,26 @@
 
     });
 
-    app.controller('check', function ($scope, alert, socket, $stateParams) {
+    app.controller('check', function ($scope, alert, socket, $stateParams, user) {
+        $scope.id = user.email;
         $scope.roomId = $stateParams.id;
+
+
+        $scope.$watch('orderedPlayers[0]', function (p) {
+            if (p == undefined)
+                return;
+            if (p.score == 0)
+                return;
+            if (this.order != undefined && p.id == this.order.id)
+                return;
+            this.order = p;
+            alert(p.name + "님이 " + p.score + "점으로 " + "방 1위에 올랐습니다.");
+        });
+
 
         $scope.resetShapes = function () {
             $scope.shapes = [];
-            var shapes = ['fa-umbrella', 'fa-heart', 'fa-phone', 'fa-plus', 'fa-caret-up', 'fa-bell', 'fa-star', 'fa-circle'];
+            var shapes = ['fa-umbrella', 'fa-heart', 'fa-phone', 'fa-plus', 'fa-bell', 'fa-star', 'fa-circle'];
             for (var i = 0; i < 3; i++) {
                 $scope.shapes[i] = "fa " + shapes.splice(parseInt(Math.random() * shapes.length), 1);
             }

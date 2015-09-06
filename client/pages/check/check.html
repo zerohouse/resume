@@ -5,7 +5,8 @@
 
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
-                <small ng-show="highest.name"> 현재 1위 : {{highest.name}} ({{highest.score}})</small>
+                <small ng-show="orderedPlayers[0].name"> 방 1위 : {{orderedPlayers[0].name}} ({{orderedPlayers[0].score}})
+                </small>
             </h1>
         </div>
     </div>
@@ -47,7 +48,7 @@
                 <div class="panel-heading">플레이어</div>
                 <ul class="list-group">
                     <li class="list-group-item" ng-class="{'list-group-item-success':player.id == id}"
-                        ng-repeat="player in players | orderBy: 'score':true">
+                        ng-repeat="player in orderedPlayers = (players | orderBy: 'score':true)">
                         {{player.name||"플레이어"}}
                         <span class="badge">{{player.score||0}}</span>
                     </li>
@@ -90,7 +91,7 @@
             <li class="list-group-item">남은 합이 없으면 -> 결</li>
             <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
             <li class="list-group-item">0점이하로는 떨어지지 않음</li>
-            <li class="list-group-item">각 합과 결에서 자신을 제외한 나머지 플레이어의 점수 * 0.05점 보너스를 받음</li>
+            <li class="list-group-item">각 합과 결에서 자신을 제외한 나머지 플레이어의 점수 * 0.02점 보너스를 받음(최대 10점)</li>
             <li class="list-group-item">1.5초간 딜레이</li>
 
             <li class="list-group-item">[TODO] 레벨링</li>
