@@ -77,7 +77,6 @@ module.exports = function (http, store, db) {
             send.blocks = game[socket.roomId].blocks;
             send.name = game[socket.roomId].name;
             send.discovered = game[socket.roomId].discovered;
-            send.id = socket.id;
             send.reset = true;
             send.players = players[socket.roomId];
             updatePlayers();
@@ -87,6 +86,7 @@ module.exports = function (http, store, db) {
         function sendToAll(reset) {
             var send = {};
             send.blocks = game[socket.roomId].blocks;
+            send.name = game[socket.roomId].name;
             send.discovered = game[socket.roomId].discovered;
             send.players = players[socket.roomId];
             send.reset = reset;
@@ -134,6 +134,7 @@ module.exports = function (http, store, db) {
         });
 
         function updatePlayers(val) {
+            val = socket.player.booster * val;
             if (!val) {
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 return;
@@ -144,13 +145,14 @@ module.exports = function (http, store, db) {
             if (val > 0) {
                 var sum = 0;
                 players[socket.roomId].forEach(function (player) {
-                    if (socket.id == player.id)
-                        return;
-                    if (socket.player.email == player.email)
+                    if (socket.player == player)
                         return;
                     sum += player.score;
                 });
-                socket.player.score = socket.player.score + val + Math.min(10, parseInt(sum * 0.2) / 10);
+                var bonus = Math.min(3, Math.ceil(sum * 0.01));
+                if (bonus == 0)
+                    bonus = 1;
+                socket.player.score = socket.player.score + val * bonus;
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 updateHighest(socket.player);
@@ -184,8 +186,10 @@ module.exports = function (http, store, db) {
 
 
             function changeIfHigh(p) {
+                if (p.email == undefined)
+                    return;
                 for (var i = 0; i < highest.length; i++) {
-                    if (highest[i].id == p.id)
+                    if (highest[i].email == p.email)
                         return false;
                 }
                 for (var j = 0; j < 10; j++) {
@@ -242,6 +246,27 @@ module.exports = function (http, store, db) {
             db.User.update({email: user.email}, user, {}, function (e, r) {
                 socket.emit("alert", new Message('정보 변경되었습니다.'));
             });
+        });
+
+        socket.on('steampack', function (i) {
+            var steam = [{point: 15, booster: 2, timeout: 30000}, {point: 30, booster: 4, timeout: 30000}, {
+                point: 150,
+                booster: 10,
+                timeout: 60000
+            }];
+            if (socket.player.booster != 1)
+                return;
+            if (socket.player.score < steam[i].point)
+                return;
+            socket.emit('steamstart', i);
+            socket.player.score = socket.player.score - steam[i].point;
+            socket.player.booster = steam[i].booster;
+            userUpdate();
+            io.to(socket.roomId).emit('players', players[socket.roomId]);
+            setTimeout(function () {
+                socket.player.booster = 1;
+                socket.emit('steamend', i);
+            }, steam[i].timeout);
         });
 
     });

@@ -8,6 +8,7 @@
                     class="fa fa-question-circle"></i></a>
                 <small ng-show="orderedPlayers[0].name"> 방 1위 : {{orderedPlayers[0].name}} ({{orderedPlayers[0].score}})
                 </small>
+                <span ng-show="steam">{{time}}</span>
             </h1>
         </div>
     </div>
@@ -47,12 +48,31 @@
         <div class="col-md-4">
 
             <div class="panel panel-primary">
+                <div class="panel-heading">스팀팩</div>
+                <ul class="list-group">
+                    <li ng-class="{opacity:player.score<15 ||steam}" class="list-group-item" ng-click="steampack(0)">
+                        <div>헉헉(15Point)</div>
+                        <div class="label label-info"> 30초간 증가/감소하는 점수가 2배가 됩니다.</div>
+                    </li>
+                    <li class="list-group-item" ng-click="steampack(1)" ng-class="{opacity:player.score<30||steam}">
+                        <div>하악하악(30Point)</div>
+                        <div class="label label-success"> 30초간 증가/감소하는 점수가 4배가 됩니다.</div>
+                    </li>
+                    <li class="list-group-item" ng-click="steampack(2)" ng-class="{opacity:player.score<150||steam}">
+                        <div>부와아악(150Point)</div>
+                        <div class="label label-danger"> 60초간 증가/감소하는 점수가 10배가 됩니다.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel panel-primary">
                 <div class="panel-heading">플레이어</div>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-class="{'list-group-item-success':player.id == id}"
-                        ng-repeat="player in orderedPlayers = (players | orderBy: 'score':true)">
-                        {{player.name||"플레이어"}}
-                        <span class="badge">{{player.score||0}}</span>
+                    <li class="list-group-item"
+                        ng-class="{'list-group-item-success':player == p}"
+                        ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
+                        {{p.name||"플레이어"}}
+                        <span class="badge">{{p.score||0}}</span>
                     </li>
                 </ul>
             </div>
@@ -92,11 +112,13 @@
             <li class="list-group-item">도형모양, 도형색, 배경색이 모두 같거나 모두 다른 3개 -> 합</li>
             <li class="list-group-item">남은 합이 없으면 -> 결</li>
             <li class="list-group-item">결성공 = +3점 / 결실패 = -2점 / 합성공 = +1점 / 합실패 = -1점</li>
+            <li class="list-group-item">나를 제외한 이방의 모든 플레이어의 점수 총합 * 0.01만큼 보너스 점수를 받습니다.최대(3)</li>
             <li class="list-group-item">0점이하로는 떨어지지 않음</li>
-            <li class="list-group-item">각 합과 결에서 자신을 제외한 나머지 플레이어의 점수 * 0.02점 보너스를 받음(최대 10점)</li>
             <li class="list-group-item">1.5초간 딜레이</li>
-
-            <li class="list-group-item">[TODO] 레벨링</li>
+            <li class="list-group-item">가입해야 통합순위에 기록됩니다.</li>
+            <li class="list-group-item">가입하면 별명 바꿀 수 있습니다.</li>
+            <li class="list-group-item">비밀번호는 못찾습니다. 메일인증을 개발할생각.</li>
+            <li class="list-group-item">게시판에 버그나 고칠부분 알려주세요</li>
         </ul>
     </div>
 

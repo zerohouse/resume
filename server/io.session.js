@@ -41,12 +41,13 @@ module.exports = function (store) {
                 }
                 else {
                     socket.player = session.user;
-                    socket.player.id = session.user.email;
+                    socket.player.email = session.user.email;
                     if (isNaN(socket.player.score))
                         socket.player.score = 0;
                     if (!socket.player.name)
                         socket.player.name = ranname();
                 }
+                socket.player.booster = 1;
                 next();
             });
         } catch (err) {

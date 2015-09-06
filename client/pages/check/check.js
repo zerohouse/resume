@@ -4,10 +4,21 @@
     app.factory('socket', function (alert, user) {
         var socket = io('/', {path: '/socket.io'});
 
+
         socket.on('check', function (success) {
             if (success) {
                 return;
             }
+        });
+
+        socket.on('steamstart', function (i) {
+            var val = 30000;
+            if (i == 2)
+                val = 60000;
+            scope.steamstart(val);
+        });
+        socket.on('steamend', function () {
+            scope.steamend();
         });
 
         socket.on('done', function (success) {
@@ -23,14 +34,12 @@
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
             scope.players = send.players;
-            if (scope.id == undefined) {
-                scope.id = send.id;
-                scope.players.forEach(function (player) {
-                    if (player.id == scope.id) {
-                        alert("나는 " + player.name + " 입니다.");
-                    }
-                });
-            }
+            send.players.forEach(function (player) {
+                if (player.email == user.email || player.id == user.id) {
+                    scope.player = player;
+                }
+            });
+
             scope.selects = [];
             scope.$apply();
 
@@ -45,6 +54,10 @@
 
         socket.on('players', function (players) {
             scope.players = players;
+            players.forEach(function (player) {
+                if (player.email == user.email || player.id == user.id)
+                    scope.player = player;
+            });
             scope.$apply();
         });
 
@@ -61,7 +74,6 @@
     });
 
     app.controller('list', function (socket, $scope, $state) {
-
 
         socket.emit('getRooms');
         listScope = $scope;
@@ -89,6 +101,45 @@
     });
 
     app.controller('check', function ($scope, alert, socket, $stateParams, user) {
+        $scope.steamstart = function (val) {
+            document.querySelector('body').classList.add('steam');
+            $scope.steam = true;
+
+            var start;
+            window.requestAnimationFrame(startTimer);
+            function startTimer(tick) {
+                if (!start)
+                    start = val + tick;
+                $scope.time = parseInt((start - tick) / 100) / 10;
+                $scope.$apply();
+                if ($scope.time > 0 && $scope.steam)
+                    window.requestAnimationFrame(startTimer);
+            }
+        };
+
+        $scope.steamend = function () {
+            document.querySelector('body').classList.remove('steam');
+            $scope.steam = false;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        };
+
+        $scope.steampack = function (i) {
+            var require = [15, 30, 150];
+            if (scope.steam)
+                return;
+            if (scope.player.score < require[i])
+                return;
+            var alerts = [
+                "15포인트를 소모하여 30초간 증가/감소하는 점수가 2배가 됩니다.",
+                "30포인트를 소모하여 30초간 증가/감소하는 점수가 4배가 됩니다.",
+                "150포인트를 소모하여 60초간 증가/감소하는 점수가 10배가 됩니다."]
+            if (!confirm(alerts[i]))
+                return;
+            socket.emit('steampack', i);
+        };
+
         $scope.id = user.email;
         $scope.roomId = $stateParams.id;
 

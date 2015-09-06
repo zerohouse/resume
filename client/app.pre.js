@@ -18,6 +18,14 @@ Array.prototype.toggle = function (item) {
     this.push(item);
 };
 
+String.prototype.toDateString = function () {
+    return new Date(this.toString()).toString();
+};
+Date.prototype.toDateString = function () {
+    return this.toString();
+};
+
+
 Date.prototype.toAmPm = function () {
     var hours = this.getHours();
     var minutes = this.getMinutes();

@@ -20,5 +20,9 @@ db.Record = mongoose.model('record', mongoose.Schema({
     record: Object
 }));
 
+db.Article = mongoose.model('article', mongoose.Schema({
+    type: String, align: String, user: Object, date: String, text: String
+}));
+
 
 module.exports = db;

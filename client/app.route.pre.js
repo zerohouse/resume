@@ -29,6 +29,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/profile",
             controller: "profile",
             templateUrl: "/dist/pages/profile/profile.html"
+        })
+        .state('board', {
+            url: "/board",
+            controller: "board",
+            templateUrl: "/dist/pages/board/board.html"
         });
 
 });
