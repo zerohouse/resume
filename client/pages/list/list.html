@@ -20,7 +20,8 @@
                 <div class="panel-heading">방목록</div>
                 <ul class="list-group">
                     <li class="list-group-item" ui-sref="check({id:room.roomId})" ng-repeat="room in rooms">
-                        {{room.roomId}}<span class="badge">{{room.players}}</span>
+                        <span class="label label-info">{{room.roomId}}</span> {{room.name}}<span
+                            class="badge">{{room.players}}</span>
                     </li>
                     <li class="list-group-item" ng-click="newGame()">
                         새 게임 만들기 <i class="fa fa-plus"></i>

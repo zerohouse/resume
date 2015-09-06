@@ -1,8 +1,12 @@
 (function () {
     var scope;
-    app.controller('alert', function ($scope) {
+    app.controller('alert', function ($scope, socket, alert) {
         scope = $scope;
         $scope.alerts = [];
+        socket.on('alert', function (message) {
+            alert(message.message, !message.fail);
+        });
+
     });
 
     app.factory('alert', function ($timeout) {
@@ -17,6 +21,9 @@
             scope.showing = true;
             if (scope.alerts.length > 6)
                 scope.alerts.remove(scope.alerts[0]);
+            if (!scope.$$phase) {
+                scope.$apply();
+            }
         };
 
         alert.getAlerts = function () {

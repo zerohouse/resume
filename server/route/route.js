@@ -22,6 +22,7 @@ module.exports = function (app, logger, store, db) {
                 res.send(new Error("해당 정보 없습니다."));
                 return;
             }
+            r.password = undefined;
             req.session.user = r;
             req.session.save();
             res.send(new Result(r));

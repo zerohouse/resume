@@ -1,7 +1,7 @@
 (function () {
     var scope;
     var listScope;
-    app.factory('socket', function (alert) {
+    app.factory('socket', function (alert, user) {
         var socket = io('/', {path: '/socket.io'});
 
         socket.on('check', function (success) {
@@ -19,14 +19,16 @@
         socket.on('game', function (send) {
             if (send.reset)
                 scope.resetShapes();
+            scope.name = send.name;
             scope.blocks = send.blocks;
             scope.discovered = send.discovered;
             scope.players = send.players;
             if (scope.id == undefined) {
                 scope.id = send.id;
                 scope.players.forEach(function (player) {
-                    if (player.id == scope.id)
+                    if (player.id == scope.id) {
                         alert("나는 " + player.name + " 입니다.");
+                    }
                 });
             }
             scope.selects = [];
@@ -46,10 +48,6 @@
             scope.$apply();
         });
 
-        socket.on('alert', function (message) {
-            alert(message.message, !message.fail);
-        });
-
 
         socket.on('chat', function (message) {
             message.date = new Date();
@@ -63,9 +61,10 @@
     });
 
     app.controller('list', function (socket, $scope, $state) {
+
+
         socket.emit('getRooms');
         listScope = $scope;
-
 
         function ranName(length) {
             var ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789";
@@ -78,6 +77,7 @@
         $scope.newGame = function () {
             $state.go('check', {id: ranName(10)});
         };
+
         $scope.ranGame = function () {
             if ($scope.rooms.length == 0) {
                 $scope.newGame();
@@ -92,7 +92,6 @@
         $scope.id = user.email;
         $scope.roomId = $stateParams.id;
 
-
         $scope.$watch('orderedPlayers[0]', function (p) {
             if (p == undefined)
                 return;
@@ -103,7 +102,6 @@
             this.order = p;
             alert(p.name + "님이 " + p.score + "점으로 " + "방 1위에 올랐습니다.");
         });
-
 
         $scope.resetShapes = function () {
             $scope.shapes = [];

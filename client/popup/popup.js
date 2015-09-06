@@ -4,9 +4,11 @@
     app.factory('popup', function () {
         var popup = {};
 
-        pop = function (val) {
+        pop = function (val, notApply) {
             popup.show = true;
             popup.state = val;
+            if (notApply)
+                return;
             scope.$apply();
         };
 

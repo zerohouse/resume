@@ -1,7 +1,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="label label-info"> Room Id : {{roomId}}</div>
+            <span class="label label-info"> Room Id : {{roomId}}</span>
+            {{name}}
 
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
@@ -27,7 +28,8 @@
                 </div>
                 <div class="panel-body" ng-show="discovered.length>0">
                     <div>이미 찾은 합</div>
-                    <span ng-repeat="each in discovered" style="margin-right:5px;" class="btn btn-success"
+                    <span ng-repeat="each in discovered" style="margin-right:5px; margin-bottom:5px;"
+                          class="btn btn-success"
                           ng-class="{'btn-danger':discovered.indexOf(each) === already}">{{format.discovered(each)}}</span>
                 </div>
                 <div class="panel-footer">
