@@ -34,26 +34,6 @@ module.exports = function (http, store, db) {
             });
         }
 
-        playerSetting();
-
-        function playerSetting() {
-            if (socket.session.user) {
-                socket.player = socket.session.user;
-                socket.player.id = socket.session.user.email;
-                if (isNaN(socket.player.score))
-                    socket.player.score = 0;
-                if (!socket.player.name)
-                    socket.player.name = ranname();
-                userUpdate();
-            }
-            else
-                socket.player = {
-                    score: 0,
-                    name: ranname(),
-                    id: socket.id
-                };
-        }
-
         socket.on('getRooms', function () {
             var send = {};
             send.rooms = [];
@@ -168,7 +148,7 @@ module.exports = function (http, store, db) {
                         return;
                     sum += player.score;
                 });
-                socket.player.score = Math.max(10, socket.player.score + val + parseInt(sum * 0.2) / 10);
+                socket.player.score = socket.player.score + val + Math.max(10, parseInt(sum * 0.2) / 10);
                 io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
                 io.to(socket.roomId).emit('players', players[socket.roomId]);
                 updateHighest(socket.player);
@@ -186,11 +166,6 @@ module.exports = function (http, store, db) {
         }
 
         function updateHighest(p) {
-            if (!changeIfHigh(p))
-                return;
-            io.sockets.emit('alert', new Message(socket.roomId + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
-            db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
-            });
             if (best.score < p.score) {
                 best.score = p.score;
                 best.name = p.name;
@@ -198,6 +173,13 @@ module.exports = function (http, store, db) {
                 db.Record.update({type: 'best'}, {record: best}, {upsert: true}, function (e, r) {
                 });
             }
+
+            if (!changeIfHigh(p))
+                return;
+            io.sockets.emit('alert', new Message(socket.roomId + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
+            db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
+            });
+
 
             function changeIfHigh(p) {
                 for (var i = 0; i < highest.length; i++) {
