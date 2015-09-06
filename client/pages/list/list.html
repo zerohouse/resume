@@ -8,7 +8,7 @@
 
             <h1>
                 <small>최고 점수</small>
-                {{best.name}}님 {{best.score}}점
+                {{best.name}} {{best.score}}점
             </h1>
 
         </div>
@@ -38,7 +38,7 @@
                 <ul class="list-group">
                     <li ng-show="h.name" class="list-group-item"
                         ng-repeat="h in highest | orderBy:'score':true">
-                        {{h.name}}님 <span
+                        {{h.name}} <span
                             class="label label-info">{{h.score}}</span>점
                     </li>
                 </ul>
