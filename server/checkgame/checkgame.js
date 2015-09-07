@@ -164,7 +164,6 @@ module.exports = function (io, socket, store, db) {
         val = socket.player.booster * val;
         if (!val) {
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
-            console.log(players);
             return;
         }
         var type = "결";
