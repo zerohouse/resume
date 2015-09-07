@@ -254,10 +254,11 @@ module.exports = function (io, socket, store, db) {
         if (players[socket.roomId] == undefined)
             return;
         players[socket.roomId].remove(socket.player);
+        if (players[socket.roomId].length == 0)
+            gameEnd(socket.roomId);
+        socket.roomId = undefined;
         updatePlayers();
-        if (players[socket.roomId].length != 0)
-            return;
-        gameEnd(socket.roomId);
+
     }
 
     socket.on('disconnect', function () {

@@ -20,12 +20,18 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/check",
             controller: "list",
             templateUrl: "/dist/pages/list/list.html",
-            onEnter: leaveRoom
+            onEnter: function (socket) {
+                leaveRoom(socket);
+                socket.emit('checkgame.getRooms');
+            }
         })
         .state('check', {
             url: "/check/:id",
             controller: "check",
-            templateUrl: "/dist/pages/check/check.html"
+            templateUrl: "/dist/pages/check/check.html",
+            onEnter: function (socket, $stateParams) {
+                socket.emit('checkgame.join', $stateParams.id);
+            }
         })
         .state('profile', {
             url: "/profile",

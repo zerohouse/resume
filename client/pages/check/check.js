@@ -112,12 +112,6 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     };
 
 
-    $scope.$watch(function () {
-        return $stateParams.id
-    }, function (id) {
-        socket.emit('checkgame.join', id);
-    });
-
     $scope.colors = ['#4337FD', '#FD3737', '#FDD237'];
 
     $scope.backs = ['#000', '#888', '#FFF'];

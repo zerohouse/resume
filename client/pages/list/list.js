@@ -1,7 +1,5 @@
 app.controller('list', function (socket, $scope, $state) {
 
-    socket.emit('checkgame.getRooms');
-
     socket.on('checkgame.rooms', function (send) {
         $scope.rooms = send.rooms;
         $scope.highest = send.highest;
