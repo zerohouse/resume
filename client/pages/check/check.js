@@ -2,7 +2,6 @@
     var scope;
     var listScope;
     var socket = io('/', {path: '/socket.io'});
-    console.log(socket);
     app.factory('socket', function (alert, user, $state) {
         socket.on('steamstart', function (i) {
             var val = 30000;
@@ -94,7 +93,7 @@
 
     });
 
-    app.controller('check', function ($scope, alert, $stateParams, user) {
+    app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
 
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
@@ -161,7 +160,10 @@
         $scope.$watch(function () {
             return $stateParams.id
         }, function (id) {
-            socket.emit('join', id);
+            $timeout(function () {
+                socket.emit('join', id);
+                console.log('join', id);
+            }, 3000)
         });
 
         scope = $scope;
