@@ -1,10 +1,9 @@
 (function () {
     var scope;
     var listScope;
+    var socket = io('/', {path: '/socket.io'});
 
-    app.factory('socket', function (alert, user, $state, alert) {
-        var socket = io('/', {path: '/socket.io', timeout: 10000});
-
+    app.factory('socket', function (alert, user, $state) {
         socket.on('steamstart', function (i) {
             var val = 30000;
             if (i == 2)
@@ -18,12 +17,6 @@
 
         socket.on('steamend', function () {
             scope.steamend();
-        });
-
-        socket.on('done', function (success) {
-            if (success) {
-                return;
-            }
         });
 
         socket.on('game', function (send) {

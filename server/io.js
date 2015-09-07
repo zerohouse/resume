@@ -156,7 +156,6 @@ module.exports = function (http, store, db) {
             }
             socket.last = new Date();
             var done = game[socket.roomId].done();
-            socket.emit('done', done);
             if (!done) {
                 updatePlayers(-2);
                 return;
