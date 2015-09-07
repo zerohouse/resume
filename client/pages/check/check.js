@@ -109,14 +109,9 @@
     });
 
     app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
-
-
-        alert('게임을 불러옵니다...');
-
         $timeout(function () {
             socket.emit('get');
-        }, 1000);
-
+        }, 100);
 
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
@@ -270,7 +265,7 @@
 
         $scope.prompt = function (val) {
             window.prompt("URL", "http://picks.be/check/" + val);
-        }
+        };
 
         $scope.move = function () {
             socket.emit('move');

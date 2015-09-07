@@ -38,7 +38,6 @@ module.exports = function (http, store, db) {
         socket.on('getRooms', function () {
             var send = {};
             send.rooms = getRooms();
-            console.log(send.rooms);
             send.highest = highest;
             send.best = best;
             socket.emit('rooms', send);
