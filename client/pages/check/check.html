@@ -4,6 +4,7 @@
             <span class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
                                                                               class="label label-danger">다른방가기</span>
             <span class="label label-info" ng-click="prompt(roomId)">http://picks.be/check/{{roomId}}</span>
+            <span ng-show="players[0].id==player.id">비공개 <input type="checkbox" ng-model="hide"></span>
 
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
@@ -11,6 +12,8 @@
                 </small>
                 <span ng-show="steam">{{time}}</span>
             </h1>
+
+
         </div>
     </div>
 

@@ -2,6 +2,14 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
 
     $scope.user = user;
 
+    $scope.$watch('hide', function (hide) {
+        if (!$scope.player)
+            return;
+        if ($scope.players[0].id != $scope.player.id)
+            return;
+        socket.emit('checkgame.hide', hide);
+    });
+
     socket.on('checkgame.steamstart', function (i) {
         var val = 30000;
         if (i == 2)

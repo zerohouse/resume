@@ -15,7 +15,7 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
         });
-    };
+    }
 
     db.Record.findOne({type: 'best'}, function (err, result) {
         if (!err && result != undefined)
@@ -36,6 +36,15 @@ module.exports = function (io, socket, store, db, Message) {
         return names[parseInt(Math.random() * names.length)];
     }
 
+    socket.on('checkgame.hide', function (hide) {
+        if (!socket.roomId)
+            return;
+        if (!game[socket.roomId])
+            return;
+        if (players[socket.roomId][0].id != socket.player.id)
+            return;
+        game[socket.roomId].hide = hide;
+    });
 
     socket.on('checkgame.getRooms', function () {
         var send = {};
@@ -72,8 +81,11 @@ module.exports = function (io, socket, store, db, Message) {
                 gameEnd(roomId);
                 return;
             }
-            if (val != roomId)
-                rooms.push({roomId: roomId, players: players[roomId].length, name: game[roomId].name});
+            if (val == roomId)
+                return;
+            if (game[roomId].hide)
+                return;
+            rooms.push({roomId: roomId, players: players[roomId].length, name: game[roomId].name});
         });
         return rooms;
     }
@@ -99,13 +111,8 @@ module.exports = function (io, socket, store, db, Message) {
         updatePlayers();
 
         function send() {
-            var send = {};
-            send.blocks = game[socket.roomId].blocks;
-            send.name = game[socket.roomId].name;
-            send.discovered = game[socket.roomId].discovered;
+            var send = sendPack();
             send.reset = true;
-            send.players = players[socket.roomId];
-            send.player = socket.player;
             socket.emit('checkgame.game', send);
         }
 
@@ -118,13 +125,19 @@ module.exports = function (io, socket, store, db, Message) {
         }
     });
 
-
-    function sendToAll(reset) {
+    function sendPack() {
         var send = {};
         send.blocks = game[socket.roomId].blocks;
         send.name = game[socket.roomId].name;
         send.discovered = game[socket.roomId].discovered;
         send.players = players[socket.roomId];
+        send.player = socket.player;
+        return send;
+    }
+
+
+    function sendToAll(reset) {
+        var send = sendPack();
         send.reset = reset;
         io.to(socket.roomId).emit('checkgame.game', send);
     }
