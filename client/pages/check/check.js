@@ -33,12 +33,11 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         $scope.discovered = send.discovered;
         $scope.players = send.players;
         $scope.selects = [];
-        if (send.player)
-            $scope.player = send.player;
         $scope.$apply();
     });
 
     socket.on('checkgame.player', function (player) {
+        console.log(player);
         $scope.player = player;
     });
 

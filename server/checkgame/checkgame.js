@@ -6,11 +6,12 @@ var highest = [];
 
 
 module.exports = function (io, socket, store, db, Message) {
-    function userUpdate() {
+    function userUpdate(socket) {
         if (!socket.session.user)
             return;
         store.set(socket.sid, socket.session);
         socket.emit('checkgame.player', socket.player);
+        console.log(socket.player);
         if (!socket.session.user.email)
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
@@ -114,8 +115,8 @@ module.exports = function (io, socket, store, db, Message) {
             var send = sendPack();
             send.reset = true;
             socket.emit('checkgame.game', send);
+            socket.emit('checkgame.player', socket.player);
         }
-
         function gameStart(vid) {
             if (game[vid] != undefined) {
                 return;
@@ -131,7 +132,6 @@ module.exports = function (io, socket, store, db, Message) {
         send.name = game[socket.roomId].name;
         send.discovered = game[socket.roomId].discovered;
         send.players = players[socket.roomId];
-        send.player = socket.player;
         return send;
     }
 
@@ -152,10 +152,12 @@ module.exports = function (io, socket, store, db, Message) {
         var done = game[socket.roomId].check(selects);
         if (!done) {
             updatePlayers(-1);
+            userUpdate(socket);
             return;
         }
         socket.last = new Date() + 1500;
         updatePlayers(1);
+        userUpdate(socket);
         sendToAll();
     });
 
@@ -168,10 +170,12 @@ module.exports = function (io, socket, store, db, Message) {
         var done = game[socket.roomId].done();
         if (!done) {
             updatePlayers(-2);
+            userUpdate(socket);
             return;
         }
         game[socket.roomId] = g.newGame();
         updatePlayers(3);
+        userUpdate(socket);
         sendToAll(true);
     });
 
@@ -198,7 +202,6 @@ module.exports = function (io, socket, store, db, Message) {
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             updateHighest(socket.player);
-            userUpdate();
         }
         else {
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 실패! " + val + "점", true));
@@ -206,7 +209,6 @@ module.exports = function (io, socket, store, db, Message) {
             if (socket.player.score < 0)
                 socket.player.score = 0;
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
-            userUpdate();
         }
     }
 
@@ -301,11 +303,11 @@ module.exports = function (io, socket, store, db, Message) {
         socket.emit('checkgame.steamstart', i);
         socket.player.score = socket.player.score - steam[i].point;
         socket.player.booster = steam[i].booster;
-        userUpdate();
+        userUpdate(socket);
         setTimeout(function () {
             socket.player.booster = 1;
             socket.emit('checkgame.steamend', i);
-            userUpdate();
+            userUpdate(socket);
         }, steam[i].timeout);
     });
 
