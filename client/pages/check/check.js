@@ -1,7 +1,21 @@
-var socket = io('/', {path: '/socket.io', 'multiplex': false});
 (function () {
     var scope;
     var listScope;
+    var socket = io('/', {path: '/socket.io', 'multiplex': false});
+    var yo = false;
+    socket.on('yo', function () {
+        yo = true;
+    });
+    yelling;
+
+    var yelling = function () {
+        console.log(1);
+        if (yo)
+            return;
+        socket.disconnect();
+        socket.connect();
+        setTimeout(yelling, 500);
+    };
 
     app.factory('socket', function (alert, user, $state) {
         socket.on('steamstart', function (i) {
@@ -161,10 +175,7 @@ var socket = io('/', {path: '/socket.io', 'multiplex': false});
         $scope.$watch(function () {
             return $stateParams.id
         }, function (id) {
-            $timeout(function () {
-                socket.emit('join', id);
-                console.log('join', id);
-            }, 3000)
+            socket.emit('join', id);
         });
 
         scope = $scope;
