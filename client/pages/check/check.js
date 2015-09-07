@@ -6,7 +6,7 @@
     socket.on('yo', function () {
         yo = true;
     });
-    yelling;
+    yelling();
 
     var yelling = function () {
         console.log(1);
