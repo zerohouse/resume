@@ -109,9 +109,16 @@
     });
 
     app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
-        $timeout(function () {
+
+        var delay = 500;
+        var load = function () {
+            if ($scope.blocks !== undefined && $scope.blocks.length > 0)
+                return;
             socket.emit('get');
-        }, 100);
+            $timeout(load, delay);
+        };
+        $timeout(load, delay);
+
 
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
