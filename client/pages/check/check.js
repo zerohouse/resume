@@ -27,6 +27,7 @@
         });
 
         socket.on('game', function (send) {
+            console.log(send);
             if (send.reset)
                 scope.resetShapes();
             scope.name = send.name;

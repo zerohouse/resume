@@ -52,4 +52,4 @@ String.prototype.newLine = function () {
 };
 
 
-var app = angular.module('resume', ['ui.router', 'ui.bootstrap', 'ngSanitize']);
+var app = angular.module('resume', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAnimate']);
