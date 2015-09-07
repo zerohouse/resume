@@ -4,7 +4,7 @@ module.exports = function (http, store, db) {
     io.use(require('./io.session.js')(store));
     io.on('connection', function (socket) {
         socket.emit('yo');
-        checkgame(io, socket, store, db);
+        checkgame(io, socket, store, db, Message);
 
         socket.on('update', function (user) {
             if (!socket.session.user)
@@ -20,5 +20,9 @@ module.exports = function (http, store, db) {
             });
         });
 
+        function Message(message, fail) {
+            this.message = message;
+            this.fail = fail;
+        }
     });
 };

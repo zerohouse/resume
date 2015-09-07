@@ -5,7 +5,7 @@ var best = {score: 0};
 var highest = [];
 
 
-module.exports = function (io, socket, store, db) {
+module.exports = function (io, socket, store, db, Message) {
     function userUpdate() {
         if (!socket.session.user)
             return;
@@ -296,8 +296,4 @@ module.exports = function (io, socket, store, db) {
     });
 
 
-    function Message(message, fail) {
-        this.message = message;
-        this.fail = fail;
-    }
 };
