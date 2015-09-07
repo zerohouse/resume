@@ -2,7 +2,7 @@
     var scope;
     var listScope;
     var socket = io('/', {path: '/socket.io'});
-
+    console.log(socket);
     app.factory('socket', function (alert, user, $state) {
         socket.on('steamstart', function (i) {
             var val = 30000;
@@ -20,7 +20,6 @@
         });
 
         socket.on('game', function (send) {
-            console.log(send);
             if (send.reset)
                 scope.resetShapes();
             scope.name = send.name;
@@ -32,10 +31,8 @@
                     scope.player = player;
                 }
             });
-
             scope.selects = [];
             scope.$apply();
-
         });
 
         socket.on('rooms', function (send) {
@@ -54,7 +51,6 @@
             scope.$apply();
         });
 
-
         socket.on('chat', function (message) {
             message.date = new Date();
             scope.messages.push(message);
@@ -62,6 +58,7 @@
                 scope.messages.remove(scope.messages[0]);
             scope.$apply();
         });
+
         socket.on('alert', function (message) {
             alert(message.message, !message.fail);
         });
@@ -164,11 +161,7 @@
         $scope.$watch(function () {
             return $stateParams.id
         }, function (id) {
-            $timeout(function () {
-
-                socket.emit('join', id);
-                console.log('join', id);
-            }, 300);
+            socket.emit('join', id);
         });
 
         scope = $scope;
