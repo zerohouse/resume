@@ -83,13 +83,16 @@ module.exports = function (http, store, db) {
                     players[socket.roomId].remove(socket.player);
                 updatePlayers();
             }
+            console.log('join')
             gameStart(id);
+            console.log('start')
             socket.roomId = id;
             if (players[id].length > 10) {
                 socket.emit('alert', new Message('방에 사람이 너무 많네요. 딴방갑니다.'));
                 moveToOtherRoom();
                 return;
             }
+            console.log('send')
             socket.join(id);
             players[socket.roomId].push(socket.player);
 
@@ -103,6 +106,7 @@ module.exports = function (http, store, db) {
                 send.discovered = game[socket.roomId].discovered;
                 send.reset = true;
                 send.players = players[socket.roomId];
+                console.log('send', send);
                 socket.emit('game', send);
             }
 
