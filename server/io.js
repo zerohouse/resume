@@ -26,6 +26,7 @@ module.exports = function (http, store, db) {
     }
 
     io.on('connection', function (socket) {
+
         function userUpdate() {
             if (socket.session.user == undefined)
                 return;
@@ -83,7 +84,7 @@ module.exports = function (http, store, db) {
                     players[socket.roomId].remove(socket.player);
                 updatePlayers();
             }
-            gameStart(id)
+            gameStart(id);
             socket.roomId = id;
             if (players[id].length > 10) {
                 socket.emit('alert', new Message('방에 사람이 너무 많네요. 딴방갑니다.'));

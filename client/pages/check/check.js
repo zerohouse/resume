@@ -108,7 +108,16 @@
 
     });
 
-    app.controller('check', function ($scope, alert, socket, $stateParams, user) {
+    app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
+
+
+        alert('게임을 불러옵니다...');
+
+        $timeout(function () {
+            socket.emit('get');
+        }, 200);
+
+
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
             $scope.steam = true;
@@ -247,11 +256,6 @@
         $scope.done = function () {
             socket.emit('done');
         };
-
-        $scope.$watch('blocks', function (blocks) {
-            if (blocks == undefined)
-                socket.emit('get');
-        });
 
         $scope.send = function (message) {
             if (message == undefined)
