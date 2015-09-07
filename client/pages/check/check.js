@@ -166,10 +166,13 @@
             }
         };
 
+
         $scope.$watch(function () {
             return $stateParams.id
         }, function (id) {
-            socket.emit('join', id);
+            $timeout(function () {
+                socket.emit('join', id);
+            });
         });
 
         scope = $scope;
