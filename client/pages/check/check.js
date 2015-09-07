@@ -115,7 +115,7 @@
 
         $timeout(function () {
             socket.emit('get');
-        }, 200);
+        }, 1000);
 
 
         $scope.steamstart = function (val) {
