@@ -77,6 +77,7 @@ module.exports = function (http, store, db) {
         }
 
         socket.on('join', function (id) {
+            console.log('joinstart')
             if (socket.roomId != undefined) {
                 socket.leave(socket.roomId);
                 if (players[socket.roomId] != undefined)
