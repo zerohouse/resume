@@ -172,7 +172,9 @@
             return $stateParams.id
         }, function (id) {
             $timeout(function () {
+
                 socket.emit('join', id);
+                console.log('join');
             }, 300);
         });
 
