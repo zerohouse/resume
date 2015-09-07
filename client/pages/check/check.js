@@ -1,7 +1,7 @@
+var socket = io('/', {path: '/socket.io', 'multiplex': false});
 (function () {
     var scope;
     var listScope;
-    var socket = io('/', {path: '/socket.io', 'multiplex': false});
 
     app.factory('socket', function (alert, user, $state) {
         socket.on('steamstart', function (i) {
