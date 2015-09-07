@@ -174,7 +174,7 @@
             $timeout(function () {
 
                 socket.emit('join', id);
-                console.log('join');
+                console.log('join', id);
             }, 300);
         });
 
