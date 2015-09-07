@@ -172,7 +172,7 @@
         }, function (id) {
             $timeout(function () {
                 socket.emit('join', id);
-            });
+            }, 300);
         });
 
         scope = $scope;
