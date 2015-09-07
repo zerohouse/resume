@@ -8,7 +8,7 @@
     });
     yelling();
 
-    var yelling = function () {
+    function yelling() {
         console.log(1);
         if (yo)
             return;
