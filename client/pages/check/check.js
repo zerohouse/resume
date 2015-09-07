@@ -94,7 +94,7 @@
 
     });
 
-    app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
+    app.controller('check', function ($scope, alert, $stateParams, user) {
 
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
