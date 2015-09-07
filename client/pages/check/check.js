@@ -9,7 +9,6 @@
     yelling();
 
     function yelling() {
-        console.log(1);
         if (yo)
             return;
         socket.disconnect();
