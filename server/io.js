@@ -5,11 +5,5 @@ module.exports = function (http, store, db) {
     io.on('connection', function (socket) {
         socket.emit('yo');
         checkgame(io, socket, store, db);
-
-        socket.on('leave', function () {
-            socket.leave(socket.roomId);
-            socket.roomId = undefined;
-        });
-
     });
 };

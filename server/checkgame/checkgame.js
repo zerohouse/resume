@@ -243,7 +243,14 @@ module.exports = function (io, socket, store, db) {
         io.to(socket.roomId).emit('checkgame.chat', {message: message, from: socket.player.name});
     });
 
-    socket.on('checkgame.disconnect', function () {
+
+    socket.on('leave', function () {
+        socket.leave(socket.roomId);
+        leaveGame();
+    });
+
+
+    function leaveGame(){
         if (players[socket.roomId] == undefined)
             return;
         players[socket.roomId].remove(socket.player);
@@ -251,6 +258,10 @@ module.exports = function (io, socket, store, db) {
         if (players[socket.roomId].length != 0)
             return;
         gameEnd(socket.roomId);
+    }
+
+    socket.on('disconnect', function () {
+        leaveGame();
     });
 
     function gameEnd(vid) {
@@ -295,6 +306,8 @@ module.exports = function (io, socket, store, db) {
             socket.emit('checkgame.steamend', i);
         }, steam[i].timeout);
     });
+
+
 
 
     function Message(message, fail) {
