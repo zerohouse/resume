@@ -1,7 +1,7 @@
 (function () {
     var scope;
     var listScope;
-    app.factory('socket', function (alert, user) {
+    app.factory('socket', function (alert, user, $state) {
         var socket = io('/', {path: '/socket.io'});
 
 
@@ -17,6 +17,11 @@
                 val = 60000;
             scope.steamstart(val);
         });
+
+        socket.on('move', function (id) {
+            $state.go('check', {id: id});
+        });
+
         socket.on('steamend', function () {
             scope.steamend();
         });
@@ -255,6 +260,15 @@
         };
 
         $scope.alerts = alert.getAlerts();
+
+        $scope.prompt = function (val) {
+            window.prompt("URL", "http://picks.be/check/" + val);
+        }
+
+        $scope.move = function () {
+            socket.emit('move');
+        }
+
     });
 
 

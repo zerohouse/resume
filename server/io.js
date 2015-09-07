@@ -36,18 +36,45 @@ module.exports = function (http, store, db) {
 
         socket.on('getRooms', function () {
             var send = {};
-            send.rooms = [];
+            send.rooms = getRooms();
+            console.log(send.rooms);
             send.highest = highest;
             send.best = best;
+            socket.emit('rooms', send);
+        });
+
+        socket.on('move', function () {
+            moveToOtherRoom();
+        });
+
+        function moveToOtherRoom() {
+            var rooms = getRooms(socket.roomId);
+            if (rooms == undefined || rooms.length == 0) {
+                socket.emit('move', ranRoom(10));
+                return;
+            }
+            socket.emit('move', getRooms(socket.roomId)[0].roomId);
+            function ranRoom(length) {
+                var ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789";
+                var result = "";
+                for (var i = 0; i < length; i++)
+                    result += ran[parseInt(Math.random() * ran.length)];
+                return result;
+            }
+        }
+
+        function getRooms(val) {
+            var rooms = [];
             Object.keys(game).forEach(function (roomId) {
                 if (players[roomId].length == 0) {
                     gameEnd(roomId);
                     return;
                 }
-                send.rooms.push({roomId: roomId, players: players[roomId].length, name: game[roomId].name});
+                if (val != roomId)
+                    rooms.push({roomId: roomId, players: players[roomId].length, name: game[roomId].name});
             });
-            socket.emit('rooms', send);
-        });
+            return rooms;
+        }
 
         socket.on('join', function (id) {
             if (socket.roomId != undefined) {
@@ -56,9 +83,14 @@ module.exports = function (http, store, db) {
                     players[socket.roomId].remove(socket.player);
                 updatePlayers();
             }
-            gameStart(id);
-            socket.join(id);
+            gameStart(id)
             socket.roomId = id;
+            if (players[id].length > 10) {
+                socket.emit('alert', new Message('방에 사람이 너무 많네요. 딴방갑니다.'));
+                moveToOtherRoom();
+                return;
+            }
+            socket.join(id);
             players[socket.roomId].push(socket.player);
 
             updatePlayers();
