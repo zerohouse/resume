@@ -15,12 +15,13 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
         });
-    }
+    };
 
     db.Record.findOne({type: 'best'}, function (err, result) {
         if (!err && result != undefined)
             best = result.record;
     });
+
     db.Record.findOne({type: 'highest'}, function (err, result) {
         if (!err && result != undefined)
             highest = result.record;
@@ -125,8 +126,6 @@ module.exports = function (io, socket, store, db, Message) {
         send.discovered = game[socket.roomId].discovered;
         send.players = players[socket.roomId];
         send.reset = reset;
-        send.player = socket.player;
-        updatePlayers();
         io.to(socket.roomId).emit('checkgame.game', send);
     }
 
@@ -186,17 +185,14 @@ module.exports = function (io, socket, store, db, Message) {
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             updateHighest(socket.player);
-            userUpdate();
         }
         else {
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 실패! " + val + "점", true));
             socket.player.score = socket.player.score + val;
             if (socket.player.score < 0)
                 socket.player.score = 0;
-            userUpdate();
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
         }
-
     }
 
     function updateHighest(p) {

@@ -20,13 +20,13 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     socket.on('checkgame.game', function (send) {
         if (send.reset)
             $scope.resetShapes();
-        console.log(send.player);
         $scope.name = send.name;
         $scope.blocks = send.blocks;
         $scope.discovered = send.discovered;
         $scope.players = send.players;
         $scope.selects = [];
-        $scope.player = send.player;
+        if (send.player)
+            $scope.player = send.player;
         $scope.$apply();
     });
 
