@@ -93,7 +93,18 @@ module.exports = function (http, store, db) {
             socket.join(id);
             players[socket.roomId].push(socket.player);
 
+            send();
             updatePlayers();
+
+            function send() {
+                var send = {};
+                send.blocks = game[socket.roomId].blocks;
+                send.name = game[socket.roomId].name;
+                send.discovered = game[socket.roomId].discovered;
+                send.reset = true;
+                send.players = players[socket.roomId];
+                socket.emit('game', send);
+            }
 
             function gameStart(vid) {
                 if (game[vid] != undefined) {
@@ -104,16 +115,6 @@ module.exports = function (http, store, db) {
             }
         });
 
-        function send() {
-            var send = {};
-            send.blocks = game[socket.roomId].blocks;
-            send.name = game[socket.roomId].name;
-            send.discovered = game[socket.roomId].discovered;
-            send.reset = true;
-            send.players = players[socket.roomId];
-            updatePlayers();
-            socket.emit('game', send);
-        }
 
         function sendToAll(reset) {
             var send = {};
@@ -126,10 +127,6 @@ module.exports = function (http, store, db) {
             io.to(socket.roomId).emit('game', send);
         }
 
-        socket.on('get', function () {
-            send();
-        });
-
         socket.on('check', function (selects) {
             if (new Date() - socket.last < 1500) {
                 return;
@@ -138,7 +135,6 @@ module.exports = function (http, store, db) {
             if (game[socket.roomId] == undefined)
                 return;
             var done = game[socket.roomId].check(selects);
-            socket.emit('check', done);
             if (!done) {
                 updatePlayers(-1);
                 return;

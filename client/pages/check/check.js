@@ -4,11 +4,6 @@
 
     app.factory('socket', function (alert, user, $state, alert) {
         var socket = io('/', {path: '/socket.io', timeout: 10000});
-        socket.on('check', function (success) {
-            if (success) {
-                return;
-            }
-        });
 
         socket.on('steamstart', function (i) {
             var val = 30000;
@@ -109,16 +104,6 @@
     });
 
     app.controller('check', function ($scope, alert, socket, $stateParams, user, $timeout) {
-
-        var delay = 500;
-        var load = function () {
-            if ($scope.blocks !== undefined && $scope.blocks.length > 0)
-                return;
-            socket.emit('get');
-            $timeout(load, delay);
-        };
-        $timeout(load, delay);
-
 
         $scope.steamstart = function (val) {
             document.querySelector('body').classList.add('steam');
