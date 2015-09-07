@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <span ng-click="move()" class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
+            <span class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
                                                                                                 class="label label-danger">다른방가기</span>
             <span class="label label-info" ng-click="prompt(roomId)">http://picks.be/check/{{roomId}}</span>
 
@@ -28,7 +28,7 @@
                         <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
                     </div>
                 </div>
-                <div class="panel-body animate-cube" ng-show="discovered.length>0">
+                <div class="panel-body" ng-show="discovered.length>0">
                     <div>이미 찾은 합</div>
                     <span ng-repeat="each in discovered" style="margin-right:5px; margin-bottom:5px;"
                           class="btn btn-success"
