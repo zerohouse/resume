@@ -22,14 +22,14 @@
         <div class="btn-group">
             <label class="btn btn-default" ng-click="submit()">글쓰기</label>
         </div>
-        <h3>{{article.user.name}} </h3>
+        <h3>{{article.user.name || "이름없는 사람"}} </h3>
 
         {{article.date.toString()}}
         <textarea class="form-control transparent" ng-model="article.text" placeholder="내용을 작성해 주세요."></textarea>
     </div>
 
     <div class="alert" ng-repeat="article in articles" ng-class="article.type" ng-style="{'text-align':article.align}">
-        <h3 style="margin-top:0">{{article.user.name}}</h3> <i class="fa fa-times delete"
+        <h3 style="margin-top:0">{{article.user.name || "이름없는 사람"}}</h3> <i class="fa fa-times delete"
                                                                ng-show="user.logged && article.user.email == user.email"
                                                                ng-click="delete(article)"></i>
 

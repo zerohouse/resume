@@ -1,5 +1,7 @@
 app.controller('check', function ($scope, alert, socket, $stateParams, user, $state) {
 
+    $scope.user = user;
+
     socket.on('checkgame.steamstart', function (i) {
         var val = 30000;
         if (i == 2)
@@ -23,9 +25,8 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         $scope.discovered = send.discovered;
         $scope.players = send.players;
         send.players.forEach(function (player) {
-            if (player.email == user.email || player.id == user.id) {
+            if (player.id == user.id)
                 $scope.player = player;
-            }
         });
         $scope.selects = [];
         $scope.$apply();
@@ -36,7 +37,7 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     socket.on('checkgame.players', function (players) {
         $scope.players = players;
         players.forEach(function (player) {
-            if (player.email == user.email || player.id == user.id)
+            if (player.id == user.id)
                 $scope.player = player;
         });
         $scope.$apply();

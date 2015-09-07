@@ -6,15 +6,15 @@ var highest = [];
 
 
 module.exports = function (io, socket, store, db) {
-
     function userUpdate() {
-        if (socket.session.user == undefined)
+        if (!socket.session.user)
             return;
         store.set(socket.sid, socket.session);
+        if (!socket.session.user.email)
+            return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
         });
     }
-
 
     db.Record.findOne({type: 'best'}, function (err, result) {
         if (!err && result != undefined)
@@ -250,7 +250,7 @@ module.exports = function (io, socket, store, db) {
     });
 
 
-    function leaveGame(){
+    function leaveGame() {
         if (players[socket.roomId] == undefined)
             return;
         players[socket.roomId].remove(socket.player);
@@ -276,7 +276,9 @@ module.exports = function (io, socket, store, db) {
 
 
     socket.on('checkgame.update', function (user) {
-        if (socket.session.user.email == undefined)
+        if (!socket.session.user)
+            return;
+        if (!socket.session.user.email)
             return;
         if (socket.session.user.email != user.email)
             return;
@@ -307,8 +309,6 @@ module.exports = function (io, socket, store, db) {
             socket.emit('checkgame.steamend', i);
         }, steam[i].timeout);
     });
-
-
 
 
     function Message(message, fail) {

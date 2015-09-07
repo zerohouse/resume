@@ -4,7 +4,6 @@
             <span class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
                                                                               class="label label-danger">다른방가기</span>
             <span class="label label-info" ng-click="prompt(roomId)">http://picks.be/check/{{roomId}}</span>
-
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
                 <small ng-show="orderedPlayers[0].name"> 방 1위 : {{orderedPlayers[0].name}} ({{orderedPlayers[0].score}})
@@ -20,6 +19,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">결합 ({{name}})<span class="badge pull-right" ng-click="resetShapes()"><i
                         class="fa fa-refresh"></i></span></div>
+                <div class="panel-body" ng-show="!user.logged">로그인해야 점수가 저장됩니다. 아무정보도 필요없고, 저장용도외에 사용하지 않습니다.</div>
                 <div class="panel-body wrap">
                     <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
                          ng-click="selectBlock(block)">
