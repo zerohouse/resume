@@ -13,12 +13,14 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('main', {
             url: "/",
             controller: "main",
-            templateUrl: "/dist/pages/main/main.html"
+            templateUrl: "/dist/pages/main/main.html",
+            onEnter: leaveRoom
         })
         .state('list', {
             url: "/check",
             controller: "list",
-            templateUrl: "/dist/pages/list/list.html"
+            templateUrl: "/dist/pages/list/list.html",
+            onEnter: leaveRoom
         })
         .state('check', {
             url: "/check/:id",
@@ -28,12 +30,18 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('profile', {
             url: "/profile",
             controller: "profile",
-            templateUrl: "/dist/pages/profile/profile.html"
+            templateUrl: "/dist/pages/profile/profile.html",
+            onEnter: leaveRoom
         })
         .state('board', {
             url: "/board",
             controller: "board",
-            templateUrl: "/dist/pages/board/board.html"
+            templateUrl: "/dist/pages/board/board.html",
+            onEnter: leaveRoom
         });
+
+    function leaveRoom(socket) {
+        socket.emit('leave');
+    }
 
 });
