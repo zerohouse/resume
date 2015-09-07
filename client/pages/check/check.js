@@ -1,9 +1,10 @@
+
+
 (function () {
     var scope;
     var listScope;
+    var socket = io('/', {path: '/socket.io'});
     app.factory('socket', function (alert, user, $state) {
-        var socket = io('/', {path: '/socket.io'});
-
 
         socket.on('check', function (success) {
             if (success) {
