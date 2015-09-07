@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <span class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
-                                                                                                class="label label-danger">다른방가기</span>
+                                                                              class="label label-danger">다른방가기</span>
             <span class="label label-info" ng-click="prompt(roomId)">http://picks.be/check/{{roomId}}</span>
 
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
@@ -22,7 +22,7 @@
                         class="fa fa-refresh"></i></span></div>
                 <div class="panel-body wrap">
                     <div ng-repeat="block in blocks" ng-style="style(block)" ng-class="{selected:block.select}"
-                         ng-click="selectBlock(block)" class="fade-in-out">
+                         ng-click="selectBlock(block)">
                         <i class="fa" ng-class="shapes[block.shape]"></i>
                         <span class="number">{{blocks.indexOf(block)+1}}</span>
                         <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
@@ -99,7 +99,6 @@
         </div>
     </div>
 
-    <ul class="list-group animate-cube">
         <li class="list-group-item"
             ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}"
             ng-repeat="alert in alerts">{{alert.alert}}
