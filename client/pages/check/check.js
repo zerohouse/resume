@@ -1,11 +1,9 @@
-
-
 (function () {
     var scope;
     var listScope;
-    var socket = io('/', {path: '/socket.io'});
-    app.factory('socket', function (alert, user, $state) {
 
+    app.factory('socket', function (alert, user, $state, alert) {
+        var socket = io('/', {path: '/socket.io', timeout: 10000});
         socket.on('check', function (success) {
             if (success) {
                 return;
@@ -75,6 +73,10 @@
                 scope.messages.remove(scope.messages[0]);
             scope.$apply();
         });
+        socket.on('alert', function (message) {
+            alert(message.message, !message.fail);
+        });
+
 
         return socket;
     });

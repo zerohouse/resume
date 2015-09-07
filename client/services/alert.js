@@ -3,9 +3,6 @@
     app.controller('alert', function ($scope, socket, alert) {
         scope = $scope;
         $scope.alerts = [];
-        socket.on('alert', function (message) {
-            alert(message.message, !message.fail);
-        });
 
     });
 
