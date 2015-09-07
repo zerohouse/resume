@@ -5,7 +5,6 @@ Array.prototype.contains = function (item) {
 Array.prototype.remove = function (val) {
     this.splice(this.indexOf(val), 1);
 };
-
 var game = {};
 game.Block = function (color, shape, back) {
     this.color = color;

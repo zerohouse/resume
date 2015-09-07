@@ -4,6 +4,7 @@
             <span class="label label-warning" ui-sref="list">방목록</span> <span ng-click="move()"
                                                                               class="label label-danger">다른방가기</span>
             <span class="label label-info" ng-click="prompt(roomId)">http://picks.be/check/{{roomId}}</span>
+
             <h1>결합!<a target="_blank" href="https://www.youtube.com/watch?v=0gCfLVFs79w"><i
                     class="fa fa-question-circle"></i></a>
                 <small ng-show="orderedPlayers[0].name"> 방 1위 : {{orderedPlayers[0].name}} ({{orderedPlayers[0].score}})
@@ -70,7 +71,7 @@
                 <div class="panel-heading">플레이어</div>
                 <ul class="list-group">
                     <li class="list-group-item"
-                        ng-class="{'list-group-item-success':player == p}"
+                        ng-class="{'list-group-item-success':player.id == p.id}"
                         ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
                         {{p.name||"플레이어"}}
                         <span class="badge">{{p.score||0}}</span>

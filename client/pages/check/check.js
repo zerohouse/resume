@@ -20,26 +20,23 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     socket.on('checkgame.game', function (send) {
         if (send.reset)
             $scope.resetShapes();
+        console.log(send.player);
         $scope.name = send.name;
         $scope.blocks = send.blocks;
         $scope.discovered = send.discovered;
         $scope.players = send.players;
-        send.players.forEach(function (player) {
-            if (player.id == user.id)
-                $scope.player = player;
-        });
         $scope.selects = [];
+        $scope.player = send.player;
         $scope.$apply();
+    });
 
+    socket.on('checkgame.player', function (player) {
+        $scope.player = player;
     });
 
 
     socket.on('checkgame.players', function (players) {
         $scope.players = players;
-        players.forEach(function (player) {
-            if (player.id == user.id)
-                $scope.player = player;
-        });
         $scope.$apply();
     });
 
@@ -78,6 +75,8 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     $scope.steampack = function (i) {
         var require = [15, 30, 150];
         if ($scope.steam)
+            return;
+        if (!$scope.player)
             return;
         if ($scope.player.score < require[i])
             return;

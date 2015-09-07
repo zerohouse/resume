@@ -10,6 +10,7 @@ module.exports = function (io, socket, store, db, Message) {
         if (!socket.session.user)
             return;
         store.set(socket.sid, socket.session);
+        socket.emit('checkgame.player', socket.player);
         if (!socket.session.user.email)
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
@@ -103,6 +104,7 @@ module.exports = function (io, socket, store, db, Message) {
             send.discovered = game[socket.roomId].discovered;
             send.reset = true;
             send.players = players[socket.roomId];
+            send.player = socket.player;
             socket.emit('checkgame.game', send);
         }
 
@@ -123,6 +125,7 @@ module.exports = function (io, socket, store, db, Message) {
         send.discovered = game[socket.roomId].discovered;
         send.players = players[socket.roomId];
         send.reset = reset;
+        send.player = socket.player;
         updatePlayers();
         io.to(socket.roomId).emit('checkgame.game', send);
     }
@@ -288,10 +291,10 @@ module.exports = function (io, socket, store, db, Message) {
         socket.player.score = socket.player.score - steam[i].point;
         socket.player.booster = steam[i].booster;
         userUpdate();
-        io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
         setTimeout(function () {
             socket.player.booster = 1;
             socket.emit('checkgame.steamend', i);
+            userUpdate();
         }, steam[i].timeout);
     });
 
