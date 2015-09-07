@@ -27,6 +27,8 @@ module.exports = function (http, store, db) {
 
     io.on('connection', function (socket) {
 
+        console.log('connected');
+
         function userUpdate() {
             if (socket.session.user == undefined)
                 return;
