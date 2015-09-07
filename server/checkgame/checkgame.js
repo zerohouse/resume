@@ -191,13 +191,14 @@ module.exports = function (io, socket, store, db, Message) {
                     return;
                 sum += player.score;
             });
-            var bonus = Math.min(3, Math.ceil(sum * 0.01));
+            var bonus = Math.min(10, Math.ceil(sum * 0.01));
             if (bonus == 0)
                 bonus = 1;
             socket.player.score = socket.player.score + val * bonus;
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             updateHighest(socket.player);
+            userUpdate();
         }
         else {
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 실패! " + val + "점", true));
@@ -205,6 +206,7 @@ module.exports = function (io, socket, store, db, Message) {
             if (socket.player.score < 0)
                 socket.player.score = 0;
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
+            userUpdate();
         }
     }
 
@@ -233,14 +235,14 @@ module.exports = function (io, socket, store, db, Message) {
                 db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
                 });
                 io.sockets.emit('alert', new Message(game[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
-                return true;
+                return;
             }
             if (highest[j].score < p.score) {
                 highest[j] = p;
                 db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
                 });
                 io.sockets.emit('alert', new Message(game[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
-                return true;
+                return;
             }
         }
 
