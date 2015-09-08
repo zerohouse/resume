@@ -74,9 +74,9 @@
                 <div class="panel-heading">플레이어</div>
                 <ul class="list-group">
                     <li class="list-group-item"
-                        ng-class="{'list-group-item-success':player.id == p.id}"
+                        ng-class="{'list-group-item-success':player.id == p.id,'list-group-item-danger':p.booster != 1}"
                         ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
-                        {{p.name||"플레이어"}}
+                        {{p.name||"플레이어"}}<span class="label label-primary" ng-show="p.booster != 1">부스터 사용중</span>
                         <span class="badge">{{p.score||0}}</span>
                     </li>
                 </ul>

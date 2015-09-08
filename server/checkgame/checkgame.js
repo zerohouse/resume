@@ -304,11 +304,13 @@ module.exports = function (io, socket, store, db, Message) {
         socket.emit('checkgame.steamstart', i);
         socket.player.score = socket.player.score - steam[i].point;
         socket.player.booster = steam[i].booster;
+        updatePlayers();
         userUpdate(socket);
         setTimeout(function () {
             socket.player.booster = 1;
             socket.emit('checkgame.steamend', i);
             userUpdate(socket);
+            updatePlayers();
         }, steam[i].timeout);
     });
 
