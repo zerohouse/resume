@@ -1,7 +1,7 @@
 var random = require('./../utils/random.js');
 var Gmailer = require("gmail-sender");
 var fs = require('fs');
-var mailInfo = JSON.parse(fs.readFileSync('./../../.mailinfo.json', encoding = "utf8"));
+var mailInfo = JSON.parse(fs.readFileSync('~/.mailinfo.json', encoding = "utf8"));
 
 Gmailer.options({
     smtp: {
