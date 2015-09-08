@@ -37,7 +37,6 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     });
 
     socket.on('checkgame.player', function (player) {
-        console.log(player);
         $scope.player = player;
     });
 
