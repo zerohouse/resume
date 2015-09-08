@@ -27,6 +27,9 @@ module.exports = function (http, store, db) {
             if (!connected[key])
                 connected[key] = [];
             connected[key].push(socket);
+            if (connected[key].length < 2) {
+                return;
+            }
 
             for (var i = 0; i < connected[key].length - 1; i++) {
                 connected[key][i].emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
