@@ -11,7 +11,6 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         store.set(socket.sid, socket.session);
         socket.emit('checkgame.player', socket.player);
-        console.log(socket.player);
         if (!socket.session.user.email)
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {

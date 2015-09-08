@@ -1,14 +1,18 @@
 module.exports = function (app) {
+
     var session = require('express-session'),
-        sessionStore = new session.MemoryStore(),
+        redis = require('redis'),
+        redisStore = require('connect-redis')(session),
         cookieParser = require('cookie-parser'),
         COOKIE_SECRET = 'secret',
         COOKIE_NAME = 'sid';
+    var client = redis.createClient(),
+        store = new redisStore({host: 'localhost', port: 6379, client: client});
 
     app.use(cookieParser(COOKIE_SECRET));
     app.use(session({
         name: COOKIE_NAME,
-        store: sessionStore,
+        store:store,
         secret: COOKIE_SECRET,
         saveUninitialized: true,
         resave: true,
@@ -20,5 +24,5 @@ module.exports = function (app) {
         }
     }));
 
-    return sessionStore;
+    return store;
 };

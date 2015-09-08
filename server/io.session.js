@@ -44,6 +44,7 @@ module.exports = function (store) {
                 next();
             });
         } catch (err) {
+            console.log(1);
             next(new Error('Internal server error'));
         }
     }
