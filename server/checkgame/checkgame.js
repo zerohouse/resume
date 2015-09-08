@@ -110,6 +110,7 @@ module.exports = function (io, socket, store, db, Message) {
             socket.emit('checkgame.game', send);
             socket.emit('checkgame.player', socket.player);
         }
+
         function gameStart(vid) {
             if (game[vid] != undefined) {
                 return;
@@ -191,7 +192,8 @@ module.exports = function (io, socket, store, db, Message) {
             var bonus = Math.min(5, Math.ceil(sum * 0.01));
             if (bonus == 0)
                 bonus = 1;
-            socket.player.score = socket.player.score + val * bonus;
+            val = val * bonus;
+            socket.player.score = socket.player.score + val;
             io.to(socket.roomId).emit("alert", new Message(socket.player.name + "님 " + type + " 성공! +" + val + "점"));
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             updateHighest(socket.player);
