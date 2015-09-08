@@ -5,17 +5,9 @@ module.exports = function (http, store, db) {
     io.use(require('./io.session.js')(store));
     io.on('connection', function (socket) {
         socket.emit('yo');
-        if (!connected[socket.sid])
-            connected[socket.sid] = [];
-        connected[socket.sid].push(socket);
-
-        for (var i = 0; i < connected[socket.sid].length - 1; i++) {
-            connected[socket.sid][i].emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
-            connected[socket.sid][i].disconnect();
-        }
-        connected[socket.sid].splice(0, connected[socket.sid].length - 1);
-
-
+        preventMutiple(socket.sid);
+        if (socket.session.user || socket.session.user.email)
+            preventMutiple(socket.session.user.email);
         checkgame(io, socket, store, db, Message);
         socket.on('update', function (user) {
             if (!socket.session.user)
@@ -30,6 +22,18 @@ module.exports = function (http, store, db) {
                 socket.emit("alert", new Message('정보 변경되었습니다.'));
             });
         });
+
+        function preventMutiple(key) {
+            if (!connected[key])
+                connected[key] = [];
+            connected[key].push(socket);
+
+            for (var i = 0; i < connected[key].length - 1; i++) {
+                connected[key][i].emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
+                connected[key][i].disconnect();
+            }
+            connected[key].splice(0, connected[key].length - 1);
+        }
 
 
         function Message(message, fail, duration) {
