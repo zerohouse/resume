@@ -286,15 +286,21 @@ module.exports = function (io, socket, store, db, Message) {
     }
 
     socket.on('checkgame.steampack', function (i) {
-        var steam = [{point: 15, booster: 2, timeout: 30000}, {point: 30, booster: 4, timeout: 30000}, {
+        var steam = [{point: 15, booster: 2, timeout: 30000, name: "헉헉"}, {
+            point: 30,
+            booster: 4,
+            timeout: 30000,
+            name: "하악하악"
+        }, {
             point: 150,
             booster: 10,
-            timeout: 60000
+            timeout: 60000, name: "부와아악"
         }];
         if (socket.player.booster != 1)
             return;
         if (socket.player.score < steam[i].point)
             return;
+        io.to(socket.roomId).emit('alert', new Message(socket.player.name + "님이 " + steam[i].name + "을 사용했습니다.", true));
         socket.emit('checkgame.steamstart', i);
         socket.player.score = socket.player.score - steam[i].point;
         socket.player.booster = steam[i].booster;
