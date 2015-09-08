@@ -79,7 +79,7 @@ module.exports = function (app, logger, store, db) {
                 res.send("이미 변경하셨거나, 잘못된 접근입니다.");
                 return;
             }
-            db.User.update({email: r.email, password: req.passed.password}, function (e, r) {
+            db.User.update({email: r.email}, {password: req.passed.password}, function (e, r) {
                 res.send("변경되었습니다.<a href='/'>picks 홈</a>");
             });
         });
