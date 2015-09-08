@@ -35,6 +35,8 @@
                     <ul class="dropdown-menu" ng-show="!user.logged">
                         <li><a popup="login">로그인</a></li>
                         <li><a popup="register">회원가입</a></li>
+                        <li class="divider"></li>
+                        <li><a ng-click="mailRequest()">패스워드 변경메일 요청</a></li>
                     </ul>
                     <ul class="dropdown-menu" ng-show="user.logged">
                         <li><a ui-sref="profile">내 정보</a></li>

@@ -24,5 +24,8 @@ db.Article = mongoose.model('article', mongoose.Schema({
     type: String, align: String, user: Object, date: String, text: String
 }));
 
+db.passwordKey = mongoose.model('passwordKey', mongoose.Schema({
+    email: {index: true, type: String, unique: true}, key: String, day: Number
+}));
 
 module.exports = db;

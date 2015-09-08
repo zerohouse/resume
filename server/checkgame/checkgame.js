@@ -3,6 +3,7 @@ var game = {};
 var players = {};
 var best = {score: 0};
 var highest = [];
+var random = require('./../utils/random.js');
 
 
 module.exports = function (io, socket, store, db, Message) {
@@ -61,17 +62,10 @@ module.exports = function (io, socket, store, db, Message) {
     function moveToOtherRoom() {
         var rooms = getRooms(socket.roomId);
         if (rooms == undefined || rooms.length == 0) {
-            socket.emit('checkgame.move', ranRoom(10));
+            socket.emit('checkgame.move', random.key(10));
             return;
         }
         socket.emit('checkgame.move', getRooms(socket.roomId)[0].roomId);
-        function ranRoom(length) {
-            var ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789";
-            var result = "";
-            for (var i = 0; i < length; i++)
-                result += ran[parseInt(Math.random() * ran.length)];
-            return result;
-        }
     }
 
     function getRooms(val) {

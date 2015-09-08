@@ -2,6 +2,8 @@ app.controller('login', function ($scope, req, alert, popup, user) {
 
     $scope.user = user;
 
+    $scope.mailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
     $scope.register = function () {
         req.post('/api/user', user).success(function (res) {
             if (res.error) {

@@ -1,4 +1,4 @@
-app.controller('check', function ($scope, alert, socket, $stateParams, user, $state) {
+app.controller('check', function ($scope, alert, socket, $stateParams, user, $state, $timeout) {
 
     $scope.user = user;
 
@@ -46,12 +46,14 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         $scope.$apply();
     });
 
+    var chat = document.querySelector('.chat-window');
     socket.on('checkgame.chat', function (message) {
         message.date = new Date();
         $scope.messages.push(message);
-        if ($scope.messages.length > 8)
-            $scope.messages.remove(scope.messages[0]);
         $scope.$apply();
+        $timeout(function () {
+            chat.scrollTop = chat.scrollHeight;
+        });
     });
 
     $scope.steamstart = function (val) {

@@ -5,11 +5,13 @@
         $scope.alerts = [];
     });
     app.factory('alert', function ($timeout, socket) {
-        var alert = function (message, success) {
+        var alert = function (message, success, duration) {
+            if (!duration)
+                duration = 1500;
             $timeout.cancel(this.hide);
             this.hide = $timeout(function () {
                 scope.showing = false;
-            }, 1500);
+            }, duration);
             var al = {alert: message, date: new Date(), success: success};
             scope.alerts.push(al);
             scope.alert = al;
