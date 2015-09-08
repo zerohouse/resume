@@ -1,29 +1,34 @@
 var random = require('./../utils/random.js');
-var Gmailer = require("gmail-sender");
 var fs = require('fs');
 var mailInfo = JSON.parse(fs.readFileSync('./../.mailinfo.json', encoding = "utf8"));
+var nodemailer = require('nodemailer');
+var sesTransport = require('nodemailer-ses-transport');
+var content = function (to, key) {
+    return "<html><body><h1><a href='" + mailInfo.url + "'>PICKS</a></h1>" +
+        "<form action='" + mailInfo.url + "/api/password/redefine' method='get'>" +
+        "<input type='password' placeholder='변경 비밀번호' name='password'>" +
+        "<input type='hidden' name='key' value='" + key + "'>" +
+        "<input type='hidden' name='email' value='" + to + "'>" +
+        "<input type='submit' value='비밀번호 변경'></form></body></html>";
+};
 
-Gmailer.options({
-    smtp: {
-        service: "Gmail",
-        user: "parksungho86@gmail.com",
-        pass: mailInfo.password
-    }
-});
+var options = {
+    accessKeyId: mailInfo.accessKeyId,
+    secretAccessKey: mailInfo.secretAccessKey,
+    rateLimit: 5
+};
+
+var transporter = nodemailer.createTransport(sesTransport(options));
+
 
 function sendMail(to, key) {
-    Gmailer.send({
-        subject: "비밀번호 변경메일입니다.(picks.be)",
-        template: "./server/mail.html",
-        from: "'PICKS'",
-        to: {
-            email: to
-        },
-        data: {
-            email: to,
-            url: mailInfo.url,
-            key: key
-        }
+    var mailOptions = {
+        from: 'Picks ✔ <parksungho86@gmail.com>', // sender address
+        to: to,
+        subject: 'PICKS 패스워드 변경메일입니다. ✔', // Subject line
+        html: content(to, key) // html body
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
     });
 }
 
@@ -57,11 +62,15 @@ module.exports = function (app, logger, store, db) {
     });
 
     app.get('/api/password/redefine', function (req, res) {
-        if (req.passed.key == "") {
+        if (req.passed.key == undefined || req.passed.key == "") {
             res.send("잘못된 접근이요~");
             return;
         }
-        if(req.passed.password.length<4){
+        if (!req.passed.password) {
+            res.send("잘못된 접근이요~");
+            return;
+        }
+        if (req.passed.password.length < 4) {
             res.send("패스워드 4자이상이요~");
             return;
         }

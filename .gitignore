@@ -1,5 +1,6 @@
 dist/**/*.*
 !dist/lib/**/*.*
+!dist/favicon.ico
 server/db.js
 server/route.js
 
