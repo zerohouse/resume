@@ -1,4 +1,3 @@
-var connected = {};
 module.exports = function (http, store, db) {
     var io = require('socket.io')(http),
         checkgame = require('./checkgame/checkgame.js');
@@ -8,6 +7,7 @@ module.exports = function (http, store, db) {
         preventMutiple(socket.sid);
         if (socket.session.user || socket.session.user.email)
             preventMutiple(socket.session.user.email);
+
         checkgame(io, socket, store, db, Message);
         socket.on('update', function (user) {
             if (!socket.session.user)
@@ -24,18 +24,15 @@ module.exports = function (http, store, db) {
         });
 
         function preventMutiple(key) {
-            if (!connected[key])
-                connected[key] = [];
-            connected[key].push(socket);
-            if (connected[key].length < 2) {
-                return;
-            }
-
-            for (var i = 0; i < connected[key].length - 1; i++) {
-                connected[key][i].emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
-                connected[key][i].disconnect();
-            }
-            connected[key].splice(0, connected[key].length - 1);
+            socket.join(key);
+            socket.broadcast.to(key).emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
+            var members = io.nsps['/'].adapter.rooms[key];
+            Object.keys(members).forEach(function (s, i) {
+                if (s == socket.id) {
+                    return;
+                }
+                io.sockets.connected[s].disconnect();
+            });
         }
 
 
