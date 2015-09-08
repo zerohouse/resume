@@ -24,7 +24,7 @@
         };
 
         socket.on('alert', function (message) {
-            alert(message.message, !message.fail);
+            alert(message.message, !message.fail, message.duration);
         });
 
         alert.getAlerts = function () {

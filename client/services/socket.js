@@ -11,7 +11,7 @@ app.factory('socket', function (user, $state, $timeout) {
             return;
         socket.disconnect();
         socket.connect();
-        $timeout(yelling, 500);
+        $timeout(yelling, 1000);
     }
 
     return socket;
