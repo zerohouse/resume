@@ -29,7 +29,6 @@
                          ng-click="selectBlock(block)">
                         <i class="fa" ng-class="shapes[block.shape]"></i>
                         <span class="number">{{blocks.indexOf(block)+1}}</span>
-                        <!--<i ng-show="block.select" class="fa fa-check selected"></i>-->
                     </div>
                 </div>
                 <div class="panel-body" ng-show="discovered.length>0">
@@ -57,15 +56,15 @@
                 <ul class="list-group">
                     <li ng-class="{opacity:player.score<15 ||steam}" class="list-group-item" ng-click="steampack(0)">
                         <div>헉헉(15Point)</div>
-                        <div class="label label-info"> 30초간 증가하는 점수가 2배가 됩니다.</div>
+                        <div class="label label-info"> 30초간 증가/감소하는 점수가 2배가 됩니다.</div>
                     </li>
                     <li class="list-group-item" ng-click="steampack(1)" ng-class="{opacity:player.score<30||steam}">
                         <div>하악하악(30Point)</div>
-                        <div class="label label-success"> 30초간 증가하는 점수가 4배가 됩니다.</div>
+                        <div class="label label-success"> 30초간 증가/감소하는 점수가 4배가 됩니다.</div>
                     </li>
                     <li class="list-group-item" ng-click="steampack(2)" ng-class="{opacity:player.score<150||steam}">
                         <div>부와아악(150Point)</div>
-                        <div class="label label-danger"> 60초간 증가하는 점수가 10배가 됩니다.</div>
+                        <div class="label label-danger"> 60초간 증가/감소하는 점수가 10배가 됩니다.</div>
                     </li>
                 </ul>
             </div>

@@ -33,6 +33,14 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 socket.emit('checkgame.join', $stateParams.id);
             }
         })
+        .state('seven', {
+            url: "/seven",
+            controller: "seven",
+            templateUrl: "/dist/pages/seven/seven.html",
+            onEnter: function (socket, $stateParams) {
+
+            }
+        })
         .state('profile', {
             url: "/profile",
             controller: "profile",

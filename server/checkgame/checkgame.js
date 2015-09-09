@@ -174,6 +174,7 @@ module.exports = function (io, socket, store, db, Message) {
     });
 
     function updatePlayers(val) {
+        val = socket.player.booster * val;
         if (!val) {
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             return;
@@ -182,7 +183,6 @@ module.exports = function (io, socket, store, db, Message) {
         if (Math.abs(val) == 1)
             type = "합";
         if (val > 0) {
-            val = socket.player.booster * val;
             var sum = 0;
             players[socket.roomId].forEach(function (player) {
                 if (socket.player == player)
