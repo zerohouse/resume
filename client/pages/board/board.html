@@ -37,7 +37,7 @@
         <p ng-bind-html="article.text.newLine()"></p>
     </div>
 
-    <div ng-show="info.page * info.limit == articles.length + new" class="alert alert-info" style="text-align:center"
+    <div ng-show="info.page * info.limit + new == articles.length" class="alert alert-info" style="text-align:center"
          ng-click="get()">더보기
     </div>
 </div>
