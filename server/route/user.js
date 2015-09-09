@@ -42,4 +42,28 @@ module.exports = function (app, logger, store, db) {
         req.session.destroy();
         res.send({});
     });
+
+
+    app.put('/api/user', function (req, res) {
+        var user = req.passed;
+        if (!req.session.user) {
+            res.send('잘못된 접근입니다.');
+            return;
+        }
+        if (!req.session.user.email) {
+            res.send('잘못된 접근입니다.');
+            return;
+        }
+        if (req.session.user.email != user.email) {
+            res.send('잘못된 접근입니다.');
+            return;
+        }
+        req.session.user.name = user.name;
+        req.session.save();
+        db.User.update({email: user.email}, user, {}, function (e, r) {
+            res.send('정보 변경되었습니다.');
+        });
+    });
+
+
 };

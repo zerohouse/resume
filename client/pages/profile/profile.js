@@ -1,8 +1,10 @@
-app.controller('profile', function (user, $scope, socket) {
+app.controller('profile', function (user, $scope, req, alert) {
     $scope.user = user;
 
     $scope.updateUser = function () {
-        socket.emit('update', user);
+        req.put('/api/user', user).success(function (res) {
+            alert(res);
+        });
     }
 
 });
