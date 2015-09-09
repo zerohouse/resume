@@ -189,8 +189,8 @@ module.exports = function (io, socket, store, db, Message) {
                     return;
                 sum += player.score;
             });
-            var bonus = Math.min(5, Math.ceil(sum * 0.01));
-            if (bonus == 0)
+            var bonus = Math.round(Math.log(sum));
+            if (bonus < 1)
                 bonus = 1;
             val = val * bonus;
             socket.player.score = socket.player.score + val;
