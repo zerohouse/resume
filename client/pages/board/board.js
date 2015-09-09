@@ -16,6 +16,8 @@ app.controller('board', function (user, $scope, req) {
 
     $scope.get();
 
+    $scope.new = 0;
+
     $scope.submit = function () {
         if ($scope.article.text == '')
             return;
@@ -27,6 +29,7 @@ app.controller('board', function (user, $scope, req) {
             angular.copy(res, $scope.article);
             $scope.articles.unshift($scope.article);
             $scope.article = new Article();
+            $scope.new++;
         });
     };
 
