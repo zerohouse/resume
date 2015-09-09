@@ -24,6 +24,7 @@ app.controller('board', function (user, $scope, req) {
                 alert(res.err);
                 return;
             }
+            angular.copy(res, $scope.article);
             $scope.articles.unshift($scope.article);
             $scope.article = new Article();
         });
