@@ -11,7 +11,7 @@ module.exports = function (http, store, db) {
 
         checkgame(io, socket, store, db, Message);
 
-      //  sevengame(io, socket, store, db, Message);
+        //sevengame(io, socket, store, db, Message);
 
         function preventMutiple(key) {
             socket.join(key);

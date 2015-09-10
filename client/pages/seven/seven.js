@@ -36,13 +36,11 @@ app.controller('seven', function ($scope, socket, user, alert) {
     function sortPlayers() {
         $scope.inPlayers = [];
         $scope.players.forEach(function (p) {
+            if (p.sid == user.sid)
+                $scope.player = p;
             if (p.in) {
                 $scope.inPlayers.push(p);
-                return;
             }
-            if (p.sid != user.sid)
-                return;
-            $scope.player = p;
         });
         $scope.inPlayers.forEach(function (p) {
             $scope.players.remove(p);

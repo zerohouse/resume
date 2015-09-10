@@ -1,13 +1,16 @@
-function Game(io, point) {
+function Game() {
     var self = this;
-    if (!point)
-        point = 0;
-    this.point = point;
+    this.point = 0;
     this.players = [];
-    this.submitted = 0;
     this.turn = 0;
     this.e = [];
 }
+
+Game.prototype.restart = function () {
+    this.turn = 0;
+    this.ing = false;
+    this.startCheck();
+};
 
 Game.prototype.addPlayer = function (socket) {
     this.players.push(new Player(socket, this));
@@ -75,6 +78,7 @@ Game.prototype.calculateWinner = function () {
             return;
         }
         self.winner = player;
+        console.log('winner', player);
         self.draw = false;
     });
     this.sync();
@@ -162,6 +166,10 @@ Game.prototype.start = function () {
 };
 
 Game.prototype.turnStart = function () {
+    if (this.turn > 9) {
+        this.restart();
+        return;
+    }
     this.turnEnded = false;
     this.turn++;
     var self = this;
