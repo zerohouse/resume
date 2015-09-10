@@ -11,7 +11,6 @@ module.exports = function (io, socket, store, db, Message) {
         if (!socket.session.user)
             return;
         store.set(socket.sid, socket.session);
-        socket.emit('checkgame.player', socket.player);
         if (!socket.session.user.email)
             return;
         db.User.update({email: socket.player.email}, socket.player, function (er, res) {
@@ -42,7 +41,7 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         if (!game[socket.roomId])
             return;
-        if (players[socket.roomId][0].id != socket.player.id)
+        if (players[socket.roomId][0].sid != socket.player.sid)
             return;
         game[socket.roomId].hide = hide;
     });
@@ -108,7 +107,6 @@ module.exports = function (io, socket, store, db, Message) {
             var send = sendPack();
             send.reset = true;
             socket.emit('checkgame.game', send);
-            socket.emit('checkgame.player', socket.player);
         }
 
         function gameStart(vid) {

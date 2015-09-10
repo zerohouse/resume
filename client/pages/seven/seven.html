@@ -1,6 +1,34 @@
 <div class="container">
     <h1>7게임!</h1>
+    만드는 중!
+    <!--<h1>{{turn +1}}라운드</h1>-->
 
+
+    <!--<h1>현재 걸린 포인트 = {{point}}</h1>-->
+
+    <!--<h1>낸카드 = {{submitted}}</h1>-->
+
+    <!--<div class="panel panel-primary">-->
+        <!--<div class="panel-heading">플레이어</div>-->
+        <!--<ul class="list-group">-->
+            <!--<li class="list-group-item"-->
+                <!--ng-class="{'list-group-item-success':player == p}"-->
+                <!--ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">-->
+                <!--{{p.name||"플레이어"}} <span ng-show="p.submitted">낸카드 {{p.submitted}}</span>-->
+                <!--<span class="badge">{{p.score||0}}</span>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+
+    <!--<span ng-show="!ing">참가 <input type="checkbox" ng-model="in"></span>-->
+
+    <!--<div class="label label-success" ng-repeat="card in player.cards" ng-click="submit(player.cards.indexOf(card))">-->
+        <!--{{card}}-->
+    <!--</div>-->
+
+    <!--<ul class="list-group">-->
+        <!--<li class="list-group-item" ng-repeat="log in logs">{{log}}</li>-->
+    <!--</ul>-->
 
     <div class="panel panel-primary">
         <div class="panel-heading">7 게임 ( 3~8인 )</div>
@@ -13,11 +41,11 @@
             <li class="list-group-item">EYE 카드를 낸 플레이어가 있을 경우 해당 플레이어들은 다른 플레이어들의 카드를 확인한 뒤 자신의 카드를 선택합니다.</li>
             <li class="list-group-item">X카드를 낸 플레이어가 있으면, 칩을 그대로 둔 채 다음 라운드를 진행합니다.</li>
             <li class="list-group-item">X카드가 없고 숫자가 높은 플레이어가 한명이면 승리하고 칩을 가져갑니다.</li>
-            <li class="list-group-item">가장 높은 카드를 낸 플레이어가 여러명이면 칩을 그대로 둔 채 다음 라운드를 진행합니다.</li>
-            <li class="list-group-item">만약 가장 높은 카드를 낸 플레이어가 여러명이고, X카드를 낸 플레이어가 없다면, 0카드를 낸 플레이어가 승자가 됩니다.</li>
+            <li class="list-group-item">가장 높은 카드를 낸 플레이어가 여러명이면이고 0카드를 낸 플레이어가 없다면 칩을 그대로 둔 채 다음 라운드를 진행합니다.</li>
+            <li class="list-group-item">가장 높은 카드를 낸 플레이어가 여러명이고, X카드를 낸 플레이어가 없다면, 0카드를 낸 플레이어가 승자가 됩니다.</li>
             <li class="list-group-item">0카드로 승리한 플레이어가 여러명일 경우 칩을 나누어 가지고 나누어지지 않는 나머지만 다음 라운드로 넘깁니다.</li>
-            <li class="list-group-item">1,2,3카드로 승리했을경우 다른 플레이어들에게 다른 플레이어에게 칩을 1개를 추가로 받습니다.</li>
-            <li class="list-group-item">9라운드가 지나 카드를 모두 소모하면 게임이 종료됩니다.</li>
+            <li class="list-group-item">1,2,3카드로 승리했을경우 다른 플레이어들에게 다른 플레이어에게 칩 1개를 추가로 받습니다.</li>
+            <li class="list-group-item">9라운드가 지나 카드를 모두 내면 게임이 종료됩니다.</li>
             <li class="list-group-item">9라운드에 승자가 없으면 칩을 그대로 둔채 다음 게임에 사용합니다.</li>
         </ul>
     </div>

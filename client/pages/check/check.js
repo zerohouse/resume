@@ -36,13 +36,13 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         $scope.$apply();
     });
 
-    socket.on('checkgame.player', function (player) {
-        $scope.player = player;
-    });
-
-
     socket.on('checkgame.players', function (players) {
         $scope.players = players;
+        players.forEach(function (p) {
+            if (p.sid != user.sid)
+                return;
+            $scope.player = p;
+        });
         $scope.$apply();
     });
 

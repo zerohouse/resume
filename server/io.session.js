@@ -38,9 +38,10 @@ module.exports = function (store) {
                     socket.player.score = 0;
                 if (!socket.player.name)
                     socket.player.name = ranname();
-                socket.player.id = socket.id;
+                socket.player.sid = socket.sid;
                 socket.player.booster = 1;
                 store.set(socket.sid, session);
+                console.log(socket.sid);
                 next();
             });
         } catch (err) {

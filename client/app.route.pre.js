@@ -34,11 +34,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             }
         })
         .state('seven', {
-            url: "/seven",
+            url: "/seven/:id",
             controller: "seven",
             templateUrl: "/dist/pages/seven/seven.html",
             onEnter: function (socket, $stateParams) {
-
+                socket.emit('sevengame.join', $stateParams.id);
             }
         })
         .state('profile', {
