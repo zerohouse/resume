@@ -38,14 +38,13 @@ module.exports = function (store) {
                     socket.player.score = 0;
                 if (!socket.player.name)
                     socket.player.name = ranname();
+                if (socket.player.booster)
+                    socket.player.booster = undefined;
                 socket.player.sid = socket.sid;
-                socket.player.booster = 1;
                 store.set(socket.sid, session);
-                console.log(socket.sid);
                 next();
             });
         } catch (err) {
-            console.log(1);
             next(new Error('Internal server error'));
         }
     }

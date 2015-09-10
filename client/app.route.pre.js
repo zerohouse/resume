@@ -30,6 +30,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             controller: "check",
             templateUrl: "/dist/pages/check/check.html",
             onEnter: function (socket, $stateParams) {
+                leaveRoom(socket);
                 socket.emit('checkgame.join', $stateParams.id);
             }
         })
@@ -38,6 +39,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             controller: "seven",
             templateUrl: "/dist/pages/seven/seven.html",
             onEnter: function (socket, $stateParams) {
+                leaveRoom(socket);
                 socket.emit('sevengame.join', $stateParams.id);
             }
         })

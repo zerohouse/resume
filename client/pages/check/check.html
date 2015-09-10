@@ -10,7 +10,7 @@
                     class="fa fa-question-circle"></i></a>
                 <small ng-show="orderedPlayers[0].name"> 방 1위 : {{orderedPlayers[0].name}} ({{orderedPlayers[0].score}})
                 </small>
-                <span ng-show="steam">{{time}}</span>
+                <span ng-show="player.booster">{{time}}</span>
             </h1>
 
 
@@ -54,15 +54,15 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">부스터</div>
                 <ul class="list-group">
-                    <li ng-class="{opacity:player.score<15 ||steam}" class="list-group-item" ng-click="steampack(0)">
+                    <li ng-class="{opacity:player.score<15 ||player.booster}" class="list-group-item" ng-click="steampack(0)">
                         <div>헉헉(15Point)</div>
                         <div class="label label-info"> 30초간 증가/감소하는 점수가 2배가 됩니다.</div>
                     </li>
-                    <li class="list-group-item" ng-click="steampack(1)" ng-class="{opacity:player.score<30||steam}">
+                    <li class="list-group-item" ng-click="steampack(1)" ng-class="{opacity:player.score<30||player.booster}">
                         <div>하악하악(30Point)</div>
                         <div class="label label-success"> 30초간 증가/감소하는 점수가 4배가 됩니다.</div>
                     </li>
-                    <li class="list-group-item" ng-click="steampack(2)" ng-class="{opacity:player.score<150||steam}">
+                    <li class="list-group-item" ng-click="steampack(2)" ng-class="{opacity:player.score<150||player.booster}">
                         <div>부와아악(150Point)</div>
                         <div class="label label-danger"> 60초간 증가/감소하는 점수가 10배가 됩니다.</div>
                     </li>
@@ -73,9 +73,9 @@
             <div class="panel-heading">플레이어</div>
             <ul class="list-group">
                 <li class="list-group-item"
-                    ng-class="{'list-group-item-success':player == p,'list-group-item-danger':p.booster != 1}"
+                    ng-class="{'list-group-item-success':player == p,'list-group-item-danger':p.booster}"
                     ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
-                    {{p.name||"플레이어"}}<span class="label label-primary" ng-show="p.booster != 1">부스터 사용중</span>
+                    {{p.name||"플레이어"}}<span class="label label-primary" ng-show="p.booster">부스터 사용중</span>
                     <span class="badge">{{p.score||0}}</span>
                 </li>
             </ul>

@@ -56,10 +56,17 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         });
     });
 
-    $scope.steamstart = function (val) {
-        document.querySelector('body').classList.add('steam');
-        $scope.steam = true;
 
+    $scope.$watch('player.booster', function (booster) {
+        if (booster) {
+            document.querySelector('body').classList.add('steam');
+            return;
+        }
+        document.querySelector('body').classList.remove('steam');
+    });
+
+
+    $scope.steamstart = function (val) {
         var start;
         window.requestAnimationFrame(startTimer);
         function startTimer(tick) {
@@ -67,24 +74,17 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
                 start = val + tick;
             $scope.time = parseInt((start - tick) / 100) / 10;
             $scope.$apply();
-            if ($scope.time > 0 && $scope.steam)
+            if ($scope.time > 0 && $scope.player.booster)
                 window.requestAnimationFrame(startTimer);
-        }
-    };
-
-    $scope.steamend = function () {
-        document.querySelector('body').classList.remove('steam');
-        $scope.steam = false;
-        if (!$scope.$$phase) {
-            $scope.$apply();
         }
     };
 
     $scope.steampack = function (i) {
         var require = [15, 30, 150];
-        if ($scope.steam)
+        if (!$scope.player) {
             return;
-        if (!$scope.player)
+        }
+        if ($scope.player.booster)
             return;
         if ($scope.player.score < require[i])
             return;
@@ -208,4 +208,5 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         socket.emit('checkgame.move');
     }
 
-});
+})
+;

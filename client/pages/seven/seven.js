@@ -6,12 +6,11 @@ app.controller('seven', function ($scope, socket, user, alert) {
         if (val == undefined)
             return;
         socket.emit('sevengame.in', val);
-        console.log(1);
     }, true);
 
     socket.on('sevengame.players', function (players) {
         $scope.players = players;
-        defineMe();
+        sortPlayers();
         $scope.$apply();
     });
 
@@ -25,11 +24,8 @@ app.controller('seven', function ($scope, socket, user, alert) {
     socket.on('sevengame.sync', function (state) {
         console.log(state);
         $scope.players = state.players;
-        $scope.turn = state.turn;
-        $scope.point = state.point;
-        $scope.ing = state.ing;
-        defineMe();
-        $scope.submitted = state.submitted;
+        sortPlayers();
+        $scope.game = state.game;
         $scope.$apply();
     });
 
@@ -37,11 +33,19 @@ app.controller('seven', function ($scope, socket, user, alert) {
         socket.emit('submit', i);
     };
 
-    function defineMe() {
+    function sortPlayers() {
+        $scope.inPlayers = [];
         $scope.players.forEach(function (p) {
+            if (p.in) {
+                $scope.inPlayers.push(p);
+                return;
+            }
             if (p.sid != user.sid)
                 return;
             $scope.player = p;
+        });
+        $scope.inPlayers.forEach(function (p) {
+            $scope.players.remove(p);
         });
     }
 

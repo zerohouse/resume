@@ -172,7 +172,8 @@ module.exports = function (io, socket, store, db, Message) {
     });
 
     function updatePlayers(val) {
-        val = socket.player.booster * val;
+        if (socket.player.booster)
+            val = socket.player.booster * val;
         if (!val) {
             io.to(socket.roomId).emit('checkgame.players', players[socket.roomId]);
             return;
@@ -294,7 +295,7 @@ module.exports = function (io, socket, store, db, Message) {
             booster: 10,
             timeout: 60000, name: "부와아악"
         }];
-        if (socket.player.booster != 1)
+        if (socket.player.booster)
             return;
         if (socket.player.score < steam[i].point)
             return;
@@ -305,7 +306,7 @@ module.exports = function (io, socket, store, db, Message) {
         updatePlayers();
         userUpdate(socket);
         setTimeout(function () {
-            socket.player.booster = 1;
+            socket.player.booster = undefined;
             socket.emit('checkgame.steamend', i);
             userUpdate(socket);
             updatePlayers();

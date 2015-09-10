@@ -10,7 +10,7 @@ module.exports = function (http, store, db) {
             preventMutiple(socket.session.user.email);
 
         checkgame(io, socket, store, db, Message);
-        sevengame(io, socket, store, db, Message);
+      //  sevengame(io, socket, store, db, Message);
 
         function preventMutiple(key) {
             socket.join(key);
