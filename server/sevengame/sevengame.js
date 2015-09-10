@@ -26,7 +26,6 @@ module.exports = function (io, socket, store, db, Message) {
             if (games[vid] != undefined) {
                 return;
             }
-            console.log(id);
             games[vid] = new Game(io);
         }
     });

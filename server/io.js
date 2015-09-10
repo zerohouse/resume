@@ -5,9 +5,9 @@ module.exports = function (http, store, db) {
     io.use(require('./io.session.js')(store));
     io.on('connection', function (socket) {
         socket.emit('yo', socket.sid);
-        //preventMutiple(socket.sid);
-        //if (socket.session.user || socket.session.user.email)
-        //    preventMutiple(socket.session.user.email);
+        preventMutiple(socket.sid);
+        if (socket.session.user || socket.session.user.email)
+            preventMutiple(socket.session.user.email);
 
         checkgame(io, socket, store, db, Message);
         sevengame(io, socket, store, db, Message);
