@@ -65,7 +65,6 @@ String.prototype.newLine = function () {
 
 ga('create', 'UA-67266885-1', 'auto');
 
-
 var app = angular.module('resume', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAnimate']);
 app.scope = {};
 app.run(function ($rootScope, $location, $window) {

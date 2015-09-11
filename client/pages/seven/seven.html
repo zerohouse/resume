@@ -1,58 +1,99 @@
 <div class="container">
-    <h1>7게임! 만드는중</h1>
+    <h3>7 게임
+        <small ng-show="game.ing">게임중 : {{game.turn}}번째 순서</small>
+        <small ng-show="!game.ing">대기중 : 3명이상이 참여하면 시작합니다.</small>
+        {{time}}
+        <div class="btn btn-sm btn-success" ng-show="!player.in" ng-click="player.in = true">게임참여</div>
+        <div class="btn btn-sm btn-danger" ng-show="player.in" ng-click="player.in = false">관전</div>
+        <div class="btn btn-sm btn-primary" popup="sevenrooms">방목록</div>
+    </h3>
 
-    <h1>{{game.turn}}라운드</h1>
-
-
-    <h1>현재 걸린 포인트 = {{game.point}}</h1>
-
-    <h1>낸카드 =
-        <span ng-show="!game.eCard"><div sevencard="game.submitted"></div></span>
-
-        <div ng-show="game.eCard" sevencard="game.eCard"></div>
-    </h1>
-
-    <div class="panel panel-primary">
-        <div class="panel-heading">게임플레이어</div>
+    <div class="panel panel-primary" ng-show="players.length!=0">
+        <div class="panel-heading">관전자</div>
         <ul class="list-group">
-            <li class="list-group-item"
+            <li class="list-group-item" ng-click="setTo(p)"
                 ng-class="{'list-group-item-success':player == p}"
-                ng-repeat="p in orderedPlayers = (inPlayers | orderBy: 'score':true)">
-                {{p.name||"플레이어"}} <span ng-show="p.submitted">낸카드      <div sevencard="p.submitted"></div></span>
+                ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
+                {{p.name||"플레이어"}} <span class="label"
+                                         ng-class="{'label-success':p!=player&&p.in,'label-danger':!p.in,'label-primary':p.in&&p==player}">
+                <span ng-show="p.in">참가예정</span>
+                <span ng-show="!p.in">관전</span></span>
                 <span class="badge">{{p.score||0}}</span>
             </li>
         </ul>
-        <div class="panel-heading">관전자</div>
-        <ul class="list-group">
-            <li class="list-group-item"
-                ng-class="{'list-group-item-success':player == p}"
-                ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
-
-
-                {{p.name||"플레이어"}}
-                <div sevencard="p.submitted"></div>
-                <span ng-show="p.submitted">낸카드 {{p.submitted}}</span>
-                <span class="badge">{{p.score||0}}</span>
-            <li>
-        </ul>
     </div>
 
 
-    <span ng-show="!game.ing || !player.in">참가 <input type="checkbox" ng-model="player.in"></span>
+    <div class="game" ng-show="game.ing">
+        <div class="players">
+            <div class="player" ng-click="setTo(p)"
+                 ng-repeat="p in inPlayers">
+                <div><i class="fa fa-user fa-5x"></i></div>
+                {{p.name||"플레이어"}} <span class="badge">{{p.score||0}}</span>
 
-    <div class="card-dek">
-        <div class="btn btn-success btn-lg card" ng-class="icon[card]" ng-repeat="card in player.cards" ng-style="cardStyle(player.cards.indexOf(card))"><span
-                ng-show="!icon[card]">{{card}}</span>
+                <div class="label label-danger disconnect" ng-show="p.disconnect">연결끊김</div>
+
+                <div ng-show="p.submitted">
+                    <card ng-click="open(p)" ng-class="{flipped:p.submitted===true || !p.open}"
+                          front="p.submitted"></card>
+                </div>
+
+            </div>
+        </div>
+        <div class="chips wrap-block">
+            <h3>{{game.point}} chips</h3>
+
+            <div class="blue chip" ng-repeat="chip in bluechips"></div>
+            <div class="black chip" ng-repeat="chip in blackchips"></div>
+        </div>
+
+        <div class="mycard">
+            <card ng-show="game.submitted" front="game.submitted"></card>
+        </div>
+
+
+        <div class="card-dek wrap-block">
+            <card class="card-hover" ng-style="cardStyle(player.cards.indexOf(card))" front="card"
+                  ng-repeat="card in player.cards" ng-click="submit(player.cards.indexOf(card))"></card>
         </div>
     </div>
 
-    <ul class="list-group">
-        <li class="list-group-item" ng-repeat="log in logs">{{log}}</li>
-    </ul>
+    <div class="panel panel-primary">
+        <div class="panel-heading">말하기
+        </div>
+        <ul class="list-group chat-window chat">
+            <li class="list-group-item" ng-repeat="message in messages"
+                ng-class="{'list-group-item-danger':message.to}">
+                <div ng-show="message.to.sid != player.sid" class="btn btn-primary" ng-click="setTo(message.from)">
+                    {{message.from.name}}<span ng-show="message.fromme">님에게</span></div>
+                <div class="btn btn-primary" ng-click="setTo(message.from)" ng-show="message.to.sid == player.sid">
+                    {{message.from.name}}님의 메시지</span></div>
+                {{message.message}}
+                <small>{{message.date.toDateString()}}</small>
+            </li>
+        </ul>
+        <div class="panel-footer">
+            <div class="input-group" ng-class="{whisper:message.to}">
+                <div class="input-group-addon" ng-show="message.to">{{message.to.name}}님에게 <i class="fa fa-times"
+                                                                                              ng-click="message.to=undefined"></i>
+                </div>
+                <input class="form-control" ng-enter="send(message);" ng-model="message.message">
+
+                <div class="input-group-addon" ng-click="send(message);">말하기</div>
+            </div>
+        </div>
+    </div>
 
     <div class="panel panel-primary">
-        <div class="panel-heading">7 게임 ( 3~8인 )</div>
-        <ul class="list-group">
+        <div class="panel-heading">게임 기록</div>
+        <ul class="list-group chat-window">
+            <li class="list-group-item" ng-repeat="log in logs">{{log.message}}</li>
+        </ul>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">규칙 : 7 게임 ( 3~8인 )</div>
+        <ul class="list-group chat-window">
             <li class="list-group-item">게임 시작시 모든 플레이어는 카드 10장을 받습니다. [0,1,2,3,4,5,6,7,EYE,X]</li>
             <li class="list-group-item">한 게임은 총 9 라운드로 진행되며 각 라운드에 모든 플레이어는 칩을 1개씩 배팅합니다.</li>
             <li class="list-group-item">각 라운드는 다음과 같이 진행됩니다.</li>
@@ -71,3 +112,5 @@
     </div>
 
 </div>
+
+

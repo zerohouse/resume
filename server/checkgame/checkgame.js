@@ -1,5 +1,5 @@
 var Game = require('./game.js');
-var game = {};
+var games = {};
 var players = {};
 var best = {score: 0};
 var highest = [];
@@ -30,11 +30,11 @@ module.exports = function (io, socket, store, db, Message) {
     socket.on('checkgame.hide', function (hide) {
         if (!socket.roomId)
             return;
-        if (!game[socket.roomId])
+        if (!games[socket.roomId])
             return;
         if (players[socket.roomId][0].sid != socket.player.sid)
             return;
-        game[socket.roomId].hide = hide;
+        games[socket.roomId].hide = hide;
     });
 
     socket.on('checkgame.getRooms', function () {
@@ -60,16 +60,16 @@ module.exports = function (io, socket, store, db, Message) {
 
     function getRooms(val) {
         var rooms = [];
-        Object.keys(game).forEach(function (roomId) {
+        Object.keys(games).forEach(function (roomId) {
             if (players[roomId].length == 0) {
                 gameEnd(roomId);
                 return;
             }
             if (val == roomId)
                 return;
-            if (game[roomId].hide)
+            if (games[roomId].hide)
                 return;
-            rooms.push({roomId: roomId, players: players[roomId].length, name: game[roomId].name});
+            rooms.push({roomId: roomId, players: players[roomId].length, name: games[roomId].name});
         });
         return rooms;
     }
@@ -101,19 +101,19 @@ module.exports = function (io, socket, store, db, Message) {
         }
 
         function gameStart(vid) {
-            if (game[vid] != undefined) {
+            if (games[vid] != undefined) {
                 return;
             }
-            game[vid] = new Game();
+            games[vid] = new Game();
             players[vid] = [];
         }
     });
 
     function sendPack() {
         var send = {};
-        send.blocks = game[socket.roomId].blocks;
-        send.name = game[socket.roomId].name;
-        send.discovered = game[socket.roomId].discovered;
+        send.blocks = games[socket.roomId].blocks;
+        send.name = games[socket.roomId].name;
+        send.discovered = games[socket.roomId].discovered;
         send.players = players[socket.roomId];
         return send;
     }
@@ -130,9 +130,9 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         }
         socket.last = new Date();
-        if (game[socket.roomId] == undefined)
+        if (games[socket.roomId] == undefined)
             return;
-        var done = game[socket.roomId].check(selects);
+        var done = games[socket.roomId].check(selects);
         if (!done) {
             updatePlayers(-1);
             userUpdate(socket);
@@ -150,17 +150,18 @@ module.exports = function (io, socket, store, db, Message) {
             return;
         }
         socket.last = new Date();
-        var done = game[socket.roomId].done();
+        var done = games[socket.roomId].done();
         if (!done) {
             updatePlayers(-2);
             userUpdate(socket);
             return;
         }
-        game[socket.roomId] = g.newGame();
+        games[socket.roomId] = g.newGame();
         updatePlayers(3);
         userUpdate(socket);
         sendToAll(true);
     });
+
 
     function updatePlayers(val) {
         if (socket.player.booster)
@@ -201,7 +202,7 @@ module.exports = function (io, socket, store, db, Message) {
         if (best.score < p.score) {
             best.score = p.score;
             best.name = p.name;
-            io.sockets.emit('alert', new Message(game[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 최고 기록을 경신하셨습니다."));
+            io.sockets.emit('alert', new Message(games[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 최고 기록을 경신하셨습니다."));
             db.Record.update({type: 'best'}, {record: best}, {upsert: true}, function (e, r) {
             });
         }
@@ -221,14 +222,14 @@ module.exports = function (io, socket, store, db, Message) {
                 highest[j] = p;
                 db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
                 });
-                io.sockets.emit('alert', new Message(game[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
+                io.sockets.emit('alert', new Message(games[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
                 return;
             }
             if (highest[j].score < p.score) {
                 highest[j] = p;
                 db.Record.update({type: 'highest'}, {record: highest}, {upsert: true}, function (e, r) {
                 });
-                io.sockets.emit('alert', new Message(game[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
+                io.sockets.emit('alert', new Message(games[socket.roomId].name + "방의 " + p.name + "님 " + p.score + "점으로 통합 10위에 진입하셨습니다."));
                 return;
             }
         }
@@ -267,10 +268,10 @@ module.exports = function (io, socket, store, db, Message) {
     });
 
     function gameEnd(vid) {
-        if (game[vid] == undefined)
+        if (games[vid] == undefined)
             return;
-        game[vid] = undefined;
-        delete game[vid];
+        games[vid] = undefined;
+        delete games[vid];
         players[vid] = undefined;
         delete players[vid];
     }
@@ -303,6 +304,4 @@ module.exports = function (io, socket, store, db, Message) {
             updatePlayers();
         }, steam[i].timeout);
     });
-
-
 };

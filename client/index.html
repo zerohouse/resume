@@ -54,10 +54,12 @@
 </nav>
 
 <div class="alert-window" ng-controller="alert" ng-show="showing">
-    <div class="message alert" ng-click="showing=!showing"
-         ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}">
-        {{alert.alert}}
-        <small>{{alert.date.toString()}}</small>
+    <div class="message" ng-click="showing=!showing">
+        <div class="alert"
+             ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}">
+            <div ng-bind-html="alert.alert"></div>
+            <small>{{alert.date.toString()}}</small>
+        </div>
     </div>
 </div>
 <div class="popup" ng-show="popup.isShow()" ng-click="popup.hide()" ng-controller="popup">

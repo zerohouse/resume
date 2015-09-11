@@ -1,0 +1,10 @@
+<div ng-controller="sevenrooms">
+    <div class="panel panel-primary">
+        <div class="panel-heading">7게임 방목록 <i class="fa fa-refresh" ng-click="getRooms()"></i></div>
+        <ul class="list-group">
+            <li class="list-group-item" ng-click="move(room)" ng-repeat="room in rooms">
+                {{room||"이름없음"}}
+            </li>
+        </ul>
+    </div>
+</div>

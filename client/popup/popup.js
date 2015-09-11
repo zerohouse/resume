@@ -44,9 +44,11 @@
         $scope.url = {};
         $scope.url.login = '/dist/popup/login/login.html';
         $scope.url.register = '/dist/popup/login/register.html';
+        $scope.url.sevenrooms = '/dist/pages/seven/rooms.html';
 
         $scope.classes = {};
         $scope.classes.login = $scope.classes.register = $scope.classes.license = 'window-s';
+        $scope.classes.sevenrooms = 'window-s';
         $scope.popup = popup;
     });
 

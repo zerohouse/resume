@@ -17,7 +17,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             onEnter: leaveRoom
         })
         .state('list', {
-            url: "/check",
+            url: "/list",
             controller: "list",
             templateUrl: "/dist/pages/list/list.html",
             onEnter: function (socket) {
