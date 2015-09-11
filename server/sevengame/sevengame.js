@@ -1,66 +1,33 @@
 var Game = require('./game.js');
-var games = {};
-var players = {};
+var games = require('./games.js');
 
 module.exports = function (io, socket, store, db, Message) {
-
     socket.on('sevengame.join', function (id) {
-        if (socket.roomId != undefined) {
-            socket.leave(socket.roomId);
-            if (games[socket.roomId] != undefined)
-                games[socket.roomId].removePlayer(socket);
-            updatePlayers();
-        }
-        socket.roomId = id;
-        gameStart(id);
-        if (games[id].getPlayerSize() > 10) {
-            socket.emit('alert', new Message('방에 사람이 너무 많네요. 딴방갑니다.'));
-            //moveToOtherRoom();
+        var game = games.getPlayingGame(socket.sid);
+        if (game) {
+            if (games[id] != game) {
+                socket.emit('redirect', {state: 'seven', object: {id: game.id}, message: '진행중인 게임이 있습니다. 다시 연결합니다.'});
+            }
+            game.reEnter(socket);
+            games.register(game, socket.sid, id);
             return;
         }
-        socket.join(id);
-        games[socket.roomId].addPlayer(socket);
-        updatePlayers();
-
-        function gameStart(vid) {
-            if (games[vid] != undefined) {
-                return;
-            }
-            games[vid] = new Game(io);
+        game = games[id];
+        if (game) {
+            game.join(socket);
+            games.register(game, socket.sid);
+            return;
         }
+        game = new Game(store, db, id);
+        games.register(game, socket.sid, id);
+        game.join(socket);
     });
 
     socket.on('leave', function () {
-        socket.leave(socket.roomId);
-        leaveGame();
+        games.leave(socket);
     });
-
-
-    function leaveGame() {
-        if (games[socket.roomId] == undefined)
-            return;
-        games[socket.roomId].removePlayer(socket);
-        if (games[socket.roomId].getPlayerSize() == 0)
-            gameEnd(socket.roomId);
-        socket.roomId = undefined;
-        updatePlayers();
-    }
 
     socket.on('disconnect', function () {
-        leaveGame();
+        games.leave(socket);
     });
-
-    function gameEnd(vid) {
-        if (games[vid] == undefined)
-            return;
-        games[vid] = undefined;
-        delete games[vid];
-    }
-
-
-    function updatePlayers() {
-        if (!games[socket.roomId])
-            return;
-        io.to(socket.roomId).emit('sevengame.players', games[socket.roomId].getPlayers());
-    }
 };

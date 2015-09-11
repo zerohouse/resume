@@ -1,0 +1,27 @@
+.card-dek {
+  position: relative;
+  height: 300px;
+  max-width: 940px;
+  margin: auto;
+
+  .card {
+    box-shadow: 2px 2px 2px silver;
+    position: absolute;
+    height: 150px;
+    width: 100px;
+    margin: 10px;
+    font-size: 300%;
+    line-height: 115px;
+    border: 1px solid white;
+  }
+  .card:hover {
+    z-index: 1;
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari */
+    transform: scale(1.2) !important;
+  }
+}
+
+[sevencard] {
+  display: inline-block;
+}

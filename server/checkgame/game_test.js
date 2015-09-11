@@ -1,9 +1,9 @@
 var chai = require('chai');
 var expect = chai.expect;
-var game = require('./game.js');
+var Game = require('./game.js');
 
 describe('newGame', function () {
-    var g = new game.Game();
+    var g = new Game();
     g.blocks =
         [{color: 2, shape: 1, back: 2},
             {color: 0, shape: 1, back: 0},

@@ -10,53 +10,6 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         socket.emit('checkgame.hide', hide);
     });
 
-    socket.on('checkgame.steamstart', function (i) {
-        var val = 30000;
-        if (i == 2)
-            val = 60000;
-        $scope.steamstart(val);
-    });
-
-    socket.on('checkgame.move', function (id) {
-        $state.go('check', {id: id});
-    });
-
-    socket.on('checkgame.steamend', function () {
-        $scope.steamend();
-    });
-
-    socket.on('checkgame.game', function (send) {
-        if (send.reset)
-            $scope.resetShapes();
-        $scope.name = send.name;
-        $scope.blocks = send.blocks;
-        $scope.discovered = send.discovered;
-        $scope.players = send.players;
-        $scope.selects = [];
-        $scope.$apply();
-    });
-
-    socket.on('checkgame.players', function (players) {
-        $scope.players = players;
-        players.forEach(function (p) {
-            if (p.sid != user.sid)
-                return;
-            $scope.player = p;
-        });
-        $scope.$apply();
-    });
-
-    var chat = document.querySelector('.chat-window');
-    socket.on('checkgame.chat', function (message) {
-        message.date = new Date();
-        $scope.messages.push(message);
-        $scope.$apply();
-        $timeout(function () {
-            chat.scrollTop = chat.scrollHeight;
-        });
-    });
-
-
     $scope.$watch('player.booster', function (booster) {
         if (booster) {
             document.querySelector('body').classList.add('steam');
@@ -206,7 +159,53 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
 
     $scope.move = function () {
         socket.emit('checkgame.move');
-    }
+    };
 
-})
-;
+
+    socket.on('checkgame.steamstart', function (i) {
+        var val = 30000;
+        if (i == 2)
+            val = 60000;
+        $scope.steamstart(val);
+    });
+
+    socket.on('checkgame.move', function (id) {
+        $state.go('check', {id: id});
+    });
+
+    socket.on('checkgame.steamend', function () {
+        $scope.steamend();
+    });
+
+    socket.on('checkgame.game', function (send) {
+        if (send.reset)
+            $scope.resetShapes();
+        $scope.name = send.name;
+        $scope.blocks = send.blocks;
+        $scope.discovered = send.discovered;
+        $scope.players = send.players;
+        $scope.selects = [];
+        $scope.$apply();
+    });
+
+    socket.on('checkgame.players', function (players) {
+        $scope.players = players;
+        players.forEach(function (p) {
+            if (p.sid != user.sid)
+                return;
+            $scope.player = p;
+        });
+        $scope.$apply();
+    });
+
+    var chat = document.querySelector('.chat-window');
+    socket.on('checkgame.chat', function (message) {
+        message.date = new Date();
+        $scope.messages.push(message);
+        $scope.$apply();
+        $timeout(function () {
+            chat.scrollTop = chat.scrollHeight;
+        });
+    });
+
+});

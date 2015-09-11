@@ -1,9 +1,14 @@
-function Game() {
+var Player = require('./player.js');
+
+function Game(store, db, id) {
     var self = this;
     this.point = 0;
     this.players = [];
     this.turn = 0;
     this.e = [];
+    this.store = store;
+    this.db = db;
+    this.id = id;
 }
 
 Game.prototype.restart = function () {
@@ -12,15 +17,32 @@ Game.prototype.restart = function () {
     this.startCheck();
 };
 
-Game.prototype.addPlayer = function (socket) {
+Game.prototype.join = function (socket) {
     this.players.push(new Player(socket, this));
+    this.sync();
+};
+
+Game.prototype.reEnter = function (socket) {
+    var player = this.getPlayer(socket.sid);
+    if (player) {
+        player.setSocket(socket);
+        this.sync();
+        return;
+    }
+    this.join(socket);
+    this.sync();
 };
 
 Game.prototype.removePlayer = function (socket) {
     var self = this;
     this.players.forEach(function (player) {
-        if (player.socket == socket)
-            self.players.remove(player);
+        if (player.socket != socket)
+            return;
+        if (self.ing && player.in) {
+            player.disconnect = true;
+            return;
+        }
+        self.players.remove(player);
     });
 };
 
@@ -36,6 +58,7 @@ Game.prototype.turnEndCheck = function () {
         return;
     this.calculate();
 };
+
 
 Game.prototype.eCardCheck = function () {
     var end = true;
@@ -78,12 +101,31 @@ Game.prototype.calculateWinner = function () {
             return;
         }
         self.winner = player;
-        console.log('winner', player);
         self.draw = false;
     });
     this.sync();
     return {x: x, e: e};
 };
+
+Game.prototype.zerosWin = function () {
+    var zeros = [];
+    var name = "";
+    this.inPlayers.forEach(function (player) {
+        if (player.submitted !== 0)
+            return;
+        zeros.push(player);
+        name += player.name + ", ";
+    });
+    var length = zeros.length;
+    if (length == 0)
+        return;
+
+    var point = parseInt(this.point / length);
+    this.alert("플레이어 (" + name.substr(0, name.length - 2), ")가 0카드로 승리하여 " + point + "P를 얻습니다.");
+    this.point = this.point % length;
+    this.sync();
+};
+
 
 Game.prototype.calculate = function () {
     var result = this.calculateWinner();
@@ -97,6 +139,7 @@ Game.prototype.calculate = function () {
         return;
     }
     if (this.draw) {
+        this.zerosWin();
         this.turnStart();
         return;
     }
@@ -104,12 +147,14 @@ Game.prototype.calculate = function () {
     this.turnStart();
 };
 
+
 Game.prototype.turnEnd = function () {
     this.turnEnded = true;
 };
 
 Game.prototype.waitForECards = function () {
     this.e.forEach(function (player) {
+        player.eCard = undefined;
         player.alert("카드를 제출해주세요.");
     });
 };
@@ -152,21 +197,24 @@ Game.prototype.alert = function (message, fail, duration) {
     });
 };
 
-
 Game.prototype.start = function () {
     this.ing = true;
     this.inPlayers = [];
     var self = this;
     self.players.forEach(function (player) {
-        if (player.in)
-            self.inPlayers.push(player);
+        if (!player.in)
+            return;
+        self.inPlayers.push(player);
+        player.start();
     });
     this.alert("게임을 시작합니다");
     this.turnStart();
 };
 
+
 Game.prototype.turnStart = function () {
-    if (this.turn > 9) {
+    this.e = [];
+    if (this.turn > 8) {
         this.restart();
         return;
     }
@@ -196,9 +244,12 @@ Game.prototype.sync = function () {
     });
     var game = {};
     game.ing = this.ing;
+    game.id = this.id;
     game.turn = this.turn;
     game.point = this.point;
     this.players.forEach(function (player) {
+        if (player.disconnect)
+            return;
         game.submitted = player.submitted;
         game.eCard = player.eCard;
         state.game = game;
@@ -206,92 +257,65 @@ Game.prototype.sync = function () {
     });
 };
 
-
-Player = function (socket, game) {
-    this.socket = socket;
-    this.cards = [1, 2, 3, 4, 5, 6, 7, 'e', 'x'];
-    var self = this;
-    this.game = game;
-    socket.on('sevengame.in', function (val) {
-        self.setIn(val);
-    });
-    socket.on('submit', function (i) {
-        self.submit(i);
-    });
+Game.prototype.getPlayer = function (sid) {
+    for (var i = 0; i < this.players.length; i++) {
+        if (this.players[i].sid == sid)
+            return this.players[i];
+    }
+};
+Game.prototype.getInPlayer = function (sid) {
+    for (var j = 0; j < this.inPlayers.length; j++) {
+        if (this.inPlayers[j].sid == sid)
+            return this.inPlayers[j];
+    }
 };
 
-Player.prototype.submitPoint = function () {
-    this.socket.player.score--;
-    if (this.socket.player.score < 0)
-        this.socket.player.score = 0;
-    this.game.point++;
+Game.prototype.isPlayingPlayer = function (sid) {
+    if (!this.ing)
+        return false;
+    return this.getInPlayer(sid);
 };
 
-Player.prototype.getInfo = function (submitted) {
-    var player = {};
-    player.name = this.socket.player.name;
-    player.score = this.socket.player.score;
-    player.sid = this.socket.player.sid;
-    player.cards = this.cards;
-    player.in = this.in;
-    if (this.game.turnEnded)
-        player.submitted = this.submitted;
-    return player;
+Game.prototype.isPlayingPlayerExist = function (sid) {
+    if (!this.ing)
+        return false;
+    for (var i = 0; i < this.inPlayers.length; i++) {
+        var player = this.inPlayers[i];
+        if (!player.disconnect && player.sid != sid)
+            return true;
+    }
+    return false;
 };
 
 
-Player.prototype.alert = function (message, fail, duration) {
-    this.socket.emit('sevengame.alert', new Message(message, fail, duration));
+Game.prototype.isEmpty = function () {
+    if (!this.ing)
+        return this.players.length == 0;
+    for (var i = 0; i < this.players.length; i++) {
+        var player = this.players[i];
+        if (!player.in)
+            return false;
+        if (player.in && !player.disconnect)
+            return false;
+    }
+    return true;
 };
 
-Player.prototype.setIn = function (val) {
-    if (this.game.ing)
+Game.prototype.leave = function (sid) {
+    var player = this.getPlayer(sid);
+    if (!player)
         return;
-    this.in = val;
-    this.game.startCheck();
-};
-
-Player.prototype.submit = function (index) {
-    if (this.submitted) {
-        this.changeSubmitted(index);
+    if (!this.ing) {
+        this.players.remove(player);
+        this.sync();
         return;
     }
-    this.submitted = this.cards.splice(index, 1)[0];
-    this.game.turnEndCheck();
-    this.game.sync();
-};
-
-
-Player.prototype.changeSubmitted = function (index) {
-    if (!this.game.turnEnded) {
-        var tmp = this.submitted;
-        this.submitted = this.cards[index];
-        this.cards[index] = tmp;
-        this.game.sync();
+    if (!player.in) {
+        this.players.remove(player);
+        this.sync();
         return;
     }
-    if (this.submitted == 'e') {
-        if (this.eCard)
-            return;
-        this.eCard = this.cards.splice(index, 1)[0];
-        this.game.eCardCheck();
-        return;
-    }
-    this.alert("턴이 끝났습니다.");
+    player.disconnect = true;
 };
-
-Player.prototype.win = function () {
-    this.game.alert(this.socket.player.name + "님이 " + this.submitted + "으로 승리하셨습니다.");
-    this.socket.player.score += this.game.point;
-    this.game.point = 0;
-    this.game.sync();
-};
-
-
-function Message(message, fail, duration) {
-    this.message = message;
-    this.fail = fail;
-    this.duration = duration;
-}
 
 module.exports = Game;

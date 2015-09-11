@@ -67,8 +67,7 @@ ga('create', 'UA-67266885-1', 'auto');
 
 
 var app = angular.module('resume', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAnimate']);
-
-
+app.scope = {};
 app.run(function ($rootScope, $location, $window) {
     $rootScope
         .$on('$stateChangeSuccess',
@@ -78,3 +77,4 @@ app.run(function ($rootScope, $location, $window) {
             $window.ga('send', 'pageview', {page: $location.path()});
         });
 });
+
