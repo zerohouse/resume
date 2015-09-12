@@ -13,6 +13,7 @@ module.exports = function (http, store, db) {
         checkgame(io, socket, store, db, Message);
         sevengame(io, socket, store, db, Message);
 
+
         function preventMutiple(key) {
             logger.debug('prevent multiple', key)
             socket.join(key);

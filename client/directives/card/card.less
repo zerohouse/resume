@@ -4,7 +4,6 @@ card {
   padding: 0;
   height: 150px;
   width: 100px;
-  margin: 10px;
   font-size: 300%;
   text-align: center;
   line-height: 150px;
@@ -76,7 +75,34 @@ card.flipped .back {
   }
 }
 
+.card-empty {
+  height: 158px;
+  width: 108px;
+  border: 4px dotted #ccc;
+  border-radius: 10px;
+  margin: 10px auto;
+  position: relative;
+  .word {
+    font-size: 20px;
+    position: absolute;
+    color: #ccc;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+  }
+}
+
 @media screen and (max-width: 500px) {
+  .card-empty {
+    height: 88px;
+    width: 68px;
+    .word {
+      font-size: 18px;
+    }
+  }
+
   card {
     width: 60px;
     height: 80px;
