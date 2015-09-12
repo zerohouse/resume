@@ -166,17 +166,15 @@ Player.prototype.win = function () {
         this.game.alert(this.name + "님이 " + this.submitted + "으로 높지만, 연결이 끊겨 칩은 다음 라운드로 넘어갑니다.");
         return;
     }
-    var message = this.name + "님이 " + this.submitted + "으로 승리하셨습니다.";
     if (this.submitted < 4) {
-        message += "하나씩 더 가져갑니다.";
         this.game.inPlayers.forEach(function (player) {
             player.submitPoint();
         });
     }
-    this.game.alert(message, true, 3000);
     this.score += this.game.point;
     this.game.point = 0;
-    this.game.sync();
+    logger.debug(this.sid);
+    this.game.sync({winner: [this.sid]});
     this.save();
 };
 

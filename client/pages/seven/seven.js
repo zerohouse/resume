@@ -6,7 +6,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
     var blackchips = $scope.blackchips = [];
 
     $scope.$watch('game.point', function (point) {
-        console.log($scope.game);
         $scope.compute(point);
     });
 
@@ -40,6 +39,7 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
     $scope.compute = function (point) {
         var chips = getPoint();
         if (point < chips) {
+            $scope.win = false;
             bluechips = $scope.bluechips = [];
             blackchips = $scope.blackchips = [];
             chips = 0;
@@ -89,7 +89,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         if ($scope.player.playing)
             $scope.players.remove($scope.player);
     }
-
 
     var width = document.querySelector('.card-dek').offsetWidth;
     angular.element($window).bind('resize', function () {
@@ -174,11 +173,58 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         sortPlayers();
         $scope.game = state.game;
         $scope.$apply();
-        if (state.type != 'open')
+        if (!state.type)
             return;
+        if (state.type == 'open') {
+            open();
+            return;
+        }
+        $scope.stateWinner = false;
+        if (state.type.winner)
+            singleWin(state.type.winner);
+        if (state.type.winners)
+            zeroWin(state.type.winner);
+    });
+
+
+    function zeroWin(winners) {
+        var name = "";
+        winners.forEach(function (winner) {
+            name += winner.name + " ";
+        });
+
+        var message = name + "님이 0으로 승리하셨습니다.";
+        message += "칩을 나눠 가져갑니다.";
+        alert(message);
+    }
+
+    function singleWin(winner) {
+        if (winner == $scope.player.sid) {
+            $scope.win = true;
+            alert("이겼습니다! 칩을 가져옵니다.");
+            return;
+        }
+        $scope.win = false;
+        winner = getWinner(winner);
+        var message = winner.name + "님이" + winner.submitted + "로 승리하셨습니다.";
+        if (winner.submitted < 4 && winner.submitted != 0)
+            message += "칩과 추가 칩을 가져갑니다.";
+        else
+            message += "칩을 가져갑니다.";
+        alert(message);
+
+        function getWinner(sid) {
+            for (var i = 0; i < $scope.inPlayers.length; i++) {
+                if ($scope.inPlayers[i].sid == sid)
+                    return $scope.inPlayers[i];
+            }
+        }
+    }
+
+
+    function open() {
         alert('준비됐어? 까보까? <br> 자 지금부터 확인들어 가것습니다이');
         var i = 0;
-
         open(i, 800);
         function open(I, delay) {
             if (i == $scope.inPlayers.length)
@@ -190,6 +236,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
                 $scope.$apply();
             }, delay);
         }
-    });
+    }
 
 });

@@ -29,7 +29,7 @@
     <div class="game" ng-show="game.ing">
         <div class="players">
             <div class="player" ng-click="setTo(p)"
-                 ng-repeat="p in inPlayers">
+                 ng-repeat="p in inPlayers" id="{{p.sid}}">
                 <div><i class="fa fa-user fa-5x"></i></div>
                 {{p.name||"플레이어"}} <span class="badge">{{p.score||0}}</span>
 
@@ -42,7 +42,8 @@
 
             </div>
         </div>
-        <div class="chips wrap-block">
+        <div class="chips wrap-block"
+             ng-class="{'animate-move-down':win, 'animate-move-up':!win}">
             <div class="counter">{{game.point}} chips</div>
 
             <div class="blue chip" ng-repeat="chip in bluechips"></div>
@@ -54,7 +55,7 @@
         </div>
 
 
-        <div class="card-dek wrap-block">
+        <div class="card-dek wrap-block" id="{{player.sid}}">
             <card class="card-hover" ng-style="cardStyle(player.cards.indexOf(card))" front="card"
                   ng-repeat="card in player.cards" ng-click="submit(player.cards.indexOf(card))"></card>
             <div class="myscore">{{player.name}} <span class="badge">{{player.score}}</span></div>

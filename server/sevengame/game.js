@@ -78,6 +78,7 @@ Game.prototype.eCardCheck = function () {
     this.calculate();
 };
 
+
 Game.prototype.calculateWinner = function () {
     logger.debug('calculateWinner');
     var x;
@@ -108,7 +109,6 @@ Game.prototype.calculateWinner = function () {
         winner = player;
         draw = false;
     });
-    this.sync('open');
     return {x: x, e: e, winner: winner, draw: draw};
 };
 
@@ -118,16 +118,14 @@ Game.prototype.zerosWin = function () {
     this.inPlayers.forEach(function (player) {
         if (player.isSubmitted())
             return;
-        zeros.push(player);
-        name += player.name + ", ";
+        zeros.push(player.getInfo);
     });
     var length = zeros.length;
     if (length == 0)
         return false;
     var point = parseInt(this.point / length);
-    this.alert("플레이어 (" + name.substr(0, name.length - 2), ")가 0카드로 승리하여 " + point + "P를 얻습니다.");
     this.point = this.point % length;
-    this.sync();
+    this.sync({winners: zeros});
     return true;
 };
 
@@ -135,6 +133,7 @@ Game.prototype.zerosWin = function () {
 Game.prototype.calculate = function () {
     logger.debug('calculate');
     var result = this.calculateWinner();
+    this.sync('open');
     this.turnEnd();
     var delayPerPerson = 2000;
     var delay;
