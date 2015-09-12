@@ -23,6 +23,10 @@ manager.register = function (game, sid, id) {
     rooms[id] = game;
 };
 
+manager.getByUrl = function (url) {
+    return rooms[url];
+};
+
 manager.leave = function (sid) {
     logger.debug('leave games');
     if (!sidRooms[sid])

@@ -6,14 +6,14 @@ module.exports = function (io, socket, store, db, Message) {
     socket.on('sevengame.join', function (id) {
         var game = manager.getPlayingGame(socket.sid);
         if (game) {
-            if (manager[id] != game) {
+            if (game = manager.getByUrl(id) != game) {
                 socket.emit('redirect', {state: 'seven', object: {id: game.id}, message: '진행중인 게임이 있습니다. 다시 연결합니다.'});
             }
             manager.register(game, socket.sid, id);
             game.reEnter(socket);
             return;
         }
-        game = manager[id];
+        game = manager.getByUrl(id);
         if (game) {
             manager.register(game, socket.sid);
             game.join(socket);

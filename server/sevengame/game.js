@@ -231,9 +231,11 @@ Game.prototype.startCheck = function (val) {
             inPlayers++;
     });
     var self = this;
-    if (inPlayers > 2) {
-        if (val)
+    if (inPlayers > 1) {
+        if (val) {
             this.start();
+            return;
+        }
         this.setTimer(function () {
             self.startCheck(true);
         }, 5000);
