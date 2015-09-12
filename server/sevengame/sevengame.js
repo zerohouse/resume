@@ -4,6 +4,17 @@ var logger = require('./../utils/logger.js');
 
 module.exports = function (io, socket, store, db, Message) {
     socket.on('sevengame.join', function (id) {
+        var on = socket.on.bind(socket);
+        var events = {};
+
+        socket.on = function (name, fn) {
+            if (events[name]) {
+                socket.removeListener(name, events[name]);
+            }
+            on(name, fn);
+            events[name] = fn;
+        };
+
         var game = manager.getPlayingGame(socket.sid);
         if (game) {
             if (manager.getByUrl(id) != game) {
@@ -22,6 +33,7 @@ module.exports = function (io, socket, store, db, Message) {
         game = new Game(store, db, id);
         game.join(socket);
         manager.register(game, socket.sid, id);
+
     });
 
     socket.on('sevengame.getRooms', function () {
