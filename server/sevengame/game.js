@@ -238,7 +238,7 @@ Game.prototype.startCheck = function (val) {
         }
         this.setTimer(function () {
             self.startCheck(true);
-        }, 100);
+        }, 5000);
         this.alert('5초후 게임이 시작됩니다.');
         return;
     }
