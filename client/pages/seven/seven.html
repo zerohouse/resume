@@ -3,9 +3,11 @@
         <small ng-show="game.ing">게임중 : {{game.turn}}번째 순서</small>
         <small ng-show="!game.ing">대기중 : 3명이상이 참여하면 시작합니다.</small>
         {{time}}
-        <div class="btn btn-sm btn-success" ng-show="!player.in" ng-click="player.in = true">게임참여</div>
-        <div class="btn btn-sm btn-danger" ng-show="player.in" ng-click="player.in = false">관전</div>
-        <div class="btn btn-sm btn-primary" popup="sevenrooms">방목록</div>
+        <div style="margin:5px; display:inline-block">
+            <div class="btn btn-sm btn-success" ng-show="!player.in" ng-click="player.in = true">게임참여</div>
+            <div class="btn btn-sm btn-danger" ng-show="player.in" ng-click="player.in = false">관전</div>
+            <div class="btn btn-sm btn-primary" popup="sevenrooms">방목록</div>
+        </div>
     </h3>
 
     <div class="panel panel-primary" ng-show="players.length!=0">
@@ -41,7 +43,7 @@
             </div>
         </div>
         <div class="chips wrap-block">
-            <h3>{{game.point}} chips</h3>
+            <div class="counter">{{game.point}} chips</div>
 
             <div class="blue chip" ng-repeat="chip in bluechips"></div>
             <div class="black chip" ng-repeat="chip in blackchips"></div>

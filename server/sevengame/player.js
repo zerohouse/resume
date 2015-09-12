@@ -120,7 +120,11 @@ Player.prototype.submit = function (index) {
         this.changeSubmitted(index);
         return;
     }
-    this.submitted = this.cards.splice(index, 1)[0];
+    if (this.cards.length - 1 < index)
+        this.submitted = 1;
+    else
+        this.submitted = this.cards.splice(index, 1)[0];
+
     this.game.turnEndCheck();
     this.game.sync();
     this.save();

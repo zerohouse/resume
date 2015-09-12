@@ -6,5 +6,16 @@
                 {{room||"이름없음"}}
             </li>
         </ul>
+        <div class="panel-footer">
+            <div class="input-group">
+                <input class="form-control" placeholder="이름" ng-model="id" ng-enter="move(id)">
+
+                <div class="input-group-addon" ng-click="move(id)">
+                    <span ng-show="!rooms.contains(id)">방만들기</span>
+                    <span ng-show="rooms.contains(id)">들어가기</span>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>

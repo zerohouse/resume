@@ -21,8 +21,15 @@
 }
 
 .chips {
-  padding: 40px;
+  color: #525252;
+  min-height: 200px;
+  padding: 50px 20px;
   text-align: center;
+  .counter {
+    font-size: 25px;
+    font-weight: 900;
+    color: #777;
+  }
   .chip {
     margin: 0 -10px;
     display: inline-block;
@@ -88,6 +95,35 @@
 }
 
 @media screen and (max-width: 500px) {
+  .mycard {
+    text-align: center;
+    height: 120px;
+    padding-top: 10px;
+  }
+
+  .card-dek {
+    height: 170px;
+  }
+
+  .players {
+    .fa-user {
+      display: none;
+    }
+  }
+
+  .myscore {
+    padding-top: 115px
+  }
+
+  .chips {
+    padding: 10px 20px;
+    min-height: inherit;
+    position: relative;
+    .counter {
+      font-size: 15px;
+    }
+  }
+
   .blue {
     width: 30px !important;
     height: 30px !important;

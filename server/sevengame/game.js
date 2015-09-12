@@ -230,6 +230,7 @@ Game.prototype.startCheck = function (val) {
         if (player.in)
             inPlayers++;
     });
+
     var self = this;
     if (inPlayers > 1) {
         if (val) {
