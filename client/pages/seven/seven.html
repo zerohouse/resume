@@ -33,7 +33,7 @@
 
                 <div class="label label-danger disconnect" ng-show="p.disconnect">연결끊김</div>
 
-                <div ng-show="p.submitted">
+                <div ng-show="p.submitted !== undefined">
                     <card ng-click="open(p)" ng-class="{flipped:p.submitted===true || !p.open}"
                           front="p.submitted"></card>
                 </div>
@@ -48,14 +48,16 @@
         </div>
 
         <div class="mycard">
-            <card ng-show="game.submitted" front="game.submitted"></card>
+            <card ng-show="game.submitted!==undefined" front="game.submitted"></card>
         </div>
 
 
         <div class="card-dek wrap-block">
             <card class="card-hover" ng-style="cardStyle(player.cards.indexOf(card))" front="card"
                   ng-repeat="card in player.cards" ng-click="submit(player.cards.indexOf(card))"></card>
+            <div class="myscore">{{player.name}} <span class="badge">{{player.score}}</span></div>
         </div>
+
     </div>
 
     <div class="panel panel-primary">

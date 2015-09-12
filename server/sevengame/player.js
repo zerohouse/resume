@@ -34,7 +34,7 @@ Player.prototype.setSocket = function (socket) {
         self.setIn(val);
     });
     socket.on('sevengame.submit', function (i) {
-        logger.debug('sevengame.submit');
+        logger.debug('sevengame.submit', i);
         self.submit(i);
     });
 
@@ -63,6 +63,10 @@ Player.prototype.submitPoint = function () {
     this.save();
 };
 
+Player.prototype.isSubmitted = function () {
+    return this.submitted !== undefined;
+};
+
 Player.prototype.getInfo = function (submitted) {
     var player = {};
     player.playing = this.playing;
@@ -73,7 +77,7 @@ Player.prototype.getInfo = function (submitted) {
     player.in = this.in
     player.disconnect = this.disconnect;
     if (!this.game.turnEnded) {
-        if (this.submitted) {
+        if (this.isSubmitted()) {
             player.submitted = true;
         }
         return player;
@@ -112,7 +116,7 @@ Player.prototype.setIn = function (val) {
 Player.prototype.submit = function (index) {
     if (!this.game.ing)
         return;
-    if (this.submitted) {
+    if (this.isSubmitted()) {
         this.changeSubmitted(index);
         return;
     }

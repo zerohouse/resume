@@ -52,7 +52,7 @@ Game.prototype.turnEndCheck = function () {
     logger.debug('turnEndCheck');
     var end = true;
     this.inPlayers.forEach(function (player) {
-        if (player.submitted)
+        if (player.isSubmitted())
             return;
         end = false;
     });
@@ -116,7 +116,7 @@ Game.prototype.zerosWin = function () {
     var zeros = [];
     var name = "";
     this.inPlayers.forEach(function (player) {
-        if (player.submitted !== 0)
+        if (player.isSubmitted())
             return;
         zeros.push(player);
         name += player.name + ", ";
@@ -238,7 +238,7 @@ Game.prototype.startCheck = function (val) {
         }
         this.setTimer(function () {
             self.startCheck(true);
-        }, 5000);
+        }, 100);
         this.alert('5초후 게임이 시작됩니다.');
         return;
     }
@@ -274,7 +274,7 @@ Game.prototype.start = function () {
 Game.prototype.turnStart = function () {
     this.eTime = false;
     this.e = [];
-    if (this.turn > 7) {
+    if (this.turn > 8) {
         this.restart();
         return;
     }
@@ -290,6 +290,7 @@ Game.prototype.turnStart = function () {
             player.submitRandom();
         }
     });
+
     this.players.forEach(function (p) {
         if (p.playing) {
             p.alert((self.turn) + "번째 카드를 선택해주세요.");
@@ -300,7 +301,7 @@ Game.prototype.turnStart = function () {
     this.sync();
     this.setTimer(function () {
         self.inPlayers.forEach(function (p) {
-            if (!p.submitted)
+            if (!p.isSubmitted())
                 p.submitRandom();
         });
     }, turnTime);

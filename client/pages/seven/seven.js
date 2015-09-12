@@ -6,6 +6,7 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
     var blackchips = $scope.blackchips = [];
 
     $scope.$watch('game.point', function (point) {
+        console.log($scope.game);
         $scope.compute(point);
     });
 
