@@ -399,6 +399,7 @@ Game.prototype.leave = function (sid) {
         return;
     }
     player.disconnect = true;
+    this.sync();
 };
 
 Game.prototype.delete = function () {

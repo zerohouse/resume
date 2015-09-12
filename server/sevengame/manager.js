@@ -33,7 +33,6 @@ manager.leave = function (sid) {
         return;
     sidRooms[sid].leave(sid);
     if (!sidRooms[sid].isEmpty()) {
-        sidRooms[sid].sync();
         return;
     }
     logger.debug('delete', sidRooms[sid].id);
