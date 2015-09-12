@@ -205,7 +205,7 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         }
         $scope.win = false;
         winner = getWinner(winner);
-        var message = winner.name + "님이" + winner.submitted + "로 승리하셨습니다.";
+        var message = winner.name + "님이 " + winner.submitted + "(으)로 승리하셨습니다.";
         if (winner.submitted < 4 && winner.submitted != 0)
             message += "칩과 추가 칩을 가져갑니다.";
         else

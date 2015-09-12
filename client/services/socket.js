@@ -13,6 +13,7 @@ app.factory('socket', function (user, $state, $timeout) {
         console.log('yo');
         if (yo)
             return;
+        socket.disconnect();
         socket.connect('/', {path: '/socket.io', 'multiplex': false});
         $timeout(yelling, 1000);
     }

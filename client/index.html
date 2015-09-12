@@ -53,12 +53,11 @@
     </div>
 </nav>
 
-<div class="alert-window" ng-controller="alert" ng-show="showing">
+<div class="alert-window fade-in-out" ng-controller="alert" ng-show="showing">
     <div class="message" ng-click="showing=!showing">
-        <div class="alert"
-             ng-class="{'list-group-item-success':alert.success,'list-group-item-danger':!alert.success}">
+        <div ng-class="{'success':alert.success,'danger':!alert.success}">
             <div ng-bind-html="alert.alert"></div>
-            <small>{{alert.date.toString()}}</small>
+            <!--<small>{{alert.date.toString()}}</small>-->
         </div>
     </div>
 </div>
