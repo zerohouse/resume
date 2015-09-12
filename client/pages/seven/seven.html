@@ -50,9 +50,10 @@
         </div>
 
         <div ng-class="{'col-md-4':game.ing, 'col-md-12':!game.ing}">
-            <h3>
-                <div><i class="fa fa-clock-o"></i>{{time}}</div>
-            </h3>
+            <h4 ng-show="time!=0">
+                <i class="fa fa-clock-o"></i> 남은시간 : {{time}}
+            </h4>
+
             <div class="panel panel-primary" ng-show="players.length!=0">
                 <div class="panel-heading">관전자</div>
                 <ul class="list-group">
@@ -60,7 +61,7 @@
                         ng-class="{'list-group-item-success':player == p}"
                         ng-repeat="p in orderedPlayers = (players | orderBy: 'score':true)">
                         {{p.name||"참여자"}} <span class="label"
-                                                 ng-class="{'label-success':p!=player&&p.in,'label-danger':!p.in,'label-primary':p.in&&p==player}">
+                                                ng-class="{'label-success':p!=player&&p.in,'label-danger':!p.in,'label-primary':p.in&&p==player}">
                 <span ng-show="p.in">참가예정</span>
                 <span ng-show="!p.in">관전</span></span>
                         <span class="badge">{{p.score||0}}</span>
@@ -69,9 +70,8 @@
             </div>
 
             <div class="panel panel-primary">
-                <div class="panel-heading">말하기
-                </div>
-                <ul class="list-group chat-window chat">
+                <div class="panel-heading" ng-click="show.chat=!show.chat" ng-init="show.chat = true">말하기</div>
+                <ul class="list-group chat-window chat" ng-show="show.chat">
                     <li class="list-group-item" ng-repeat="message in messages"
                         ng-class="{'list-group-item-danger':message.to}">
                         <div ng-show="message.to.sid != player.sid" class="btn btn-sm btn-primary"
@@ -84,7 +84,7 @@
                         <small ng-show="!game.ing">{{message.date.toDateString()}}</small>
                     </li>
                 </ul>
-                <div class="panel-footer">
+                <div class="panel-footer" ng-show="show.chat">
                     <div class="input-group" ng-class="{whisper:message.to}">
                         <div class="input-group-addon" ng-show="message.to">{{message.to.name}}님에게 <i
                                 class="fa fa-times"
@@ -98,15 +98,15 @@
             </div>
 
             <div class="panel panel-primary">
-                <div class="panel-heading">게임 기록</div>
-                <ul class="list-group chat-window">
+                <div class="panel-heading" ng-click="show.record=!show.record">게임 기록</div>
+                <ul class="list-group chat-window" ng-show="show.record">
                     <li class="list-group-item" ng-repeat="log in logs">{{log.message}}</li>
                 </ul>
             </div>
 
             <div class="panel panel-primary">
-                <div class="panel-heading">규칙 : 7 게임 ( 3~8인 )</div>
-                <ul class="list-group chat-window">
+                <div class="panel-heading" ng-click="show.rule=!show.rule">규칙 : 7 게임 ( 3~8인 )</div>
+                <ul class="list-group" ng-show="show.rule">
                     <li class="list-group-item">게임 시작시 모든 참여자는 카드 10장을 받습니다. [0,1,2,3,4,5,6,7,눈,X]</li>
                     <li class="list-group-item">게임은 9 라운드로 진행되며 각 라운드에 모든 참여자는 칩을 1개씩 배팅합니다.</li>
                     <li class="list-group-item">각 라운드에 카드를 한장씩 선택하여 냅니다.</li>

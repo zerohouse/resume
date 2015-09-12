@@ -122,6 +122,7 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         p.open = !p.open;
     };
 
+    $scope.time = 0;
     function timerStart(val) {
         window.requestAnimationFrame(startTimer);
         var start;
