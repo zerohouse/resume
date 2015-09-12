@@ -10,7 +10,7 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
     });
 
     $scope.setTo = function (p) {
-        if (p == $scope.player)
+        if (p.sid == $scope.player.sid)
             return;
         if (!$scope.message)
             $scope.message = {};
@@ -19,6 +19,8 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
 
     var messages = $scope.messages = [];
     $scope.send = function (message) {
+        if (message.message == undefined || message.message == '')
+            return;
         $scope.message = {};
         $scope.message.to = message.to;
         message.date = new Date();
