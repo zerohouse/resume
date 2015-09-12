@@ -8,6 +8,7 @@ app.factory('socket', function (user, $state, $timeout) {
     yelling();
 
     function yelling() {
+        console.log('yo');
         if (yo)
             return;
         socket.connect();
