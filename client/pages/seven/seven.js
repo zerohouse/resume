@@ -46,7 +46,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         }
         for (var i = chips; i < point; i++)
             bluechips.push(i);
-        changeChips();
         function changeChips() {
             if (bluechips.length < 10)
                 return;
@@ -179,7 +178,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
             open();
             return;
         }
-        $scope.stateWinner = false;
         if (state.type.winner)
             singleWin(state.type.winner);
         if (state.type.winners)

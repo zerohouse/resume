@@ -129,7 +129,6 @@ Game.prototype.zerosWin = function () {
     return true;
 };
 
-
 Game.prototype.calculate = function () {
     logger.debug('calculate');
     var result = this.calculateWinner();

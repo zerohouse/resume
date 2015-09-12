@@ -43,11 +43,14 @@
             </div>
         </div>
         <div class="chips wrap-block"
-             ng-class="{'animate-move-down':win, 'animate-move-up':!win}">
+             ng-class="{'animate-move-down-hide':win, 'animate-move-up-hide':!win}">
             <div class="counter">{{game.point}} chips</div>
 
-            <div class="blue chip" ng-repeat="chip in bluechips"></div>
-            <div class="black chip" ng-repeat="chip in blackchips"></div>
+            <div class="blue chip"
+                 ng-class="{'animate-move-from-down':bluechips.indexOf(chip)%(inPlayers.length+1)==0,
+                  'animate-move-from-up':bluechips.indexOf(chip)%(inPlayers.length+1)!=0}"
+                 ng-repeat="chip in bluechips"></div>
+            <div class="black chip fade-in-out" ng-repeat="chip in blackchips"></div>
         </div>
 
         <div class="mycard">
