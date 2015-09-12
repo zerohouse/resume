@@ -2,7 +2,9 @@ app.factory('socket', function (user, $state, $timeout) {
     var socket = io('/', {path: '/socket.io', 'multiplex': false});
 
     var yo = false;
+    console.log('yo start');
     socket.on('connect', function () {
+        console.log('yo received');
         yo = true;
     });
     yelling();
