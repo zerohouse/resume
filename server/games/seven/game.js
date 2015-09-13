@@ -1,21 +1,18 @@
 var Player = require('./player.js');
-var logger = require('./../utils/logger.js');
+var logger = require('./../../utils/logger.js');
 var turnTime = 30000;
-function Game(store, db, id) {
+function Game() {
     var self = this;
     this.point = 0;
     this.players = [];
     this.turn = 0;
     this.e = [];
-    this.store = store;
-    this.db = db;
-    this.id = id;
 }
 
 Game.prototype.restart = function () {
     logger.debug('restart');
     this.turn = 0;
-    this.ing = false;
+    this.playing = false;
     this.players.forEach(function (p) {
         if (p.disconnect)
             p.in = false;
@@ -26,27 +23,19 @@ Game.prototype.restart = function () {
     this.startCheck();
 };
 
+
 Game.prototype.join = function (socket) {
-    if (this.getPlayer(socket.sid))
-        return;
-    this.players.push(new Player(socket, this));
-    this.sync();
-};
-
-Game.prototype.reEnter = function (socket) {
-    logger.debug('reEnter');
+    logger.debug('join seven');
     var player = this.getPlayer(socket.sid);
-
-    if (player) {
-        player.setSocket(socket);
-        player.alertAll();
+    if (!player) {
+        this.players.push(new Player(socket, this));
         this.sync();
         return;
     }
-    this.join(socket);
+    player.setSocket(socket);
+    player.alertAll();
     this.sync();
 };
-
 
 Game.prototype.turnEndCheck = function () {
     logger.debug('turnEndCheck');
@@ -114,9 +103,8 @@ Game.prototype.calculateWinner = function () {
 
 Game.prototype.zerosWin = function () {
     var zeros = [];
-    var name = "";
     this.inPlayers.forEach(function (player) {
-        if (player.isSubmitted())
+        if (player.submitted !== 0)
             return;
         zeros.push(player.getInfo);
     });
@@ -124,6 +112,10 @@ Game.prototype.zerosWin = function () {
     if (length == 0)
         return false;
     var point = parseInt(this.point / length);
+    zeros.forEach(function (player) {
+        player.score += point;
+        player.save();
+    });
     this.point = this.point % length;
     this.sync({winners: zeros});
     return true;
@@ -155,8 +147,8 @@ Game.prototype.calculate = function () {
             return;
         }
         if (result.draw) {
-            self.zerosWin();
-            self.alert("승자가 없습니다.");
+            if (!self.zerosWin())
+                self.alert("승자가 없습니다.");
             self.setTimer(function () {
                 self.turnStart();
             }, 3000);
@@ -214,6 +206,26 @@ Game.prototype.getPlayers = function () {
     return result;
 };
 
+
+Game.prototype.getPlayer = function (sid) {
+    for (var i = 0; i < this.players.length; i++) {
+        if (this.players[i].sid == sid)
+            return this.players[i];
+    }
+};
+Game.prototype.getInPlayer = function (sid) {
+    for (var j = 0; j < this.inPlayers.length; j++) {
+        if (this.inPlayers[j].sid == sid)
+            return this.inPlayers[j];
+    }
+};
+
+Game.prototype.isPlayingPlayer = function (sid) {
+    if (!this.playing)
+        return false;
+    return this.getInPlayer(sid);
+};
+
 Game.prototype.send = function (message) {
     this.players.forEach(function (p) {
         p.send(message);
@@ -221,7 +233,7 @@ Game.prototype.send = function (message) {
 };
 
 Game.prototype.startCheck = function (val) {
-    if (this.ing)
+    if (this.playing)
         return;
     var inPlayers = 0;
     this.players.forEach(function (player) {
@@ -264,7 +276,7 @@ Game.prototype.start = function () {
         self.inPlayers.push(player);
         player.start();
     });
-    this.ing = true;
+    this.playing = true;
     this.alert("게임을 시작합니다");
     this.turnStart();
 };
@@ -325,7 +337,7 @@ Game.prototype.sync = function (val) {
         state.players.push(player.getInfo());
     });
     var game = {};
-    game.ing = this.ing;
+    game.playing = this.playing;
     game.id = this.id;
     game.turn = this.turn;
     game.point = this.point;
@@ -339,27 +351,8 @@ Game.prototype.sync = function (val) {
     });
 };
 
-Game.prototype.getPlayer = function (sid) {
-    for (var i = 0; i < this.players.length; i++) {
-        if (this.players[i].sid == sid)
-            return this.players[i];
-    }
-};
-Game.prototype.getInPlayer = function (sid) {
-    for (var j = 0; j < this.inPlayers.length; j++) {
-        if (this.inPlayers[j].sid == sid)
-            return this.inPlayers[j];
-    }
-};
-
-Game.prototype.isPlayingPlayer = function (sid) {
-    if (!this.ing)
-        return false;
-    return this.getInPlayer(sid);
-};
-
 Game.prototype.isPlayingPlayerExist = function (sid) {
-    if (!this.ing)
+    if (!this.playing)
         return false;
     for (var i = 0; i < this.inPlayers.length; i++) {
         var player = this.inPlayers[i];
@@ -371,7 +364,7 @@ Game.prototype.isPlayingPlayerExist = function (sid) {
 
 
 Game.prototype.isEmpty = function () {
-    if (!this.ing)
+    if (!this.playing)
         return this.players.length == 0;
     for (var i = 0; i < this.players.length; i++) {
         var player = this.players[i];
@@ -388,7 +381,7 @@ Game.prototype.leave = function (sid) {
     var player = this.getPlayer(sid);
     if (!player)
         return;
-    if (!this.ing) {
+    if (!this.playing) {
         this.players.remove(player);
         this.sync();
         return;
@@ -402,7 +395,7 @@ Game.prototype.leave = function (sid) {
     this.sync();
 };
 
-Game.prototype.delete = function () {
+Game.prototype.destroy = function () {
     clearTimeout(this.timer);
 };
 

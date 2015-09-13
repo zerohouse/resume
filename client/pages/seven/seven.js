@@ -1,4 +1,4 @@
-app.controller('seven', function ($scope, socket, user, alert, $window, $timeout) {
+app.controller('seven', function ($scope, socket, user, alert, $window, $timeout, $stateParams) {
 
     $scope.logs = [];
 
@@ -9,30 +9,10 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         $scope.compute(point);
     });
 
-    $scope.setTo = function (p) {
-        if (p.sid == $scope.player.sid)
-            return;
-        if (!$scope.message)
-            $scope.message = {};
-        $scope.message.to = p;
-    };
+    $scope.roomId = $stateParams.id;
 
-    var messages = $scope.messages = [];
-    $scope.send = function (message) {
-        if (message.message == undefined || message.message == '')
-            return;
-        $scope.message = {};
-        $scope.message.to = message.to;
-        message.date = new Date();
-        socket.emit('sevengame.chat', message);
-        if (!message.to)
-            return;
-        message.from = message.to;
-        message.fromme = true;
-        messages.push(message);
-        $timeout(function () {
-            chat.scrollTop = chat.scrollHeight;
-        });
+    $scope.prompt = function (val) {
+        window.prompt("URL", "http://picks.be/check/" + val);
     };
 
     var bp = 5;
@@ -89,9 +69,12 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
             $scope.players.remove($scope.player);
     }
 
-    var width = document.querySelector('.card-dek').offsetWidth;
+    var dek = document.querySelector('.card-dek');
+    var width = dek.offsetWidth;
     angular.element($window).bind('resize', function () {
-        width = document.querySelector('.card-dek').offsetWidth;
+        if (dek == null)
+            return;
+        width = dek.offsetWidth;
         $scope.$apply();
     });
 
@@ -138,16 +121,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
     }
 
 
-    var chat = document.querySelector('.chat-window');
-    socket.on('sevengame.chat', function (message) {
-        $scope.messages.push(message);
-        $scope.$apply();
-        $timeout(function () {
-            chat.scrollTop = chat.scrollHeight;
-        });
-    });
-
-
     socket.on('sevengame.time', function (time) {
         timerStart(time);
     });
@@ -163,9 +136,6 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
         $scope.logs.unshift(message);
         alert(message.message);
         $scope.$apply();
-        $timeout(function () {
-            chat.scrollTop = chat.scrollHeight;
-        });
     });
 
     socket.on('sevengame.sync', function (state) {

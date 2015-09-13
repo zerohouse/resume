@@ -157,10 +157,6 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         window.prompt("URL", "http://picks.be/check/" + val);
     };
 
-    $scope.move = function () {
-        socket.emit('checkgame.move');
-    };
-
 
     socket.on('checkgame.steamstart', function (i) {
         var val = 30000;
@@ -178,14 +174,27 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
     });
 
     socket.on('checkgame.game', function (send) {
-        if (send.reset)
+        var selects;
+        if (!send.reset) {
+            selects = [];
+            $scope.selects.forEach(function (block) {
+                selects.push($scope.blocks.indexOf(block))
+            });
+        } else
             $scope.resetShapes();
         $scope.name = send.name;
         $scope.blocks = send.blocks;
         $scope.discovered = send.discovered;
         $scope.players = send.players;
-        $scope.selects = [];
+        if (!send.reset)
+            selects.forEach(function (i) {
+                blockSelect(i);
+            });
+        sortPlayers();
         $scope.$apply();
+        function blockSelect(i) {
+            $scope.selectBlock($scope.blocks[i]);
+        }
     });
 
     socket.on('checkgame.players', function (players) {
@@ -198,6 +207,8 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
         $scope.$apply();
     });
 
+
+
     var chat = document.querySelector('.chat-window');
     socket.on('checkgame.chat', function (message) {
         message.date = new Date();
@@ -207,5 +218,13 @@ app.controller('check', function ($scope, alert, socket, $stateParams, user, $st
             chat.scrollTop = chat.scrollHeight;
         });
     });
+
+    function sortPlayers() {
+        $scope.players.forEach(function (p) {
+            if (p.sid == user.sid) {
+                $scope.player = p;
+            }
+        });
+    }
 
 });

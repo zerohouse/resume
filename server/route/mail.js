@@ -2,6 +2,8 @@ var random = require('./../utils/random.js');
 var fs = require('fs');
 var mailInfo = JSON.parse(fs.readFileSync('./../.mailinfo.json', encoding = "utf8"));
 var nodemailer = require('nodemailer');
+var db = require('./../db/db.js');
+var logger = require('./../utils/logger.js');
 var sesTransport = require('nodemailer-ses-transport');
 var content = function (to, key) {
     return "<html><body><h1><a href='" + mailInfo.url + "'>PICKS</a></h1>" +
@@ -37,7 +39,9 @@ function Error(err) {
     this.error = err;
 }
 
-module.exports = function (app, logger, store, db) {
+
+
+module.exports = function (app) {
 
     app.get('/api/password', function (req, res) {
         var email = req.passed.email;

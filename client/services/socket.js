@@ -21,7 +21,7 @@ app.factory('socket', function (user, $state, $timeout) {
     socket.on('redirect', function (send) {
         if (send.message)
             alert(send.message);
-        $state.go(send.state, send.object);
+        $state.go(send.state, send.params);
     });
 
     var on = socket.on.bind(socket);

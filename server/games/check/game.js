@@ -1,14 +1,72 @@
-require('./../utils/util.js')();
 var block = require('./block.js');
-var namer = require('./../utils/namer.js');
+var Player = require('./player.js');
 
-var Game = function () {
+function Game() {
+    this.restart();
+    this.players = [];
+}
+
+Game.prototype.restart = function () {
     this.blocks = block.random();
     this.results = [];
     this.discovered = [];
     this.getAllResults();
-    this.name = namer.movie();
 };
+
+Game.prototype.send = function (message) {
+    this.players.forEach(function (p) {
+        p.send(message);
+    });
+};
+
+Game.prototype.join = function (socket) {
+    this.players.push(new Player(socket, this));
+    this.sync(true);
+};
+
+Game.prototype.sync = function (reset) {
+    var send = {};
+    send.reset = reset;
+    send.blocks = this.blocks;
+    send.discovered = this.discovered;
+    send.players = this.players;
+    send.players = [];
+    this.players.forEach(function (player) {
+        send.players.push(player.getInfo());
+    });
+    this.players.forEach(function (player) {
+        player.socket.emit('checkgame.game', send);
+    });
+};
+
+
+
+Game.prototype.alert = function (message, fail, duration) {
+    this.players.forEach(function (player) {
+        player.alert(message, fail, duration);
+    });
+};
+
+
+Game.prototype.leave = function (sid) {
+    this.players.remove(this.getPlayer(sid));
+};
+
+Game.prototype.isEmpty = function () {
+    return this.players.length == 0;
+};
+
+Game.prototype.getPlayerSize = function () {
+    return this.players.length;
+};
+
+Game.prototype.getPlayer = function (sid) {
+    for (var i = 0; i < this.players.length; i++) {
+        if (this.players[i].sid == sid)
+            return this.players[i];
+    }
+};
+
 
 Game.prototype.done = function () {
     return this.results.length == 0;
@@ -25,6 +83,10 @@ Game.prototype.check = function (selects) {
         return true;
     }
     return false;
+};
+
+Game.prototype.destroy = function () {
+
 };
 
 Game.prototype.getAllResults = function () {

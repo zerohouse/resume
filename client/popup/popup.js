@@ -3,28 +3,22 @@
     var pop;
     app.factory('popup', function () {
         var popup = {};
-
-        pop = function (val, notApply) {
+        pop = function (val, param) {
             popup.show = true;
             popup.state = val;
-            if (notApply)
-                return;
-            scope.$apply();
+            scope.param = param;
+            if (!scope.$$phase)
+                scope.$apply();
         };
-
         pop.isShow = function () {
             return popup.show;
         };
-
         pop.getState = function () {
             return popup.state;
         };
-
         pop.hide = function () {
             popup.show = false;
         };
-
-
         return pop;
     });
 
@@ -33,23 +27,31 @@
             restrict: 'A',
             link: function (s, e, a) {
                 e.bind('click', function () {
-                    pop(a.popup);
+                    var params = a.popup.split(',');
+                    pop(params[0], params[1]);
                 });
             }
         }
     });
 
-    app.controller('popup', function ($scope, popup) {
+    app.controller('popup', function ($scope, popup, socket) {
         scope = $scope;
         $scope.url = {};
         $scope.url.login = '/dist/popup/login/login.html';
         $scope.url.register = '/dist/popup/login/register.html';
-        $scope.url.sevenrooms = '/dist/pages/seven/rooms.html';
+        $scope.url.rooms = '/dist/popup/rooms/rooms.html';
 
         $scope.classes = {};
         $scope.classes.login = $scope.classes.register = $scope.classes.license = 'window-s';
-        $scope.classes.sevenrooms = 'window-s';
+        $scope.classes.rooms = 'window-s';
         $scope.popup = popup;
+
+
+        socket.on('gameList', function (list) {
+            $scope.list = list;
+            $scope.$apply();
+        });
+
     });
 
 })();

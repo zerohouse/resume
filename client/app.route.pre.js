@@ -14,15 +14,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/",
             controller: "main",
             templateUrl: "/dist/pages/main/main.html",
-            onEnter: leaveRoom
-        })
-        .state('list', {
-            url: "/list",
-            controller: "list",
-            templateUrl: "/dist/pages/list/list.html",
             onEnter: function (socket) {
-                leaveRoom(socket);
-                socket.emit('checkgame.getRooms');
+                socket.emit('getGameList');
             }
         })
         .state('check', {
@@ -31,7 +24,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: "/dist/pages/check/check.html",
             onEnter: function (socket, $stateParams) {
                 leaveRoom(socket);
-                socket.emit('checkgame.join', $stateParams.id);
+                socket.emit('join', {type: 'check', id: $stateParams.id});
             }
         })
         .state('seven', {
@@ -39,7 +32,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             controller: "seven",
             templateUrl: "/dist/pages/seven/seven.html",
             onEnter: function (socket, $stateParams) {
-                socket.emit('sevengame.join', $stateParams.id);
+                leaveRoom(socket);
+                socket.emit('join', {type: 'seven', id: $stateParams.id});
             }
         })
         .state('profile', {

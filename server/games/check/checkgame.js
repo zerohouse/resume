@@ -2,8 +2,8 @@ var Game = require('./game.js');
 var games = {};
 var players = {};
 var best = {score: 0};
-var highest = [];
-var random = require('./../utils/random.js');
+
+var random = require('./../../utils/random.js');
 
 
 module.exports = function (io, socket, store, db, Message) {
@@ -20,11 +20,6 @@ module.exports = function (io, socket, store, db, Message) {
     db.Record.findOne({type: 'best'}, function (err, result) {
         if (!err && result != undefined)
             best = result.record;
-    });
-
-    db.Record.findOne({type: 'highest'}, function (err, result) {
-        if (!err && result != undefined)
-            highest = result.record;
     });
 
     socket.on('checkgame.hide', function (hide) {
@@ -124,43 +119,6 @@ module.exports = function (io, socket, store, db, Message) {
         send.reset = reset;
         io.to(socket.roomId).emit('checkgame.game', send);
     }
-
-    socket.on('checkgame.check', function (selects) {
-        if (new Date() - socket.last < 1500) {
-            return;
-        }
-        socket.last = new Date();
-        if (games[socket.roomId] == undefined)
-            return;
-        var done = games[socket.roomId].check(selects);
-        if (!done) {
-            updatePlayers(-1);
-            userUpdate(socket);
-            return;
-        }
-        socket.last = new Date() + 1500;
-        updatePlayers(1);
-        userUpdate(socket);
-        sendToAll();
-    });
-
-
-    socket.on('checkgame.done', function () {
-        if (new Date() - socket.last < 1500) {
-            return;
-        }
-        socket.last = new Date();
-        var done = games[socket.roomId].done();
-        if (!done) {
-            updatePlayers(-2);
-            userUpdate(socket);
-            return;
-        }
-        games[socket.roomId] = g.newGame();
-        updatePlayers(3);
-        userUpdate(socket);
-        sendToAll(true);
-    });
 
 
     function updatePlayers(val) {
@@ -276,32 +234,4 @@ module.exports = function (io, socket, store, db, Message) {
         delete players[vid];
     }
 
-    socket.on('checkgame.steampack', function (i) {
-        var steam = [{point: 15, booster: 2, timeout: 30000, name: "헉헉"}, {
-            point: 30,
-            booster: 4,
-            timeout: 30000,
-            name: "하악하악"
-        }, {
-            point: 150,
-            booster: 10,
-            timeout: 60000, name: "부와아악"
-        }];
-        if (socket.player.booster)
-            return;
-        if (socket.player.score < steam[i].point)
-            return;
-        io.to(socket.roomId).emit('alert', new Message(socket.player.name + "님이 " + steam[i].name + "을 사용했습니다.", true));
-        socket.emit('checkgame.steamstart', i);
-        socket.player.score = socket.player.score - steam[i].point;
-        socket.player.booster = steam[i].booster;
-        updatePlayers();
-        userUpdate(socket);
-        setTimeout(function () {
-            socket.player.booster = undefined;
-            socket.emit('checkgame.steamend', i);
-            userUpdate(socket);
-            updatePlayers();
-        }, steam[i].timeout);
-    });
 };

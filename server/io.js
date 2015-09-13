@@ -1,36 +1,48 @@
 var logger = require('./utils/logger.js');
+var gameio = require('./gameio.js');
 
-module.exports = function (http, store, db) {
-    var io = require('socket.io', {multiplex: false})(http),
-        checkgame = require('./checkgame/checkgame.js'),
-        sevengame = require('./sevengame/sevengame.js');
-    io.use(require('./io.session.js')(store));
+module.exports = function (http) {
+    var io = require('socket.io', {multiplex: false})(http);
+    io.use(require('./io.session.js'));
     io.on('connection', function (socket) {
-        preventMutiple(socket.sid);
-        if (socket.session.user && socket.session.user.email)
-            preventMutiple(socket.session.user.email);
-
-        checkgame(io, socket, store, db, Message);
-        sevengame(io, socket, store, db, Message);
-
-
-        function preventMutiple(key) {
-            logger.debug('prevent multiple', key)
-            socket.join(key);
-            socket.broadcast.to(key).emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
-            var members = io.nsps['/'].adapter.rooms[key];
-            Object.keys(members).forEach(function (s, i) {
-                if (s == socket.id) {
-                    return;
-                }
-                io.sockets.connected[s].disconnect();
-            });
-        }
-
-        function Message(message, fail, duration) {
-            this.message = message;
-            this.fail = fail;
-            this.duration = duration;
-        }
+        preventMutiple(io, socket);
+        overWriteOn(socket);
+        gameio(io, socket);
     });
 };
+
+function preventMutiple(io, socket) {
+    var key = socket.sid;
+    if (socket.session.user && socket.session.user.email)
+        key = socket.session.user.email;
+    logger.debug('prevent multiple', key);
+    socket.join(key);
+    var members = io.nsps['/'].adapter.rooms[key];
+    Object.keys(members).forEach(function (sid) {
+        if (sid == socket.id) {
+            return;
+        }
+        var other = io.sockets.connected[sid];
+        other.emit('alert', new Message("다른곳에서 접속했어요.", true, 150000));
+        other.disconnect();
+    });
+}
+
+function Message(message, type, duration) {
+    this.message = message;
+    this.type = type;
+    this.duration = duration;
+}
+
+function overWriteOn(socket) {
+    var on = socket.on.bind(socket);
+    var events = {};
+
+    socket.on = function (name, fn) {
+        if (events[name]) {
+            socket.removeListener(name, events[name]);
+        }
+        on(name, fn);
+        events[name] = fn;
+    };
+}

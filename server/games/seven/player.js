@@ -1,11 +1,13 @@
-var logger = require('./../utils/logger.js');
+var logger = require('./../../utils/logger.js');
+var store = require('./../../utils/store.js');
+var db = require('./../../db/db.js');
 
 Player = function (socket, game) {
-    logger.debug(socket.player.name, socket.sid);
-    this.score = socket.player.score;
-    this.name = socket.player.name;
+    logger.debug(socket.session.user.name, socket.sid);
+    this.score = socket.session.user.score;
+    this.name = socket.session.user.name;
     this.sid = socket.sid;
-    socket.session.player = this;
+    socket.session.user = this;
     this.cards = [0, 1, 2, 3, 4, 5, 6, 7, 'e', 'x'];
     var self = this;
     this.game = game;
@@ -38,7 +40,7 @@ Player.prototype.setSocket = function (socket) {
         self.submit(i);
     });
 
-    socket.on('sevengame.chat', function (message) {
+    socket.on('chat', function (message) {
         message.from = self.getInfo();
         if (message.to) {
             self.game.getPlayer(message.to.sid).send(message);
@@ -52,7 +54,7 @@ Player.prototype.send = function (message) {
     if (this.disconnect) {
         return;
     }
-    this.socket.emit('sevengame.chat', message);
+    this.socket.emit('chat', message);
 };
 
 Player.prototype.submitPoint = function () {
@@ -110,11 +112,10 @@ Player.prototype.setIn = function (val) {
         this.game.alert(this.name + "님이 참여합니다.");
     this.game.startCheck();
     this.game.sync();
-    this.save();
 };
 
 Player.prototype.submit = function (index) {
-    if (!this.game.ing)
+    if (!this.game.playing)
         return;
     if (this.isSubmitted()) {
         this.changeSubmitted(index);
@@ -127,7 +128,6 @@ Player.prototype.submit = function (index) {
 
     this.game.turnEndCheck();
     this.game.sync();
-    this.save();
 };
 
 Player.prototype.submitRandom = function () {
@@ -158,7 +158,6 @@ Player.prototype.changeSubmitted = function (index) {
         return;
     }
     this.alert("낼 차례가 아닙니다.");
-    this.save();
 };
 
 Player.prototype.win = function () {
@@ -178,9 +177,13 @@ Player.prototype.win = function () {
     this.save();
 };
 
-
 Player.prototype.save = function () {
-    this.game.store.set(this.sid, this.socket.session);
+    this.socket.session.user.score = this.score;
+    store.set(this.sid, this.socket.session);
+    if (!this.socket.session.user.email)
+        return;
+    db.User.update({email: this.socket.session.user.email}, {score: this.score}, function (er, res) {
+    });
 };
 
 
@@ -189,5 +192,4 @@ function Message(message, fail, duration) {
     this.fail = fail;
     this.duration = duration;
 }
-
 module.exports = Player;

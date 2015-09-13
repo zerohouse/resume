@@ -1,4 +1,7 @@
-module.exports = function (app, logger, store, db) {
+var db = require('./../db/db.js');
+var logger = require('./../utils/logger.js');
+
+module.exports = function (app) {
     app.post('/api/article', function (req, res) {
         var article = new db.Article(req.passed);
         article.save(function (e, r) {
@@ -14,7 +17,6 @@ module.exports = function (app, logger, store, db) {
     });
 
     app.post('/api/article/delete', function (req, res) {
-        console.log(req.passed);
         if (!req.session.user)
             return;
         if (req.passed.user != req.session.user.email)
@@ -24,7 +26,7 @@ module.exports = function (app, logger, store, db) {
         var query = {};
         query._id = req.passed._id;
         query['user.email'] = req.session.user.email;
-        console.log(query);
+        logger.debug(query);
         db.Article.remove(query).exec(function (e, r) {
             res.send(r);
         });

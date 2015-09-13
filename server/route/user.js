@@ -1,3 +1,6 @@
+var db = require('./../db/db.js');
+var logger = require('./../utils/logger.js');
+
 function Result(result) {
     this.result = result;
 }
@@ -6,8 +9,7 @@ function Error(err) {
     this.error = err;
 }
 
-
-module.exports = function (app, logger, store, db) {
+module.exports = function (app) {
     app.post('/api/user', function (req, res) {
         var user = new db.User(req.passed);
         user.save(function (err, r) {
@@ -43,7 +45,6 @@ module.exports = function (app, logger, store, db) {
         res.send({});
     });
 
-
     app.put('/api/user', function (req, res) {
         var user = req.passed;
         if (!req.session.user) {
@@ -64,6 +65,4 @@ module.exports = function (app, logger, store, db) {
             res.send('정보 변경되었습니다.');
         });
     });
-
-
 };
