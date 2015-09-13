@@ -1,6 +1,7 @@
 var logger = require('./../../utils/logger.js');
 var store = require('./../../utils/store.js');
 var db = require('./../../db/db.js');
+var highest = require('./../highest.js');
 
 Player = function (socket, game) {
     logger.debug(socket.session.user.name, socket.sid);
@@ -180,6 +181,7 @@ Player.prototype.win = function () {
 Player.prototype.save = function () {
     this.socket.session.user.score = this.score;
     store.set(this.sid, this.socket.session);
+    highest.updateHighest(this.getInfo());
     if (!this.socket.session.user.email)
         return;
     db.User.update({email: this.socket.session.user.email}, {score: this.score}, function (er, res) {
