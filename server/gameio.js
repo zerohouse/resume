@@ -1,17 +1,10 @@
 var Games = require('./games/games.js');
 var logger = require('./utils/logger.js');
 var games = new Games();
-var highest = [];
-
-db.Record.findOne({type: 'highest'}, function (err, result) {
-    if (!err && result != undefined)
-        highest = result.record;
-});
-
+var highest = require('./games/highest.js');
 
 module.exports = function (io, socket) {
-
-    socket.emit('highest', highest);
+    socket.emit('highest', highest.highest);
 
     socket.on('join', function (req) {
         var gameDisconnected = games.getPlayingGame(socket.sid);
