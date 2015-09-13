@@ -81,6 +81,8 @@ app.controller('seven', function ($scope, socket, user, alert, $window, $timeout
 
     $scope.cardStyle = function (index) {
         var result = {};
+        if (!$scope.player)
+            return;
         var def = index / $scope.player.cards.length;
         result.left = width * def - 11;
         result.left += 'px';
