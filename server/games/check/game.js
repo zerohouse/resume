@@ -40,7 +40,6 @@ Game.prototype.sync = function (reset) {
 };
 
 
-
 Game.prototype.alert = function (message, fail, duration) {
     this.players.forEach(function (player) {
         player.alert(message, fail, duration);
@@ -49,10 +48,12 @@ Game.prototype.alert = function (message, fail, duration) {
 
 
 Game.prototype.leave = function (sid) {
+    console.log(sid)
     this.players.remove(this.getPlayer(sid));
 };
 
 Game.prototype.isEmpty = function () {
+    console.log('remain player : ', this.players.length);
     return this.players.length == 0;
 };
 
