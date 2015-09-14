@@ -154,7 +154,6 @@ Player.prototype.setSocket = function (socket) {
 Player.prototype.save = function () {
     this.socket.session.user.score = this.score;
     store.set(this.sid, this.socket.session);
-    highest.updateHighest(this.getInfo());
     if (!this.socket.session.user.email)
         return;
     db.User.update({email: this.socket.session.user.email}, {score: this.score}, function (er, res) {
