@@ -1,11 +1,11 @@
 var express = require('express'),
     app = express();
 
-var logger = require('./utils/logger.js');
 app.use(function (req, res, next) {
     res.charset = "utf-8";
     next();
 });
+
 require('./utils/util.js')();
 app.http = require('http').Server(app);
 require('./utils/parse.js')(app);
