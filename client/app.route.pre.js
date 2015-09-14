@@ -46,7 +46,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         })
         .state('sabotage', {
             url: "/sabotage/:id",
-            controller: "sevesabotagen",
+            controller: "sabotage",
             templateUrl: "/dist/pages/sabotage/sabotage.html",
             onEnter: function (socket, $stateParams) {
                 leaveRoom(socket);
