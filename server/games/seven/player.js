@@ -60,8 +60,6 @@ Player.prototype.send = function (message) {
 
 Player.prototype.submitPoint = function () {
     this.score--;
-    if (this.score < 0)
-        this.score = 0;
     this.game.point++;
     this.save();
 };
