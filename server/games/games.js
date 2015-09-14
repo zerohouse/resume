@@ -64,6 +64,7 @@ Games.prototype.leave = function (sid) {
     logger.debug('destroy', type, id);
     this.sids[sid].destroy();
     this.games[type][id] = null;
+    delete this.games[type][id];
     delete this.sids[sid];
 };
 

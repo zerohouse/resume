@@ -4,7 +4,8 @@ module.exports = function () {
     };
 
     Array.prototype.remove = function (val) {
-        this.splice(this.indexOf(val), 1);
+        if (this.contains(val))
+            this.splice(this.indexOf(val), 1);
     };
 
 };
