@@ -11,7 +11,7 @@
           href="/dist/favicon.ico">
     <title>Play Ground</title>
 </head>
-<body>
+<body ng-controller="wrap">
 <nav class="navbar navbar-inverse" ng-controller="nav">
     <div class="container">
         <div class="navbar-header">
@@ -29,6 +29,8 @@
             <ul class="nav navbar-nav">
                 <li><a ui-sref="check">결합</a></li>
                 <li><a ui-sref="seven">7 게임</a></li>
+                <li><a ui-sref="numberchess">숫자장기</a></li>
+                <li><a ui-sref="sabotage">광산게임</a></li>
                 <li><a ui-sref="board">게시판</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

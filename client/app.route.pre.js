@@ -36,6 +36,22 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 socket.emit('join', {type: 'seven', id: $stateParams.id});
             }
         })
+        .state('numberchess', {
+            url: "/numberchess/:id",
+            controller: "numberchess",
+            templateUrl: "/dist/pages/numberchess/numberchess.html",
+            onEnter: function (socket, $stateParams) {
+                leaveRoom(socket);
+            }
+        })
+        .state('sabotage', {
+            url: "/sabotage/:id",
+            controller: "sevesabotagen",
+            templateUrl: "/dist/pages/sabotage/sabotage.html",
+            onEnter: function (socket, $stateParams) {
+                leaveRoom(socket);
+            }
+        })
         .state('profile', {
             url: "/profile",
             controller: "profile",

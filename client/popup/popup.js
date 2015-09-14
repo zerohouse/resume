@@ -47,11 +47,6 @@
         $scope.popup = popup;
 
 
-        socket.on('gameList', function (list) {
-            $scope.list = list;
-            $scope.$apply();
-        });
-
     });
 
 })();
