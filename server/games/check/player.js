@@ -59,11 +59,11 @@ Player.prototype.steam = function (i) {
         return;
     if (this.score < steam[i].point)
         return;
-    this.game.alert(socket.player.name + "님이 " + steam[i].name + "을 사용했습니다.");
+    this.game.alert(this.name + "님이 " + steam[i].name + "을 사용했습니다.");
     this.socket.emit('checkgame.steamstart', i);
     this.score = this.score - steam[i].point;
     this.booster = steam[i].booster;
-    this.sync();
+    this.game.sync();
     var self = this;
     setTimeout(function () {
         self.booster = undefined;
